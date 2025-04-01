@@ -2,3 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
+
+/* Enable Dark Mode */
+:root {
+    --color-bg: white;
+    --color-text: black;
+  }
+  
+  .dark {
+    --color-bg: black;
+    --color-text: white;
+  }
+  
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+  }
