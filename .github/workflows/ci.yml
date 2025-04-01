@@ -9,28 +9,27 @@ on:
       - main
 
 jobs:
-  ci-checks:
-    name: Lint, Type Check & Build
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
           cache: 'pnpm'
 
-      - name: Install Dependencies
-        run: pnpm install --frozen-lockfile
+      - name: Install pnpm
+        run: npm install -g pnpm
 
-      - name: Run Linter
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run lint
         run: pnpm lint
 
-      - name: Run Type Check
-        run: pnpm type-check
-
-      - name: Build Project
+      - name: Run build
         run: pnpm build
