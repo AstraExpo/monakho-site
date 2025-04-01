@@ -1,13 +1,7 @@
 import { hydrateRoot } from "react-dom/client";
-import { StartClient } from "@tanstack/start";
+import { StartClient } from "@tanstack/react-start";
 import { createRouter } from "./router";
-import { ThemeProvider } from "./context/theme";
 
 const router = createRouter();
 
-hydrateRoot(
-  document,
-  <ThemeProvider>
-    <StartClient router={router} />
-  </ThemeProvider>
-);
+hydrateRoot(document, <StartClient router={router} />);
