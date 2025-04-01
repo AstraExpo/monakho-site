@@ -1,0 +1,28 @@
+{
+  "_server-bqJCiR6i.js": {
+    "file": "assets/server-bqJCiR6i.js",
+    "name": "server",
+    "dynamicImports": [
+      "app/functions.ts?tsr-directive-use-server=",
+      "app/functions.ts?tsr-directive-use-server="
+    ]
+  },
+  "app/functions.ts?tsr-directive-use-server=": {
+    "file": "assets/functions-RHPYwc0W.js",
+    "name": "functions",
+    "src": "app/functions.ts?tsr-directive-use-server=",
+    "isDynamicEntry": true,
+    "imports": [
+      "_server-bqJCiR6i.js"
+    ]
+  },
+  "virtual:$vinxi/handler/server": {
+    "file": "server.js",
+    "name": "server",
+    "src": "virtual:$vinxi/handler/server",
+    "isEntry": true,
+    "imports": [
+      "_server-bqJCiR6i.js"
+    ]
+  }
+}

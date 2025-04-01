@@ -1,0 +1,83 @@
+{
+  "_ssr-BgmHWOBt.css": {
+    "file": "assets/ssr-BgmHWOBt.css",
+    "src": "_ssr-BgmHWOBt.css"
+  },
+  "_ssr-Dwf2OW9r.js": {
+    "file": "assets/ssr-Dwf2OW9r.js",
+    "name": "ssr",
+    "dynamicImports": [
+      "app/routes/team.tsx?tsr-split=component",
+      "app/routes/sermons.tsx?tsr-split=component",
+      "app/routes/music.tsx?tsr-split=component",
+      "app/routes/events.tsx?tsr-split=component",
+      "app/routes/donate.tsx?tsr-split=component",
+      "app/routes/contact.tsx?tsr-split=component",
+      "app/routes/about.tsx?tsr-split=component",
+      "app/routes/index.tsx?tsr-split=component"
+    ],
+    "css": [
+      "assets/ssr-BgmHWOBt.css"
+    ]
+  },
+  "app/routes/about.tsx?tsr-split=component": {
+    "file": "assets/about-CzFvV-7i.js",
+    "name": "about",
+    "src": "app/routes/about.tsx?tsr-split=component",
+    "isDynamicEntry": true
+  },
+  "app/routes/contact.tsx?tsr-split=component": {
+    "file": "assets/contact-D_SEO6t2.js",
+    "name": "contact",
+    "src": "app/routes/contact.tsx?tsr-split=component",
+    "isDynamicEntry": true
+  },
+  "app/routes/donate.tsx?tsr-split=component": {
+    "file": "assets/donate-Bx6kU925.js",
+    "name": "donate",
+    "src": "app/routes/donate.tsx?tsr-split=component",
+    "isDynamicEntry": true
+  },
+  "app/routes/events.tsx?tsr-split=component": {
+    "file": "assets/events-CV_BIea9.js",
+    "name": "events",
+    "src": "app/routes/events.tsx?tsr-split=component",
+    "isDynamicEntry": true
+  },
+  "app/routes/index.tsx?tsr-split=component": {
+    "file": "assets/index-B-ufCL2F.js",
+    "name": "index",
+    "src": "app/routes/index.tsx?tsr-split=component",
+    "isDynamicEntry": true,
+    "imports": [
+      "_ssr-Dwf2OW9r.js"
+    ]
+  },
+  "app/routes/music.tsx?tsr-split=component": {
+    "file": "assets/music-Badlr5GP.js",
+    "name": "music",
+    "src": "app/routes/music.tsx?tsr-split=component",
+    "isDynamicEntry": true
+  },
+  "app/routes/sermons.tsx?tsr-split=component": {
+    "file": "assets/sermons-zu2_ZZEu.js",
+    "name": "sermons",
+    "src": "app/routes/sermons.tsx?tsr-split=component",
+    "isDynamicEntry": true
+  },
+  "app/routes/team.tsx?tsr-split=component": {
+    "file": "assets/team-DRR5a8GT.js",
+    "name": "team",
+    "src": "app/routes/team.tsx?tsr-split=component",
+    "isDynamicEntry": true
+  },
+  "virtual:$vinxi/handler/ssr": {
+    "file": "ssr.js",
+    "name": "ssr",
+    "src": "virtual:$vinxi/handler/ssr",
+    "isEntry": true,
+    "imports": [
+      "_ssr-Dwf2OW9r.js"
+    ]
+  }
+}
