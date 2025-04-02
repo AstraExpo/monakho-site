@@ -25,23 +25,23 @@ export function Navbar() {
           <Link to="/about" className="text-lg hover:text-gray-300">
             About
           </Link>
+          <Link to="/music" className="text-lg hover:text-gray-300">
+            Music
+          </Link>
+          <Link to="/events" className="text-lg hover:text-gray-300">
+            Events
+          </Link>
+          <Link to="/team" className="text-lg hover:text-gray-300">
+            Team
+          </Link>
+          <Link to="/sermons" className="text-lg hover:text-gray-300">
+            Sermons
+          </Link>
           <Link to="/contact" className="text-lg hover:text-gray-300">
             Contact Us
           </Link>
           <Link to="/donate" className="text-lg hover:text-gray-300">
             Donate
-          </Link>
-          <Link to="/sermons" className="text-lg hover:text-gray-300">
-            Sermons
-          </Link>
-          <Link to="/team" className="text-lg hover:text-gray-300">
-            Team
-          </Link>
-          <Link to="/events" className="text-lg hover:text-gray-300">
-            Events
-          </Link>
-          <Link to="/music" className="text-lg hover:text-gray-300">
-            Music
           </Link>
         </div>
 
@@ -81,14 +81,20 @@ export function Navbar() {
           <Link to="/about" className="block text-lg hover:text-gray-300">
             About
           </Link>
-          <Link to="/events" className="block text-lg hover:text-gray-300">
-            Events
-          </Link>
           <Link to="/music" className="block text-lg hover:text-gray-300">
             Music
           </Link>
+          <Link to="/events" className="block text-lg hover:text-gray-300">
+            Events
+          </Link>
+          <Link to="/team" className="block text-lg hover:text-gray-300">
+            Team
+          </Link>
           <Link to="/sermons" className="block text-lg hover:text-gray-300">
             Sermons
+          </Link>
+          <Link to="/contact" className="block text-lg hover:text-gray-300">
+            Contact Us
           </Link>
           <Link to="/donate" className="block text-lg hover:text-gray-300">
             Donate
