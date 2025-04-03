@@ -7,6 +7,8 @@ import {
 import type { ReactNode } from "react";
 import "../index.css";
 import { ThemeProvider } from "../context/theme";
+import { Navbar } from "../components/layout/navbar";
+import { Footer } from "../components/layout/footer";
 
 export const Route = createRootRoute({
   head: () => ({
@@ -30,7 +32,10 @@ function RootComponent() {
   return (
     <ThemeProvider>
       <RootDocument>
+        <Navbar />
+        {/* Main content area */}
         <Outlet />
+        <Footer />
       </RootDocument>
     </ThemeProvider>
   );

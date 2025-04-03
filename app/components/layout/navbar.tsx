@@ -24,6 +24,7 @@ export function Navbar() {
               key={item.name}
               to={item.path}
               className="text-lg hover:text-gray-300"
+              activeProps={{ className: "text-blue-500 font-bold" }}
             >
               {item.name}
             </Link>
