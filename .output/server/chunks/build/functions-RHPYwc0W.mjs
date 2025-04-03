@@ -12,6 +12,7 @@ import 'vinxi/lib/path';
 import 'node:url';
 import '@tanstack/react-router';
 import 'react/jsx-runtime';
+import 'react';
 import 'node:stream';
 import 'react-dom/server';
 import 'node:stream/web';

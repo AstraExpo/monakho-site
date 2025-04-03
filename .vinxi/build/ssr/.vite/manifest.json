@@ -1,10 +1,6 @@
 {
-  "_ssr-BgmHWOBt.css": {
-    "file": "assets/ssr-BgmHWOBt.css",
-    "src": "_ssr-BgmHWOBt.css"
-  },
-  "_ssr-Dwf2OW9r.js": {
-    "file": "assets/ssr-Dwf2OW9r.js",
+  "_ssr-C4Ilk3wg.js": {
+    "file": "assets/ssr-C4Ilk3wg.js",
     "name": "ssr",
     "dynamicImports": [
       "app/routes/team.tsx?tsr-split=component",
@@ -17,8 +13,12 @@
       "app/routes/index.tsx?tsr-split=component"
     ],
     "css": [
-      "assets/ssr-BgmHWOBt.css"
+      "assets/ssr-_niByH3A.css"
     ]
+  },
+  "_ssr-_niByH3A.css": {
+    "file": "assets/ssr-_niByH3A.css",
+    "src": "_ssr-_niByH3A.css"
   },
   "app/routes/about.tsx?tsr-split=component": {
     "file": "assets/about-CzFvV-7i.js",
@@ -45,12 +45,12 @@
     "isDynamicEntry": true
   },
   "app/routes/index.tsx?tsr-split=component": {
-    "file": "assets/index-B-ufCL2F.js",
+    "file": "assets/index-DOa1lz9E.js",
     "name": "index",
     "src": "app/routes/index.tsx?tsr-split=component",
     "isDynamicEntry": true,
     "imports": [
-      "_ssr-Dwf2OW9r.js"
+      "_ssr-C4Ilk3wg.js"
     ]
   },
   "app/routes/music.tsx?tsr-split=component": {
@@ -77,7 +77,7 @@
     "src": "virtual:$vinxi/handler/ssr",
     "isEntry": true,
     "imports": [
-      "_ssr-Dwf2OW9r.js"
+      "_ssr-C4Ilk3wg.js"
     ]
   }
 }

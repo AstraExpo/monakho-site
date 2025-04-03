@@ -9,8 +9,9 @@ import { AsyncLocalStorage } from 'node:async_hooks';
 import invariant from 'vinxi/lib/invariant';
 import { virtualId, handlerModule, join as join$1 } from 'vinxi/lib/path';
 import { pathToFileURL, fileURLToPath } from 'node:url';
-import { RouterProvider, createRootRoute, Outlet, ScrollRestoration, createFileRoute, lazyRouteComponent, HeadContent, Scripts, createRouter as createRouter$2 } from '@tanstack/react-router';
+import { RouterProvider, createRootRoute, Outlet, HeadContent, Scripts, createFileRoute, lazyRouteComponent, createRouter as createRouter$2 } from '@tanstack/react-router';
 import { jsx, jsxs } from 'react/jsx-runtime';
+import { createContext as createContext$1, useState, useEffect, useContext } from 'react';
 import { PassThrough, Readable } from 'node:stream';
 import ee$1 from 'react-dom/server';
 import { ReadableStream as ReadableStream$1 } from 'node:stream/web';
@@ -590,7 +591,7 @@ const defuFn = createDefu((object, key, currentValue) => {
   }
 });
 
-function o(n){throw new Error(`${n} is not implemented yet!`)}let i$1 = class i extends EventEmitter{__unenv__={};readableEncoding=null;readableEnded=true;readableFlowing=false;readableHighWaterMark=0;readableLength=0;readableObjectMode=false;readableAborted=false;readableDidRead=false;closed=false;errored=null;readable=false;destroyed=false;static from(e,t){return new i(t)}constructor(e){super();}_read(e){}read(e){}setEncoding(e){return this}pause(){return this}resume(){return this}isPaused(){return  true}unpipe(e){return this}unshift(e,t){}wrap(e){return this}push(e,t){return  false}_destroy(e,t){this.removeAllListeners();}destroy(e){return this.destroyed=true,this._destroy(e),this}pipe(e,t){return {}}compose(e,t){throw new Error("Method not implemented.")}[Symbol.asyncDispose](){return this.destroy(),Promise.resolve()}async*[Symbol.asyncIterator](){throw o("Readable.asyncIterator")}iterator(e){throw o("Readable.iterator")}map(e,t){throw o("Readable.map")}filter(e,t){throw o("Readable.filter")}forEach(e,t){throw o("Readable.forEach")}reduce(e,t,r){throw o("Readable.reduce")}find(e,t){throw o("Readable.find")}findIndex(e,t){throw o("Readable.findIndex")}some(e,t){throw o("Readable.some")}toArray(e){throw o("Readable.toArray")}every(e,t){throw o("Readable.every")}flatMap(e,t){throw o("Readable.flatMap")}drop(e,t){throw o("Readable.drop")}take(e,t){throw o("Readable.take")}asIndexedPairs(e){throw o("Readable.asIndexedPairs")}};let l$2 = class l extends EventEmitter{__unenv__={};writable=true;writableEnded=false;writableFinished=false;writableHighWaterMark=0;writableLength=0;writableObjectMode=false;writableCorked=0;closed=false;errored=null;writableNeedDrain=false;destroyed=false;_data;_encoding="utf8";constructor(e){super();}pipe(e,t){return {}}_write(e,t,r){if(this.writableEnded){r&&r();return}if(this._data===void 0)this._data=e;else {const s=typeof this._data=="string"?Buffer$1.from(this._data,this._encoding||t||"utf8"):this._data,a=typeof e=="string"?Buffer$1.from(e,t||this._encoding||"utf8"):e;this._data=Buffer$1.concat([s,a]);}this._encoding=t,r&&r();}_writev(e,t){}_destroy(e,t){}_final(e){}write(e,t,r){const s=typeof t=="string"?this._encoding:"utf8",a=typeof t=="function"?t:typeof r=="function"?r:void 0;return this._write(e,s,a),true}setDefaultEncoding(e){return this}end(e,t,r){const s=typeof e=="function"?e:typeof t=="function"?t:typeof r=="function"?r:void 0;if(this.writableEnded)return s&&s(),this;const a=e===s?void 0:e;if(a){const u=t===s?void 0:t;this.write(a,u,s);}return this.writableEnded=true,this.writableFinished=true,this.emit("close"),this.emit("finish"),this}cork(){}uncork(){}destroy(e){return this.destroyed=true,delete this._data,this.removeAllListeners(),this}compose(e,t){throw new Error("Method not implemented.")}};const c=class{allowHalfOpen=true;_destroy;constructor(e=new i$1,t=new l$2){Object.assign(this,e),Object.assign(this,t),this._destroy=g$1(e._destroy,t._destroy);}};function _$1(){return Object.assign(c.prototype,i$1.prototype),Object.assign(c.prototype,l$2.prototype),c}function g$1(...n){return function(...e){for(const t of n)t(...e);}}const m=_$1();class A extends m{__unenv__={};bufferSize=0;bytesRead=0;bytesWritten=0;connecting=false;destroyed=false;pending=false;localAddress="";localPort=0;remoteAddress="";remoteFamily="";remotePort=0;autoSelectFamilyAttemptedAddresses=[];readyState="readOnly";constructor(e){super();}write(e,t,r){return  false}connect(e,t,r){return this}end(e,t,r){return this}setEncoding(e){return this}pause(){return this}resume(){return this}setTimeout(e,t){return this}setNoDelay(e){return this}setKeepAlive(e,t){return this}address(){return {}}unref(){return this}ref(){return this}destroySoon(){this.destroy();}resetAndDestroy(){const e=new Error("ERR_SOCKET_CLOSED");return e.code="ERR_SOCKET_CLOSED",this.destroy(e),this}}class y extends i$1{aborted=false;httpVersion="1.1";httpVersionMajor=1;httpVersionMinor=1;complete=true;connection;socket;headers={};trailers={};method="GET";url="/";statusCode=200;statusMessage="";closed=false;errored=null;readable=false;constructor(e){super(),this.socket=this.connection=e||new A;}get rawHeaders(){const e=this.headers,t=[];for(const r in e)if(Array.isArray(e[r]))for(const s of e[r])t.push(r,s);else t.push(r,e[r]);return t}get rawTrailers(){return []}setTimeout(e,t){return this}get headersDistinct(){return p(this.headers)}get trailersDistinct(){return p(this.trailers)}}function p(n){const e={};for(const[t,r]of Object.entries(n))t&&(e[t]=(Array.isArray(r)?r:[r]).filter(Boolean));return e}class w extends l$2{statusCode=200;statusMessage="";upgrading=false;chunkedEncoding=false;shouldKeepAlive=false;useChunkedEncodingByDefault=false;sendDate=false;finished=false;headersSent=false;strictContentLength=false;connection=null;socket=null;req;_headers={};constructor(e){super(),this.req=e;}assignSocket(e){e._httpMessage=this,this.socket=e,this.connection=e,this.emit("socket",e),this._flush();}_flush(){this.flushHeaders();}detachSocket(e){}writeContinue(e){}writeHead(e,t,r){e&&(this.statusCode=e),typeof t=="string"&&(this.statusMessage=t,t=void 0);const s=r||t;if(s&&!Array.isArray(s))for(const a in s)this.setHeader(a,s[a]);return this.headersSent=true,this}writeProcessing(){}setTimeout(e,t){return this}appendHeader(e,t){e=e.toLowerCase();const r=this._headers[e],s=[...Array.isArray(r)?r:[r],...Array.isArray(t)?t:[t]].filter(Boolean);return this._headers[e]=s.length>1?s:s[0],this}setHeader(e,t){return this._headers[e.toLowerCase()]=t,this}setHeaders(e){for(const[t,r]of Object.entries(e))this.setHeader(t,r);return this}getHeader(e){return this._headers[e.toLowerCase()]}getHeaders(){return this._headers}getHeaderNames(){return Object.keys(this._headers)}hasHeader(e){return e.toLowerCase()in this._headers}removeHeader(e){delete this._headers[e.toLowerCase()];}addTrailers(e){}flushHeaders(){}writeEarlyHints(e,t){typeof t=="function"&&t();}}const E$2=(()=>{const n=function(){};return n.prototype=Object.create(null),n})();function R$1(n={}){const e=new E$2,t=Array.isArray(n)||H$1(n)?n:Object.entries(n);for(const[r,s]of t)if(s){if(e[r]===void 0){e[r]=s;continue}e[r]=[...Array.isArray(e[r])?e[r]:[e[r]],...Array.isArray(s)?s:[s]];}return e}function H$1(n){return typeof n?.entries=="function"}function S$1(n={}){if(n instanceof Headers)return n;const e=new Headers;for(const[t,r]of Object.entries(n))if(r!==void 0){if(Array.isArray(r)){for(const s of r)e.append(t,String(s));continue}e.set(t,String(r));}return e}const C=new Set([101,204,205,304]);async function b$1(n,e){const t=new y,r=new w(t);t.url=e.url?.toString()||"/";let s;if(!t.url.startsWith("/")){const d=new URL(t.url);s=d.host,t.url=d.pathname+d.search+d.hash;}t.method=e.method||"GET",t.headers=R$1(e.headers||{}),t.headers.host||(t.headers.host=e.host||s||"localhost"),t.connection.encrypted=t.connection.encrypted||e.protocol==="https",t.body=e.body||null,t.__unenv__=e.context,await n(t,r);let a=r._data;(C.has(r.statusCode)||t.method.toUpperCase()==="HEAD")&&(a=null,delete r._headers["content-length"]);const u={status:r.statusCode,statusText:r.statusMessage,headers:r._headers,body:a};return t.destroy(),r.destroy(),u}async function O$2(n,e,t={}){try{const r=await b$1(n,{url:e,...t});return new Response(r.body,{status:r.status,statusText:r.statusText,headers:S$1(r.headers)})}catch(r){return new Response(r.toString(),{status:Number.parseInt(r.statusCode||r.code)||500,statusText:r.statusText})}}
+function o(n){throw new Error(`${n} is not implemented yet!`)}let i$1 = class i extends EventEmitter{__unenv__={};readableEncoding=null;readableEnded=true;readableFlowing=false;readableHighWaterMark=0;readableLength=0;readableObjectMode=false;readableAborted=false;readableDidRead=false;closed=false;errored=null;readable=false;destroyed=false;static from(e,t){return new i(t)}constructor(e){super();}_read(e){}read(e){}setEncoding(e){return this}pause(){return this}resume(){return this}isPaused(){return  true}unpipe(e){return this}unshift(e,t){}wrap(e){return this}push(e,t){return  false}_destroy(e,t){this.removeAllListeners();}destroy(e){return this.destroyed=true,this._destroy(e),this}pipe(e,t){return {}}compose(e,t){throw new Error("Method not implemented.")}[Symbol.asyncDispose](){return this.destroy(),Promise.resolve()}async*[Symbol.asyncIterator](){throw o("Readable.asyncIterator")}iterator(e){throw o("Readable.iterator")}map(e,t){throw o("Readable.map")}filter(e,t){throw o("Readable.filter")}forEach(e,t){throw o("Readable.forEach")}reduce(e,t,r){throw o("Readable.reduce")}find(e,t){throw o("Readable.find")}findIndex(e,t){throw o("Readable.findIndex")}some(e,t){throw o("Readable.some")}toArray(e){throw o("Readable.toArray")}every(e,t){throw o("Readable.every")}flatMap(e,t){throw o("Readable.flatMap")}drop(e,t){throw o("Readable.drop")}take(e,t){throw o("Readable.take")}asIndexedPairs(e){throw o("Readable.asIndexedPairs")}};let l$2 = class l extends EventEmitter{__unenv__={};writable=true;writableEnded=false;writableFinished=false;writableHighWaterMark=0;writableLength=0;writableObjectMode=false;writableCorked=0;closed=false;errored=null;writableNeedDrain=false;destroyed=false;_data;_encoding="utf8";constructor(e){super();}pipe(e,t){return {}}_write(e,t,r){if(this.writableEnded){r&&r();return}if(this._data===void 0)this._data=e;else {const s=typeof this._data=="string"?Buffer$1.from(this._data,this._encoding||t||"utf8"):this._data,a=typeof e=="string"?Buffer$1.from(e,t||this._encoding||"utf8"):e;this._data=Buffer$1.concat([s,a]);}this._encoding=t,r&&r();}_writev(e,t){}_destroy(e,t){}_final(e){}write(e,t,r){const s=typeof t=="string"?this._encoding:"utf8",a=typeof t=="function"?t:typeof r=="function"?r:void 0;return this._write(e,s,a),true}setDefaultEncoding(e){return this}end(e,t,r){const s=typeof e=="function"?e:typeof t=="function"?t:typeof r=="function"?r:void 0;if(this.writableEnded)return s&&s(),this;const a=e===s?void 0:e;if(a){const u=t===s?void 0:t;this.write(a,u,s);}return this.writableEnded=true,this.writableFinished=true,this.emit("close"),this.emit("finish"),this}cork(){}uncork(){}destroy(e){return this.destroyed=true,delete this._data,this.removeAllListeners(),this}compose(e,t){throw new Error("Method not implemented.")}};const c=class{allowHalfOpen=true;_destroy;constructor(e=new i$1,t=new l$2){Object.assign(this,e),Object.assign(this,t),this._destroy=g$1(e._destroy,t._destroy);}};function _$1(){return Object.assign(c.prototype,i$1.prototype),Object.assign(c.prototype,l$2.prototype),c}function g$1(...n){return function(...e){for(const t of n)t(...e);}}const m=_$1();class A extends m{__unenv__={};bufferSize=0;bytesRead=0;bytesWritten=0;connecting=false;destroyed=false;pending=false;localAddress="";localPort=0;remoteAddress="";remoteFamily="";remotePort=0;autoSelectFamilyAttemptedAddresses=[];readyState="readOnly";constructor(e){super();}write(e,t,r){return  false}connect(e,t,r){return this}end(e,t,r){return this}setEncoding(e){return this}pause(){return this}resume(){return this}setTimeout(e,t){return this}setNoDelay(e){return this}setKeepAlive(e,t){return this}address(){return {}}unref(){return this}ref(){return this}destroySoon(){this.destroy();}resetAndDestroy(){const e=new Error("ERR_SOCKET_CLOSED");return e.code="ERR_SOCKET_CLOSED",this.destroy(e),this}}class y extends i$1{aborted=false;httpVersion="1.1";httpVersionMajor=1;httpVersionMinor=1;complete=true;connection;socket;headers={};trailers={};method="GET";url="/";statusCode=200;statusMessage="";closed=false;errored=null;readable=false;constructor(e){super(),this.socket=this.connection=e||new A;}get rawHeaders(){const e=this.headers,t=[];for(const r in e)if(Array.isArray(e[r]))for(const s of e[r])t.push(r,s);else t.push(r,e[r]);return t}get rawTrailers(){return []}setTimeout(e,t){return this}get headersDistinct(){return p(this.headers)}get trailersDistinct(){return p(this.trailers)}}function p(n){const e={};for(const[t,r]of Object.entries(n))t&&(e[t]=(Array.isArray(r)?r:[r]).filter(Boolean));return e}class w extends l$2{statusCode=200;statusMessage="";upgrading=false;chunkedEncoding=false;shouldKeepAlive=false;useChunkedEncodingByDefault=false;sendDate=false;finished=false;headersSent=false;strictContentLength=false;connection=null;socket=null;req;_headers={};constructor(e){super(),this.req=e;}assignSocket(e){e._httpMessage=this,this.socket=e,this.connection=e,this.emit("socket",e),this._flush();}_flush(){this.flushHeaders();}detachSocket(e){}writeContinue(e){}writeHead(e,t,r){e&&(this.statusCode=e),typeof t=="string"&&(this.statusMessage=t,t=void 0);const s=r||t;if(s&&!Array.isArray(s))for(const a in s)this.setHeader(a,s[a]);return this.headersSent=true,this}writeProcessing(){}setTimeout(e,t){return this}appendHeader(e,t){e=e.toLowerCase();const r=this._headers[e],s=[...Array.isArray(r)?r:[r],...Array.isArray(t)?t:[t]].filter(Boolean);return this._headers[e]=s.length>1?s:s[0],this}setHeader(e,t){return this._headers[e.toLowerCase()]=t,this}setHeaders(e){for(const[t,r]of Object.entries(e))this.setHeader(t,r);return this}getHeader(e){return this._headers[e.toLowerCase()]}getHeaders(){return this._headers}getHeaderNames(){return Object.keys(this._headers)}hasHeader(e){return e.toLowerCase()in this._headers}removeHeader(e){delete this._headers[e.toLowerCase()];}addTrailers(e){}flushHeaders(){}writeEarlyHints(e,t){typeof t=="function"&&t();}}const E$2=(()=>{const n=function(){};return n.prototype=Object.create(null),n})();function R(n={}){const e=new E$2,t=Array.isArray(n)||H$1(n)?n:Object.entries(n);for(const[r,s]of t)if(s){if(e[r]===void 0){e[r]=s;continue}e[r]=[...Array.isArray(e[r])?e[r]:[e[r]],...Array.isArray(s)?s:[s]];}return e}function H$1(n){return typeof n?.entries=="function"}function S$1(n={}){if(n instanceof Headers)return n;const e=new Headers;for(const[t,r]of Object.entries(n))if(r!==void 0){if(Array.isArray(r)){for(const s of r)e.append(t,String(s));continue}e.set(t,String(r));}return e}const C=new Set([101,204,205,304]);async function b$1(n,e){const t=new y,r=new w(t);t.url=e.url?.toString()||"/";let s;if(!t.url.startsWith("/")){const d=new URL(t.url);s=d.host,t.url=d.pathname+d.search+d.hash;}t.method=e.method||"GET",t.headers=R(e.headers||{}),t.headers.host||(t.headers.host=e.host||s||"localhost"),t.connection.encrypted=t.connection.encrypted||e.protocol==="https",t.body=e.body||null,t.__unenv__=e.context,await n(t,r);let a=r._data;(C.has(r.statusCode)||t.method.toUpperCase()==="HEAD")&&(a=null,delete r._headers["content-length"]);const u={status:r.statusCode,statusText:r.statusMessage,headers:r._headers,body:a};return t.destroy(),r.destroy(),u}async function O$2(n,e,t={}){try{const r=await b$1(n,{url:e,...t});return new Response(r.body,{status:r.status,statusText:r.statusText,headers:S$1(r.headers)})}catch(r){return new Response(r.toString(),{status:Number.parseInt(r.statusCode||r.code)||500,statusText:r.statusText})}}
 
 function hasProp(obj, prop) {
   try {
@@ -4228,7 +4229,7 @@ async function errorHandler(error, event) {
 }
 
 const appConfig = {"name":"vinxi","routers":[{"name":"public","type":"static","dir":"./public","base":"/","root":"/home/astra/Documents/astraExpo/monakho-site","order":0,"outDir":"/home/astra/Documents/astraExpo/monakho-site/.vinxi/build/public"},{"name":"client","type":"client","target":"browser","handler":"app/client.tsx","base":"/_build","build":{"sourcemap":true},"root":"/home/astra/Documents/astraExpo/monakho-site","outDir":"/home/astra/Documents/astraExpo/monakho-site/.vinxi/build/client","order":1},{"name":"ssr","type":"http","target":"server","handler":"app/ssr.tsx","link":{"client":"client"},"root":"/home/astra/Documents/astraExpo/monakho-site","base":"/","outDir":"/home/astra/Documents/astraExpo/monakho-site/.vinxi/build/ssr","order":2},{"name":"server","type":"http","target":"server","base":"/_server","handler":"node_modules/.pnpm/@tanstack+start-server-functions-handler@1.114.32/node_modules/@tanstack/start-server-functions-handler/dist/esm/index.js","root":"/home/astra/Documents/astraExpo/monakho-site","outDir":"/home/astra/Documents/astraExpo/monakho-site/.vinxi/build/server","order":3}],"server":{"preset":"node-server","experimental":{"asyncContext":true}},"root":"/home/astra/Documents/astraExpo/monakho-site"};
-				const buildManifest = {"client":{"__vite-browser-external":{"file":"assets/__vite-browser-external-BIHI7g3E.js","name":"__vite-browser-external","src":"__vite-browser-external","isDynamicEntry":true},"_client-BgmHWOBt.css":{"file":"assets/client-BgmHWOBt.css","src":"_client-BgmHWOBt.css"},"_client-KhrFkGyD.js":{"file":"assets/client-KhrFkGyD.js","name":"client","dynamicImports":["__vite-browser-external","__vite-browser-external","__vite-browser-external","__vite-browser-external","app/routes/team.tsx?tsr-split=component","app/routes/sermons.tsx?tsr-split=component","app/routes/music.tsx?tsr-split=component","app/routes/events.tsx?tsr-split=component","app/routes/donate.tsx?tsr-split=component","app/routes/contact.tsx?tsr-split=component","app/routes/about.tsx?tsr-split=component","app/routes/index.tsx?tsr-split=component"],"css":["assets/client-BgmHWOBt.css"]},"app/routes/about.tsx?tsr-split=component":{"file":"assets/about-9kxzYOfv.js","name":"about","src":"app/routes/about.tsx?tsr-split=component","isDynamicEntry":true,"imports":["_client-KhrFkGyD.js"]},"app/routes/contact.tsx?tsr-split=component":{"file":"assets/contact-CbWdXpms.js","name":"contact","src":"app/routes/contact.tsx?tsr-split=component","isDynamicEntry":true,"imports":["_client-KhrFkGyD.js"]},"app/routes/donate.tsx?tsr-split=component":{"file":"assets/donate-BxDSBWD_.js","name":"donate","src":"app/routes/donate.tsx?tsr-split=component","isDynamicEntry":true,"imports":["_client-KhrFkGyD.js"]},"app/routes/events.tsx?tsr-split=component":{"file":"assets/events-D6chfjZb.js","name":"events","src":"app/routes/events.tsx?tsr-split=component","isDynamicEntry":true,"imports":["_client-KhrFkGyD.js"]},"app/routes/index.tsx?tsr-split=component":{"file":"assets/index-B8Kfd46t.js","name":"index","src":"app/routes/index.tsx?tsr-split=component","isDynamicEntry":true,"imports":["_client-KhrFkGyD.js"]},"app/routes/music.tsx?tsr-split=component":{"file":"assets/music-ENByoFX-.js","name":"music","src":"app/routes/music.tsx?tsr-split=component","isDynamicEntry":true,"imports":["_client-KhrFkGyD.js"]},"app/routes/sermons.tsx?tsr-split=component":{"file":"assets/sermons-Bu4jDh1a.js","name":"sermons","src":"app/routes/sermons.tsx?tsr-split=component","isDynamicEntry":true,"imports":["_client-KhrFkGyD.js"]},"app/routes/team.tsx?tsr-split=component":{"file":"assets/team-CfAXnfHo.js","name":"team","src":"app/routes/team.tsx?tsr-split=component","isDynamicEntry":true,"imports":["_client-KhrFkGyD.js"]},"virtual:$vinxi/handler/client":{"file":"assets/client-C2WQU9LZ.js","name":"client","src":"virtual:$vinxi/handler/client","isEntry":true,"imports":["_client-KhrFkGyD.js"]}},"ssr":{"_ssr-BgmHWOBt.css":{"file":"assets/ssr-BgmHWOBt.css","src":"_ssr-BgmHWOBt.css"},"_ssr-Dwf2OW9r.js":{"file":"assets/ssr-Dwf2OW9r.js","name":"ssr","dynamicImports":["app/routes/team.tsx?tsr-split=component","app/routes/sermons.tsx?tsr-split=component","app/routes/music.tsx?tsr-split=component","app/routes/events.tsx?tsr-split=component","app/routes/donate.tsx?tsr-split=component","app/routes/contact.tsx?tsr-split=component","app/routes/about.tsx?tsr-split=component","app/routes/index.tsx?tsr-split=component"],"css":["assets/ssr-BgmHWOBt.css"]},"app/routes/about.tsx?tsr-split=component":{"file":"assets/about-CzFvV-7i.js","name":"about","src":"app/routes/about.tsx?tsr-split=component","isDynamicEntry":true},"app/routes/contact.tsx?tsr-split=component":{"file":"assets/contact-D_SEO6t2.js","name":"contact","src":"app/routes/contact.tsx?tsr-split=component","isDynamicEntry":true},"app/routes/donate.tsx?tsr-split=component":{"file":"assets/donate-Bx6kU925.js","name":"donate","src":"app/routes/donate.tsx?tsr-split=component","isDynamicEntry":true},"app/routes/events.tsx?tsr-split=component":{"file":"assets/events-CV_BIea9.js","name":"events","src":"app/routes/events.tsx?tsr-split=component","isDynamicEntry":true},"app/routes/index.tsx?tsr-split=component":{"file":"assets/index-B-ufCL2F.js","name":"index","src":"app/routes/index.tsx?tsr-split=component","isDynamicEntry":true,"imports":["_ssr-Dwf2OW9r.js"]},"app/routes/music.tsx?tsr-split=component":{"file":"assets/music-Badlr5GP.js","name":"music","src":"app/routes/music.tsx?tsr-split=component","isDynamicEntry":true},"app/routes/sermons.tsx?tsr-split=component":{"file":"assets/sermons-zu2_ZZEu.js","name":"sermons","src":"app/routes/sermons.tsx?tsr-split=component","isDynamicEntry":true},"app/routes/team.tsx?tsr-split=component":{"file":"assets/team-DRR5a8GT.js","name":"team","src":"app/routes/team.tsx?tsr-split=component","isDynamicEntry":true},"virtual:$vinxi/handler/ssr":{"file":"ssr.js","name":"ssr","src":"virtual:$vinxi/handler/ssr","isEntry":true,"imports":["_ssr-Dwf2OW9r.js"]}},"server":{"_server-bqJCiR6i.js":{"file":"assets/server-bqJCiR6i.js","name":"server","dynamicImports":["app/functions.ts?tsr-directive-use-server=","app/functions.ts?tsr-directive-use-server="]},"app/functions.ts?tsr-directive-use-server=":{"file":"assets/functions-RHPYwc0W.js","name":"functions","src":"app/functions.ts?tsr-directive-use-server=","isDynamicEntry":true,"imports":["_server-bqJCiR6i.js"]},"virtual:$vinxi/handler/server":{"file":"server.js","name":"server","src":"virtual:$vinxi/handler/server","isEntry":true,"imports":["_server-bqJCiR6i.js"]}}};
+				const buildManifest = {"client":{"__vite-browser-external":{"file":"assets/__vite-browser-external-BIHI7g3E.js","name":"__vite-browser-external","src":"__vite-browser-external","isDynamicEntry":true},"_client-CXCw_QxF.js":{"file":"assets/client-CXCw_QxF.js","name":"client","dynamicImports":["__vite-browser-external","__vite-browser-external","__vite-browser-external","__vite-browser-external","app/routes/team.tsx?tsr-split=component","app/routes/sermons.tsx?tsr-split=component","app/routes/music.tsx?tsr-split=component","app/routes/events.tsx?tsr-split=component","app/routes/donate.tsx?tsr-split=component","app/routes/contact.tsx?tsr-split=component","app/routes/about.tsx?tsr-split=component","app/routes/index.tsx?tsr-split=component"],"css":["assets/client-_niByH3A.css"]},"_client-_niByH3A.css":{"file":"assets/client-_niByH3A.css","src":"_client-_niByH3A.css"},"app/routes/about.tsx?tsr-split=component":{"file":"assets/about-D6JSbcz2.js","name":"about","src":"app/routes/about.tsx?tsr-split=component","isDynamicEntry":true,"imports":["_client-CXCw_QxF.js"]},"app/routes/contact.tsx?tsr-split=component":{"file":"assets/contact-DR1DH3Rh.js","name":"contact","src":"app/routes/contact.tsx?tsr-split=component","isDynamicEntry":true,"imports":["_client-CXCw_QxF.js"]},"app/routes/donate.tsx?tsr-split=component":{"file":"assets/donate-7iry3DSZ.js","name":"donate","src":"app/routes/donate.tsx?tsr-split=component","isDynamicEntry":true,"imports":["_client-CXCw_QxF.js"]},"app/routes/events.tsx?tsr-split=component":{"file":"assets/events-B8gHXw73.js","name":"events","src":"app/routes/events.tsx?tsr-split=component","isDynamicEntry":true,"imports":["_client-CXCw_QxF.js"]},"app/routes/index.tsx?tsr-split=component":{"file":"assets/index-DXnJupVd.js","name":"index","src":"app/routes/index.tsx?tsr-split=component","isDynamicEntry":true,"imports":["_client-CXCw_QxF.js"]},"app/routes/music.tsx?tsr-split=component":{"file":"assets/music--lvVVD2s.js","name":"music","src":"app/routes/music.tsx?tsr-split=component","isDynamicEntry":true,"imports":["_client-CXCw_QxF.js"]},"app/routes/sermons.tsx?tsr-split=component":{"file":"assets/sermons-Cb_7c5zn.js","name":"sermons","src":"app/routes/sermons.tsx?tsr-split=component","isDynamicEntry":true,"imports":["_client-CXCw_QxF.js"]},"app/routes/team.tsx?tsr-split=component":{"file":"assets/team-TIhg94eQ.js","name":"team","src":"app/routes/team.tsx?tsr-split=component","isDynamicEntry":true,"imports":["_client-CXCw_QxF.js"]},"virtual:$vinxi/handler/client":{"file":"assets/client-CXSflu94.js","name":"client","src":"virtual:$vinxi/handler/client","isEntry":true,"imports":["_client-CXCw_QxF.js"]}},"ssr":{"_ssr-C4Ilk3wg.js":{"file":"assets/ssr-C4Ilk3wg.js","name":"ssr","dynamicImports":["app/routes/team.tsx?tsr-split=component","app/routes/sermons.tsx?tsr-split=component","app/routes/music.tsx?tsr-split=component","app/routes/events.tsx?tsr-split=component","app/routes/donate.tsx?tsr-split=component","app/routes/contact.tsx?tsr-split=component","app/routes/about.tsx?tsr-split=component","app/routes/index.tsx?tsr-split=component"],"css":["assets/ssr-_niByH3A.css"]},"_ssr-_niByH3A.css":{"file":"assets/ssr-_niByH3A.css","src":"_ssr-_niByH3A.css"},"app/routes/about.tsx?tsr-split=component":{"file":"assets/about-CzFvV-7i.js","name":"about","src":"app/routes/about.tsx?tsr-split=component","isDynamicEntry":true},"app/routes/contact.tsx?tsr-split=component":{"file":"assets/contact-D_SEO6t2.js","name":"contact","src":"app/routes/contact.tsx?tsr-split=component","isDynamicEntry":true},"app/routes/donate.tsx?tsr-split=component":{"file":"assets/donate-Bx6kU925.js","name":"donate","src":"app/routes/donate.tsx?tsr-split=component","isDynamicEntry":true},"app/routes/events.tsx?tsr-split=component":{"file":"assets/events-CV_BIea9.js","name":"events","src":"app/routes/events.tsx?tsr-split=component","isDynamicEntry":true},"app/routes/index.tsx?tsr-split=component":{"file":"assets/index-DOa1lz9E.js","name":"index","src":"app/routes/index.tsx?tsr-split=component","isDynamicEntry":true,"imports":["_ssr-C4Ilk3wg.js"]},"app/routes/music.tsx?tsr-split=component":{"file":"assets/music-Badlr5GP.js","name":"music","src":"app/routes/music.tsx?tsr-split=component","isDynamicEntry":true},"app/routes/sermons.tsx?tsr-split=component":{"file":"assets/sermons-zu2_ZZEu.js","name":"sermons","src":"app/routes/sermons.tsx?tsr-split=component","isDynamicEntry":true},"app/routes/team.tsx?tsr-split=component":{"file":"assets/team-DRR5a8GT.js","name":"team","src":"app/routes/team.tsx?tsr-split=component","isDynamicEntry":true},"virtual:$vinxi/handler/ssr":{"file":"ssr.js","name":"ssr","src":"virtual:$vinxi/handler/ssr","isEntry":true,"imports":["_ssr-C4Ilk3wg.js"]}},"server":{"_server-bqJCiR6i.js":{"file":"assets/server-bqJCiR6i.js","name":"server","dynamicImports":["app/functions.ts?tsr-directive-use-server=","app/functions.ts?tsr-directive-use-server="]},"app/functions.ts?tsr-directive-use-server=":{"file":"assets/functions-RHPYwc0W.js","name":"functions","src":"app/functions.ts?tsr-directive-use-server=","isDynamicEntry":true,"imports":["_server-bqJCiR6i.js"]},"virtual:$vinxi/handler/server":{"file":"server.js","name":"server","src":"virtual:$vinxi/handler/server","isEntry":true,"imports":["_server-bqJCiR6i.js"]}}};
 
 				const routeManifest = {};
 
@@ -4488,103 +4489,103 @@ app
 ];
 
 const assets = {
-  "/assets/ssr-BgmHWOBt.css": {
+  "/assets/ssr-_niByH3A.css": {
     "type": "text/css; charset=utf-8",
-    "etag": "\"323b-uVj0p67CD0XX78Xp3k9uLbCDsZ8\"",
-    "mtime": "2025-04-01T15:46:32.797Z",
-    "size": 12859,
-    "path": "../public/assets/ssr-BgmHWOBt.css"
+    "etag": "\"1dca-K9I2dABID2FkTXIf2RL0U8556kQ\"",
+    "mtime": "2025-04-01T22:56:36.031Z",
+    "size": 7626,
+    "path": "../public/assets/ssr-_niByH3A.css"
+  },
+  "/_build/.vite/manifest.json": {
+    "type": "application/json",
+    "etag": "\"cb2-kKnlv37+9j/mN0mjT4DaiHcjLh0\"",
+    "mtime": "2025-04-01T22:56:36.024Z",
+    "size": 3250,
+    "path": "../public/_build/.vite/manifest.json"
   },
   "/_build/assets/__vite-browser-external-BIHI7g3E.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"21-TnSDqNzuAbz1l2Zfx/fW4jY7tlk\"",
-    "mtime": "2025-04-01T15:46:32.788Z",
+    "mtime": "2025-04-01T22:56:36.020Z",
     "size": 33,
     "path": "../public/_build/assets/__vite-browser-external-BIHI7g3E.js"
   },
-  "/_build/assets/about-9kxzYOfv.js": {
+  "/_build/assets/about-D6JSbcz2.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"86-KBintAeZIDelzUa84krzH6FIWH4\"",
-    "mtime": "2025-04-01T15:46:32.782Z",
+    "etag": "\"86-eCHxCpJVVCzzyVRYLJkJYvuiuug\"",
+    "mtime": "2025-04-01T22:56:36.021Z",
     "size": 134,
-    "path": "../public/_build/assets/about-9kxzYOfv.js"
+    "path": "../public/_build/assets/about-D6JSbcz2.js"
   },
-  "/_build/assets/client-BgmHWOBt.css": {
-    "type": "text/css; charset=utf-8",
-    "etag": "\"323b-uVj0p67CD0XX78Xp3k9uLbCDsZ8\"",
-    "mtime": "2025-04-01T15:46:32.786Z",
-    "size": 12859,
-    "path": "../public/_build/assets/client-BgmHWOBt.css"
-  },
-  "/_build/assets/client-C2WQU9LZ.js": {
+  "/_build/assets/client-CXCw_QxF.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"3f-GYVK5JDLfZ2MYlFDpkzQo+WWs/o\"",
-    "mtime": "2025-04-01T15:46:32.783Z",
+    "etag": "\"36b33-M7XhP8n35jdX3oB1w8/JDiy2clM\"",
+    "mtime": "2025-04-01T22:56:36.021Z",
+    "size": 224051,
+    "path": "../public/_build/assets/client-CXCw_QxF.js"
+  },
+  "/_build/assets/client-CXSflu94.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"3f-9F+jA4goH+tdKjtteesyccMhfkU\"",
+    "mtime": "2025-04-01T22:56:36.021Z",
     "size": 63,
-    "path": "../public/_build/assets/client-C2WQU9LZ.js"
+    "path": "../public/_build/assets/client-CXSflu94.js"
   },
-  "/_build/assets/client-KhrFkGyD.js": {
-    "type": "text/javascript; charset=utf-8",
-    "etag": "\"36814-xnaAQo2oRHzcFcIsji1nwbma4kg\"",
-    "mtime": "2025-04-01T15:46:32.784Z",
-    "size": 223252,
-    "path": "../public/_build/assets/client-KhrFkGyD.js"
+  "/_build/assets/client-_niByH3A.css": {
+    "type": "text/css; charset=utf-8",
+    "etag": "\"1dca-K9I2dABID2FkTXIf2RL0U8556kQ\"",
+    "mtime": "2025-04-01T22:56:36.021Z",
+    "size": 7626,
+    "path": "../public/_build/assets/client-_niByH3A.css"
   },
-  "/_build/assets/contact-CbWdXpms.js": {
+  "/_build/assets/contact-DR1DH3Rh.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"88-2tGBKvQRwoe0g/KfsK8UlYXrduA\"",
-    "mtime": "2025-04-01T15:46:32.783Z",
+    "etag": "\"88-BlEWJytuAVSvHi392Vp6pHd6hFo\"",
+    "mtime": "2025-04-01T22:56:36.021Z",
     "size": 136,
-    "path": "../public/_build/assets/contact-CbWdXpms.js"
+    "path": "../public/_build/assets/contact-DR1DH3Rh.js"
   },
-  "/_build/assets/donate-BxDSBWD_.js": {
+  "/_build/assets/donate-7iry3DSZ.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"87-UOJpVb5d1080BC/Q/Ob+qYLN1Wg\"",
-    "mtime": "2025-04-01T15:46:32.785Z",
+    "etag": "\"87-cR3ihabaPxgjhKxRsQz1nHdS+Wo\"",
+    "mtime": "2025-04-01T22:56:36.021Z",
     "size": 135,
-    "path": "../public/_build/assets/donate-BxDSBWD_.js"
+    "path": "../public/_build/assets/donate-7iry3DSZ.js"
   },
-  "/_build/assets/events-D6chfjZb.js": {
+  "/_build/assets/events-B8gHXw73.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"87-u/NkrtuIbMn9QaHAcZrNxlmTgBs\"",
-    "mtime": "2025-04-01T15:46:32.785Z",
+    "etag": "\"87-kmkMsVWEiZ2NBTetqV7Tlq7zhh0\"",
+    "mtime": "2025-04-01T22:56:36.021Z",
     "size": 135,
-    "path": "../public/_build/assets/events-D6chfjZb.js"
+    "path": "../public/_build/assets/events-B8gHXw73.js"
   },
-  "/_build/assets/index-B8Kfd46t.js": {
+  "/_build/assets/index-DXnJupVd.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"64e5-enNLPGUVfDCri8fTYRbVBXI7HVY\"",
-    "mtime": "2025-04-01T15:46:32.785Z",
-    "size": 25829,
-    "path": "../public/_build/assets/index-B8Kfd46t.js"
+    "etag": "\"7a1d-cEW3WpGPLfvBOWuYTDRWIR1Xx9E\"",
+    "mtime": "2025-04-01T22:56:36.022Z",
+    "size": 31261,
+    "path": "../public/_build/assets/index-DXnJupVd.js"
   },
-  "/_build/assets/music-ENByoFX-.js": {
+  "/_build/assets/music--lvVVD2s.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"86-EAz2cQsHPJ0Cn0B1E8BDqmb3MC0\"",
-    "mtime": "2025-04-01T15:46:32.785Z",
+    "etag": "\"86-TTbzsss4d9gdzVmgzvTmrRiYUo0\"",
+    "mtime": "2025-04-01T22:56:36.024Z",
     "size": 134,
-    "path": "../public/_build/assets/music-ENByoFX-.js"
+    "path": "../public/_build/assets/music--lvVVD2s.js"
   },
-  "/_build/assets/sermons-Bu4jDh1a.js": {
+  "/_build/assets/sermons-Cb_7c5zn.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"88-+5kDQ8LYexMj/ELivLvghy7dMlQ\"",
-    "mtime": "2025-04-01T15:46:32.786Z",
+    "etag": "\"88-oBl3t7jpCBoSE5CZIc6Smee4SRM\"",
+    "mtime": "2025-04-01T22:56:36.024Z",
     "size": 136,
-    "path": "../public/_build/assets/sermons-Bu4jDh1a.js"
+    "path": "../public/_build/assets/sermons-Cb_7c5zn.js"
   },
-  "/_build/assets/team-CfAXnfHo.js": {
+  "/_build/assets/team-TIhg94eQ.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"85-GKpkx6URS1blzpJ4LMEZ0Ic3nfs\"",
-    "mtime": "2025-04-01T15:46:32.786Z",
+    "etag": "\"85-8D5qLwyHwl8bR6d4YKbmN177w0U\"",
+    "mtime": "2025-04-01T22:56:36.024Z",
     "size": 133,
-    "path": "../public/_build/assets/team-CfAXnfHo.js"
-  },
-  "/_build/.vite/manifest.json": {
-    "type": "application/json",
-    "etag": "\"cb2-HJNlUljB99fABhYtWcV35U3ku4Q\"",
-    "mtime": "2025-04-01T15:46:32.782Z",
-    "size": 3250,
-    "path": "../public/_build/.vite/manifest.json"
+    "path": "../public/_build/assets/team-TIhg94eQ.js"
   }
 };
 
@@ -4978,24 +4979,24 @@ function j(e) {
   return new Response(JSON.stringify(n), { status: 200, headers: { "Content-Type": "application/json", ...t || {} } });
 }
 
-function ye(e) {
+function ge(e) {
   return jsx(RouterProvider, { router: e.router });
 }
-var dt = " daum[ /]| deusu/| yadirectfetcher|(?:^|[^g])news(?!sapphire)|(?<! (?:channel/|google/))google(?!(app|/google| pixel))|(?<! cu)bots?(?:\\b|_)|(?<!(?:lib))http|(?<![hg]m)score|@[a-z][\\w-]+\\.|\\(\\)|\\.com\\b|\\btime/|\\||^<|^[\\w \\.\\-\\(?:\\):%]+(?:/v?\\d+(?:\\.\\d+)?(?:\\.\\d{1,10})*?)?(?:,|$)|^[^ ]{50,}$|^\\d+\\b|^\\w*search\\b|^\\w+/[\\w\\(\\)]*$|^active|^ad muncher|^amaya|^avsdevicesdk/|^biglotron|^bot|^bw/|^clamav[ /]|^client/|^cobweb/|^custom|^ddg[_-]android|^discourse|^dispatch/\\d|^downcast/|^duckduckgo|^email|^facebook|^getright/|^gozilla/|^hobbit|^hotzonu|^hwcdn/|^igetter/|^jeode/|^jetty/|^jigsaw|^microsoft bits|^movabletype|^mozilla/\\d\\.\\d\\s[\\w\\.-]+$|^mozilla/\\d\\.\\d\\s\\(compatible;?(?:\\s\\w+\\/\\d+\\.\\d+)?\\)$|^navermailapp|^netsurf|^offline|^openai/|^owler|^php|^postman|^python|^rank|^read|^reed|^rest|^rss|^snapchat|^space bison|^svn|^swcd |^taringa|^thumbor/|^track|^w3c|^webbandit/|^webcopier|^wget|^whatsapp|^wordpress|^xenu link sleuth|^yahoo|^yandex|^zdm/\\d|^zoom marketplace/|^{{.*}}$|adscanner/|analyzer|archive|ask jeeves/teoma|audit|bit\\.ly/|bluecoat drtr|browsex|burpcollaborator|capture|catch|check\\b|checker|chrome-lighthouse|chromeframe|classifier|cloudflare|convertify|cookiehubscan|crawl|cypress/|dareboost|datanyze|dejaclick|detect|dmbrowser|download|evc-batch/|exaleadcloudview|feed|firephp|functionize|gomezagent|headless|httrack|hubspot marketing grader|hydra|ibisbrowser|infrawatch|insight|inspect|iplabel|ips-agent|java(?!;)|jsjcw_scanner|library|linkcheck|mail\\.ru/|manager|measure|neustar wpm|node|nutch|offbyone|optimize|pageburst|pagespeed|parser|perl|phantomjs|pingdom|powermarks|preview|proxy|ptst[ /]\\d|retriever|rexx;|rigor|rss\\b|scanner\\.|scrape|server|sogou|sparkler/|speedcurve|spider|splash|statuscake|supercleaner|synapse|synthetic|tools|torrent|transcoder|url|validator|virtuoso|wappalyzer|webglance|webkit2png|whatcms/|zgrab", ft = /bot|crawl|http|lighthouse|scan|search|spider/i, U;
-function pt() {
+var mt = " daum[ /]| deusu/| yadirectfetcher|(?:^|[^g])news(?!sapphire)|(?<! (?:channel/|google/))google(?!(app|/google| pixel))|(?<! cu)bots?(?:\\b|_)|(?<!(?:lib))http|(?<![hg]m)score|@[a-z][\\w-]+\\.|\\(\\)|\\.com\\b|\\btime/|\\||^<|^[\\w \\.\\-\\(?:\\):%]+(?:/v?\\d+(?:\\.\\d+)?(?:\\.\\d{1,10})*?)?(?:,|$)|^[^ ]{50,}$|^\\d+\\b|^\\w*search\\b|^\\w+/[\\w\\(\\)]*$|^active|^ad muncher|^amaya|^avsdevicesdk/|^biglotron|^bot|^bw/|^clamav[ /]|^client/|^cobweb/|^custom|^ddg[_-]android|^discourse|^dispatch/\\d|^downcast/|^duckduckgo|^email|^facebook|^getright/|^gozilla/|^hobbit|^hotzonu|^hwcdn/|^igetter/|^jeode/|^jetty/|^jigsaw|^microsoft bits|^movabletype|^mozilla/\\d\\.\\d\\s[\\w\\.-]+$|^mozilla/\\d\\.\\d\\s\\(compatible;?(?:\\s\\w+\\/\\d+\\.\\d+)?\\)$|^navermailapp|^netsurf|^offline|^openai/|^owler|^php|^postman|^python|^rank|^read|^reed|^rest|^rss|^snapchat|^space bison|^svn|^swcd |^taringa|^thumbor/|^track|^w3c|^webbandit/|^webcopier|^wget|^whatsapp|^wordpress|^xenu link sleuth|^yahoo|^yandex|^zdm/\\d|^zoom marketplace/|^{{.*}}$|adscanner/|analyzer|archive|ask jeeves/teoma|audit|bit\\.ly/|bluecoat drtr|browsex|burpcollaborator|capture|catch|check\\b|checker|chrome-lighthouse|chromeframe|classifier|cloudflare|convertify|cookiehubscan|crawl|cypress/|dareboost|datanyze|dejaclick|detect|dmbrowser|download|evc-batch/|exaleadcloudview|feed|firephp|functionize|gomezagent|headless|httrack|hubspot marketing grader|hydra|ibisbrowser|infrawatch|insight|inspect|iplabel|ips-agent|java(?!;)|jsjcw_scanner|library|linkcheck|mail\\.ru/|manager|measure|neustar wpm|node|nutch|offbyone|optimize|pageburst|pagespeed|parser|perl|phantomjs|pingdom|powermarks|preview|proxy|ptst[ /]\\d|retriever|rexx;|rigor|rss\\b|scanner\\.|scrape|server|sogou|sparkler/|speedcurve|spider|splash|statuscake|supercleaner|synapse|synthetic|tools|torrent|transcoder|url|validator|virtuoso|wappalyzer|webglance|webkit2png|whatcms/|zgrab", yt = /bot|crawl|http|lighthouse|scan|search|spider/i, U;
+function gt() {
   if (U instanceof RegExp) return U;
   try {
-    U = new RegExp(dt, "i");
+    U = new RegExp(mt, "i");
   } catch {
-    U = ft;
+    U = yt;
   }
   return U;
 }
-function ge(e) {
-  return !!e && pt().test(e);
+function _e(e) {
+  return !!e && gt().test(e);
 }
 const q = "__TSR_index";
-function ht(e) {
+function _t(e) {
   let r = e.getLocation();
   const t = /* @__PURE__ */ new Set(), n = (s) => {
     r = e.getLocation(), t.forEach((i) => i({ location: r, action: s }));
@@ -5011,8 +5012,8 @@ function ht(e) {
     }
     const f = (_b = (d = e.getBlockers) == null ? void 0 : d.call(e)) != null ? _b : [], b = c.type === "PUSH" || c.type === "REPLACE";
     if (typeof document < "u" && f.length && b) for (const N of f) {
-      const H = Ce(c.path, c.state);
-      if (await N.blockerFn({ currentLocation: r, nextLocation: H, action: c.type })) {
+      const k = Ee(c.path, c.state);
+      if (await N.blockerFn({ currentLocation: r, nextLocation: k, action: c.type })) {
         (p = e.onBlocked) == null || p.call(e);
         return;
       }
@@ -5070,13 +5071,13 @@ function ht(e) {
   }, notify: n };
 }
 function ie(e, r) {
-  return r || (r = {}), { ...r, key: Ee(), [q]: e };
+  return r || (r = {}), { ...r, key: je(), [q]: e };
 }
-function mt(e = { initialEntries: ["/"] }) {
+function St(e = { initialEntries: ["/"] }) {
   const r = e.initialEntries;
   let t = e.initialIndex ? Math.min(Math.max(e.initialIndex, 0), r.length - 1) : r.length - 1;
   const n = r.map((a, s) => ie(s, void 0));
-  return ht({ getLocation: () => Ce(r[t], n[t]), getLength: () => r.length, pushState: (a, s) => {
+  return _t({ getLocation: () => Ee(r[t], n[t]), getLength: () => r.length, pushState: (a, s) => {
     t < r.length - 1 && (r.splice(t + 1), n.splice(t + 1)), n.push(s), r.push(a), t = Math.max(r.length - 1, 0);
   }, replaceState: (a, s) => {
     n[t] = s, r[t] = a;
@@ -5088,34 +5089,34 @@ function mt(e = { initialEntries: ["/"] }) {
     t = Math.min(Math.max(t + a, 0), r.length - 1);
   }, createHref: (a) => a });
 }
-function Ce(e, r) {
+function Ee(e, r) {
   const t = e.indexOf("#"), n = e.indexOf("?");
-  return { href: e, pathname: e.substring(0, t > 0 ? n > 0 ? Math.min(t, n) : t : n > 0 ? n : e.length), hash: t > -1 ? e.substring(t) : "", search: n > -1 ? e.slice(n, t === -1 ? void 0 : t) : "", state: r || { [q]: 0, key: Ee() } };
+  return { href: e, pathname: e.substring(0, t > 0 ? n > 0 ? Math.min(t, n) : t : n > 0 ? n : e.length), hash: t > -1 ? e.substring(t) : "", search: n > -1 ? e.slice(n, t === -1 ? void 0 : t) : "", state: r || { [q]: 0, key: je() } };
 }
-function Ee() {
+function je() {
   return (Math.random() + 1).toString(36).substring(7);
 }
-var yt = "Invariant failed";
+var wt = "Invariant failed";
 function ue(e, r) {
-  if (!e) throw new Error(yt);
+  if (!e) throw new Error(wt);
 }
-function gt(e, r) {
+function vt(e, r) {
   return r.reduce((t, n) => (t[n] = e[n], t), {});
 }
 function O(e) {
-  if (!_e(e)) return false;
+  if (!Se(e)) return false;
   const r = e.constructor;
   if (typeof r > "u") return true;
   const t = r.prototype;
-  return !(!_e(t) || !t.hasOwnProperty("isPrototypeOf"));
+  return !(!Se(t) || !t.hasOwnProperty("isPrototypeOf"));
 }
-function _e(e) {
+function Se(e) {
   return Object.prototype.toString.call(e) === "[object Object]";
 }
-function _t(e) {
+function bt(e) {
   return Array.isArray(e) && e.length === Object.keys(e).length;
 }
-function St(e) {
+function xt(e) {
   let r, t;
   const n = new Promise((o, a) => {
     r = o, t = a;
@@ -5126,38 +5127,38 @@ function St(e) {
     n.status = "rejected", t(o);
   }, n;
 }
-function je(e) {
+function Te(e) {
   return !!(e == null ? void 0 : e.isNotFound);
 }
-function wt(e, r) {
+function Rt(e, r) {
   let t, n, o, a = "";
   for (t in e) if ((o = e[t]) !== void 0) if (Array.isArray(o)) for (n = 0; n < o.length; n++) a && (a += "&"), a += encodeURIComponent(t) + "=" + encodeURIComponent(o[n]);
   else a && (a += "&"), a += encodeURIComponent(t) + "=" + encodeURIComponent(o);
   return "" + a;
 }
-function Te(e) {
+function Pe(e) {
   return !!(e == null ? void 0 : e.isRedirect);
 }
-function vt(e) {
+function Ct(e) {
   return e instanceof Error ? { name: e.name, message: e.message } : { data: e };
 }
 const F = Symbol.for("TSR_DEFERRED_PROMISE");
-function bt(e, r) {
+function Et(e, r) {
   const t = e;
   return t[F] || (t[F] = { status: "pending" }, t.then((n) => {
     t[F].status = "success", t[F].data = n;
   }).catch((n) => {
-    t[F].status = "error", t[F].error = { data: vt(n), __isServerError: true };
+    t[F].status = "error", t[F].error = { data: Ct(n), __isServerError: true };
   })), t;
 }
-function Rt(e, r) {
-  return Pe(e, r);
+function jt(e, r) {
+  return $e(e, r);
 }
-function xt(e, r) {
-  return Readable.fromWeb(Pe(e, Readable.toWeb(r)));
+function Tt(e, r) {
+  return Readable.fromWeb($e(e, Readable.toWeb(r)));
 }
-const Ct = /(<body)/, Et = /(<\/body>)/, jt = /(<\/html>)/, Tt = /(<head.*?>)/, Pt = /(<\/[a-zA-Z][\w:.-]*?>)/g, $t = new TextDecoder();
-function At() {
+const Pt = /(<body)/, $t = /(<\/body>)/, At = /(<\/html>)/, Ft = /(<head.*?>)/, Ot = /(<\/[a-zA-Z][\w:.-]*?>)/g, kt = new TextDecoder();
+function Ht() {
   let e;
   const r = new TextEncoder(), n = { stream: new ReadableStream$1({ start(o) {
     e = o;
@@ -5170,7 +5171,7 @@ function At() {
   }, destroyed: false };
   return n;
 }
-async function Ft(e, r) {
+async function It(e, r) {
   var t, n, o;
   try {
     const a = e.getReader();
@@ -5181,27 +5182,27 @@ async function Ft(e, r) {
     (o = r.onError) == null || o.call(r, a);
   }
 }
-function Pe(e, r) {
-  const t = At();
+function $e(e, r) {
+  const t = Ht();
   let n = true, o = "", a = "", s = false, i = false, c = "", d = "";
   function p() {
     const h = o;
     return o = "", h;
   }
   function m(h) {
-    return h instanceof Uint8Array ? $t.decode(h) : String(h);
+    return h instanceof Uint8Array ? kt.decode(h) : String(h);
   }
-  const f = St();
+  const f = xt();
   let b = 0;
   e.serverSsr.injectedHtml.forEach((h) => {
-    H(h);
+    k(h);
   });
   const N = e.subscribe("onInjectedHtml", (h) => {
-    H(h.promise);
+    k(h.promise);
   });
-  function H(h) {
-    b++, h.then((k) => {
-      s ? t.write(k) : o += k;
+  function k(h) {
+    b++, h.then((H) => {
+      s ? t.write(H) : o += H;
     }).catch(f.reject).finally(() => {
       b--, !n && b === 0 && (N(), f.resolve());
     });
@@ -5211,12 +5212,12 @@ function Pe(e, r) {
     t.end(h);
   }).catch((h) => {
     console.error("Error reading routerStream:", h), t.destroy(h);
-  }), Ft(r, { onData: (h) => {
-    const k = m(h.value);
-    let _ = c + k;
-    const z = _.match(Et), G = _.match(jt);
-    if (s || _.match(Ct) && (s = true), !i) {
-      const y = _.match(Tt);
+  }), It(r, { onData: (h) => {
+    const H = m(h.value);
+    let _ = c + H;
+    const z = _.match($t), G = _.match(At);
+    if (s || _.match(Pt) && (s = true), !i) {
+      const y = _.match(Ft);
       if (y) {
         i = true;
         const l = y.index, u = y[0], S = _.slice(l + u.length);
@@ -5233,7 +5234,7 @@ function Pe(e, r) {
       return;
     }
     let L, I = 0;
-    for (; (L = Pt.exec(_)) !== null; ) I = L.index + L[0].length;
+    for (; (L = Ot.exec(_)) !== null; ) I = L.index + L[0].length;
     if (I > 0) {
       const y = _.slice(0, I) + p() + d;
       t.write(y), c = _.slice(I);
@@ -5244,8 +5245,8 @@ function Pe(e, r) {
     console.error("Error reading appStream:", h), t.destroy(h);
   } }), t.stream;
 }
-function $e(e) {
-  if (Array.isArray(e)) return e.flatMap((p) => $e(p));
+function Ae(e) {
+  if (Array.isArray(e)) return e.flatMap((p) => Ae(p));
   if (typeof e != "string") return [];
   const r = [];
   let t = 0, n, o, a, s, i;
@@ -5262,13 +5263,13 @@ function $e(e) {
   }
   return r;
 }
-function Ot(e) {
+function Mt(e) {
   return e instanceof Headers ? new Headers(e) : Array.isArray(e) ? new Headers(e) : typeof e == "object" ? new Headers(e) : new Headers();
 }
 function W(...e) {
   return e.reduce((r, t) => {
-    const n = Ot(t);
-    for (const [o, a] of n.entries()) o === "set-cookie" ? $e(a).forEach((i) => r.append("set-cookie", i)) : r.set(o, a);
+    const n = Mt(t);
+    for (const [o, a] of n.entries()) o === "set-cookie" ? Ae(a).forEach((i) => r.append("set-cookie", i)) : r.set(o, a);
     return r;
   }, new Headers());
 }
@@ -5306,51 +5307,51 @@ const v = { stringify: (e) => JSON.stringify(e, function(t, n) {
     Array.isArray(n) ? n.forEach((o) => r.append(t, o)) : r.append(t, n);
   }), r;
 }), J("bigint", (e) => typeof e == "bigint", (e) => e.toString(), (e) => BigInt(e))];
-const Ht = [];
+const Dt = [];
 function K(e, r) {
   const t = r || e || {};
   return typeof t.method > "u" && (t.method = "GET"), { options: t, middleware: (n) => K(void 0, Object.assign(t, { middleware: n })), validator: (n) => K(void 0, Object.assign(t, { validator: n })), type: (n) => K(void 0, Object.assign(t, { type: n })), handler: (...n) => {
     const [o, a] = n;
     Object.assign(t, { ...o, extractedFn: o, serverFn: a });
-    const s = [...t.middleware || [], Nt(t)];
-    return Object.assign(async (i) => Se(s, "client", { ...o, ...t, data: i == null ? void 0 : i.data, headers: i == null ? void 0 : i.headers, signal: i == null ? void 0 : i.signal, context: {} }).then((c) => {
+    const s = [...t.middleware || [], Jt(t)];
+    return Object.assign(async (i) => we(s, "client", { ...o, ...t, data: i == null ? void 0 : i.data, headers: i == null ? void 0 : i.headers, signal: i == null ? void 0 : i.signal, context: {} }).then((c) => {
       if (t.response === "full") return c;
       if (c.error) throw c.error;
       return c.result;
     }), { ...o, __executeServer: async (i, c) => {
-      const d = i instanceof FormData ? It(i) : i;
+      const d = i instanceof FormData ? Nt(i) : i;
       d.type = typeof t.type == "function" ? t.type(d) : t.type;
-      const p = { ...o, ...d, signal: c }, m = () => Se(s, "server", p).then((f) => ({ result: f.result, error: f.error, context: f.sendContext }));
+      const p = { ...o, ...d, signal: c }, m = () => we(s, "server", p).then((f) => ({ result: f.result, error: f.error, context: f.sendContext }));
       if (p.type === "static") {
         let f;
-        if ((R == null ? void 0 : R.getItem) && (f = await R.getItem(p)), f || (f = await m().then((b) => ({ ctx: b, error: null })).catch((b) => ({ ctx: void 0, error: b })), (R == null ? void 0 : R.setItem) && await R.setItem(p, f)), ue(f), f.error) throw f.error;
+        if ((x == null ? void 0 : x.getItem) && (f = await x.getItem(p)), f || (f = await m().then((b) => ({ ctx: b, error: null })).catch((b) => ({ ctx: void 0, error: b })), (x == null ? void 0 : x.setItem) && await x.setItem(p, f)), ue(f), f.error) throw f.error;
         return f.ctx;
       }
       return m();
     } });
   } };
 }
-async function Se(e, r, t) {
-  const n = Dt([...Ht, ...e]), o = async (a) => {
+async function we(e, r, t) {
+  const n = zt([...Dt, ...e]), o = async (a) => {
     const s = n.shift();
     if (!s) return a;
-    s.options.validator && (r !== "client" || s.options.validateClient) && (a.data = await Bt(s.options.validator, a.data));
+    s.options.validator && (r !== "client" || s.options.validateClient) && (a.data = await Ut(s.options.validator, a.data));
     const i = r === "client" ? s.options.client : s.options.server;
-    return i ? Mt(i, a, async (c) => o(c).catch((d) => {
-      if (Te(d) || je(d)) return { ...c, error: d };
+    return i ? Lt(i, a, async (c) => o(c).catch((d) => {
+      if (Pe(d) || Te(d)) return { ...c, error: d };
       throw d;
     })) : o(a);
   };
   return o({ ...t, headers: t.headers || {}, sendContext: t.sendContext || {}, context: t.context || {} });
 }
-let R;
-function kt(e) {
-  const r = R;
-  return R = typeof e == "function" ? e() : e, () => {
-    R = r;
+let x;
+function Bt(e) {
+  const r = x;
+  return x = typeof e == "function" ? e() : e, () => {
+    x = r;
   };
 }
-kt(() => {
+Bt(() => {
   const e = (n, o) => `/__tsr/staticServerFnCache/${n.functionId}__${o}.json`, r = (n) => JSON.stringify(n != null ? n : "", (s, i) => i && typeof i == "object" && !Array.isArray(i) ? Object.keys(i).sort().reduce((c, d) => (c[d] = i[d], c), {}) : i).replace(/[/\\?%*:|"<>]/g, "-").replace(/\s+/g, "_"), t = typeof document < "u" ? /* @__PURE__ */ new Map() : null;
   return { getItem: async (n) => {
     if (typeof document > "u") {
@@ -5367,7 +5368,7 @@ kt(() => {
     return s || (s = await fetch(a, { method: "GET" }).then((i) => i.text()).then((i) => v.parse(i)), t == null ? void 0 : t.set(a, s)), s;
   } };
 });
-function It(e) {
+function Nt(e) {
   const r = e.get("__TSR_CONTEXT");
   if (e.delete("__TSR_CONTEXT"), typeof r != "string") return { context: {}, data: e };
   try {
@@ -5376,7 +5377,7 @@ function It(e) {
     return { data: e };
   }
 }
-function Dt(e) {
+function zt(e) {
   const r = /* @__PURE__ */ new Set(), t = [], n = (o) => {
     o.forEach((a) => {
       a.options.middleware && n(a.options.middleware), r.has(a) || (r.add(a), t.push(a));
@@ -5384,11 +5385,11 @@ function Dt(e) {
   };
   return n(e), t;
 }
-const Mt = async (e, r, t) => e({ ...r, next: async (n = {}) => {
+const Lt = async (e, r, t) => e({ ...r, next: async (n = {}) => {
   var _a, _b;
   return t({ ...r, ...n, context: { ...r.context, ...n.context }, sendContext: { ...r.sendContext, ...(_a = n.sendContext) != null ? _a : {} }, headers: W(r.headers, n.headers), result: n.result !== void 0 ? n.result : r.response === "raw" ? n : r.result, error: (_b = n.error) != null ? _b : r.error });
 } });
-function Bt(e, r) {
+function Ut(e, r) {
   if (e == null) return {};
   if ("~standard" in e) {
     const t = e["~standard"].validate(r);
@@ -5400,13 +5401,13 @@ function Bt(e, r) {
   if (typeof e == "function") return e(r);
   throw new Error("Invalid validator type!");
 }
-function Nt(e) {
+function Jt(e) {
   return { _types: void 0, options: { validator: e.validator, validateClient: e.validateClient, client: async ({ next: r, sendContext: t, ...n }) => {
     var o;
     const a = { ...n, context: t, type: typeof n.type == "function" ? n.type(n) : n.type };
     if (n.type === "static" && typeof document < "u") {
-      ue(R);
-      const i = await R.fetchItem(a);
+      ue(x);
+      const i = await x.fetchItem(a);
       if (i) {
         if (i.error) throw i.error;
         return r(i.ctx);
@@ -5421,13 +5422,13 @@ function Nt(e) {
     return r({ ...t, result: o });
   } } };
 }
-function zt(e) {
+function qt(e) {
   return e && e.__esModule && Object.prototype.hasOwnProperty.call(e, "default") ? e.default : e;
 }
-var se, we;
-function Lt() {
-  if (we) return se;
-  we = 1;
+var se, ve;
+function Kt() {
+  if (ve) return se;
+  ve = 1;
   const e = {}, r = e.hasOwnProperty, t = (l, u) => {
     for (const S in l) r.call(l, S) && u(S, l[S]);
   }, n = (l, u) => (u && t(u, (S, j) => {
@@ -5439,97 +5440,97 @@ function Lt() {
   }, a = (l) => "\\u" + ("0000" + l).slice(-4), s = (l, u) => {
     let S = l.toString(16);
     return u ? S : S.toUpperCase();
-  }, i = e.toString, c = Array.isArray, d = (l) => typeof Buffer == "function" && Buffer.isBuffer(l), p = (l) => i.call(l) == "[object Object]", m = (l) => typeof l == "string" || i.call(l) == "[object String]", f = (l) => typeof l == "number" || i.call(l) == "[object Number]", b = (l) => typeof l == "bigint", N = (l) => typeof l == "function", H = (l) => i.call(l) == "[object Map]", h = (l) => i.call(l) == "[object Set]", k = { "\\": "\\\\", "\b": "\\b", "\f": "\\f", "\n": "\\n", "\r": "\\r", "	": "\\t" }, _ = /[\\\b\f\n\r\t]/, z = /[0-9]/, G = /[\xA0\u1680\u2000-\u200A\u2028\u2029\u202F\u205F\u3000]/, L = /([\uD800-\uDBFF][\uDC00-\uDFFF])|([\uD800-\uDFFF])|(['"`])|[^]/g, I = /([\uD800-\uDBFF][\uDC00-\uDFFF])|([\uD800-\uDFFF])|(['"`])|[^ !#-&\(-\[\]-_a-~]/g, y = (l, u) => {
+  }, i = e.toString, c = Array.isArray, d = (l) => typeof Buffer == "function" && Buffer.isBuffer(l), p = (l) => i.call(l) == "[object Object]", m = (l) => typeof l == "string" || i.call(l) == "[object String]", f = (l) => typeof l == "number" || i.call(l) == "[object Number]", b = (l) => typeof l == "bigint", N = (l) => typeof l == "function", k = (l) => i.call(l) == "[object Map]", h = (l) => i.call(l) == "[object Set]", H = { "\\": "\\\\", "\b": "\\b", "\f": "\\f", "\n": "\\n", "\r": "\\r", "	": "\\t" }, _ = /[\\\b\f\n\r\t]/, z = /[0-9]/, G = /[\xA0\u1680\u2000-\u200A\u2028\u2029\u202F\u205F\u3000]/, L = /([\uD800-\uDBFF][\uDC00-\uDFFF])|([\uD800-\uDFFF])|(['"`])|[^]/g, I = /([\uD800-\uDBFF][\uDC00-\uDFFF])|([\uD800-\uDFFF])|(['"`])|[^ !#-&\(-\[\]-_a-~]/g, y = (l, u) => {
     const S = () => {
       ne = X, ++u.indentLevel, X = u.indent.repeat(u.indentLevel);
     }, j = { escapeEverything: false, minimal: false, isScriptContext: false, quotes: "single", wrap: false, es6: false, json: false, compact: true, lowercaseHex: false, numbers: "decimal", indent: "	", indentLevel: 0, __inline1__: false, __inline2__: false }, T = u && u.json;
     T && (j.quotes = "double", j.wrap = true), u = n(j, u), u.quotes != "single" && u.quotes != "double" && u.quotes != "backtick" && (u.quotes = "single");
-    const V = u.quotes == "double" ? '"' : u.quotes == "backtick" ? "`" : "'", A = u.compact, D = u.lowercaseHex;
+    const V = u.quotes == "double" ? '"' : u.quotes == "backtick" ? "`" : "'", A = u.compact, M = u.lowercaseHex;
     let X = u.indent.repeat(u.indentLevel), ne = "";
-    const Le = u.__inline1__, Z = u.__inline2__, M = A ? "" : `
+    const Je = u.__inline1__, Q = u.__inline2__, D = A ? "" : `
 `;
-    let w, Q = true;
-    const Ue = u.numbers == "binary", Je = u.numbers == "octal", qe = u.numbers == "decimal", Ke = u.numbers == "hexadecimal";
+    let w, Z = true;
+    const qe = u.numbers == "binary", Ke = u.numbers == "octal", We = u.numbers == "decimal", Ge = u.numbers == "hexadecimal";
     if (T && l && N(l.toJSON) && (l = l.toJSON()), !m(l)) {
-      if (H(l)) return l.size == 0 ? "new Map()" : (A || (u.__inline1__ = true, u.__inline2__ = false), "new Map(" + y(Array.from(l), u) + ")");
+      if (k(l)) return l.size == 0 ? "new Map()" : (A || (u.__inline1__ = true, u.__inline2__ = false), "new Map(" + y(Array.from(l), u) + ")");
       if (h(l)) return l.size == 0 ? "new Set()" : "new Set(" + y(Array.from(l), u) + ")";
       if (d(l)) return l.length == 0 ? "Buffer.from([])" : "Buffer.from(" + y(Array.from(l), u) + ")";
-      if (c(l)) return w = [], u.wrap = true, Le && (u.__inline1__ = false, u.__inline2__ = true), Z || S(), o(l, (g) => {
-        Q = false, Z && (u.__inline2__ = false), w.push((A || Z ? "" : X) + y(g, u));
-      }), Q ? "[]" : Z ? "[" + w.join(", ") + "]" : "[" + M + w.join("," + M) + M + (A ? "" : ne) + "]";
+      if (c(l)) return w = [], u.wrap = true, Je && (u.__inline1__ = false, u.__inline2__ = true), Q || S(), o(l, (g) => {
+        Z = false, Q && (u.__inline2__ = false), w.push((A || Q ? "" : X) + y(g, u));
+      }), Z ? "[]" : Q ? "[" + w.join(", ") + "]" : "[" + D + w.join("," + D) + D + (A ? "" : ne) + "]";
       if (f(l) || b(l)) {
         if (T) return JSON.stringify(Number(l));
         let g;
-        if (qe) g = String(l);
-        else if (Ke) {
-          let C = l.toString(16);
-          D || (C = C.toUpperCase()), g = "0x" + C;
-        } else Ue ? g = "0b" + l.toString(2) : Je && (g = "0o" + l.toString(8));
+        if (We) g = String(l);
+        else if (Ge) {
+          let R = l.toString(16);
+          M || (R = R.toUpperCase()), g = "0x" + R;
+        } else qe ? g = "0b" + l.toString(2) : Ke && (g = "0o" + l.toString(8));
         return b(l) ? g + "n" : g;
-      } else return b(l) ? T ? JSON.stringify(Number(l)) : l + "n" : p(l) ? (w = [], u.wrap = true, S(), t(l, (g, C) => {
-        Q = false, w.push((A ? "" : X) + y(g, u) + ":" + (A ? "" : " ") + y(C, u));
-      }), Q ? "{}" : "{" + M + w.join("," + M) + M + (A ? "" : ne) + "}") : T ? JSON.stringify(l) || "null" : String(l);
+      } else return b(l) ? T ? JSON.stringify(Number(l)) : l + "n" : p(l) ? (w = [], u.wrap = true, S(), t(l, (g, R) => {
+        Z = false, w.push((A ? "" : X) + y(g, u) + ":" + (A ? "" : " ") + y(R, u));
+      }), Z ? "{}" : "{" + D + w.join("," + D) + D + (A ? "" : ne) + "}") : T ? JSON.stringify(l) || "null" : String(l);
     }
-    const We = u.escapeEverything ? L : I;
-    return w = l.replace(We, (g, C, de, Y, Ge, Ve) => {
-      if (C) {
-        if (u.minimal) return C;
-        const fe = C.charCodeAt(0), pe = C.charCodeAt(1);
+    const Ve = u.escapeEverything ? L : I;
+    return w = l.replace(Ve, (g, R, de, Y, Xe, Qe) => {
+      if (R) {
+        if (u.minimal) return R;
+        const fe = R.charCodeAt(0), pe = R.charCodeAt(1);
         if (u.es6) {
-          const Xe = (fe - 55296) * 1024 + pe - 56320 + 65536;
-          return "\\u{" + s(Xe, D) + "}";
+          const Ze = (fe - 55296) * 1024 + pe - 56320 + 65536;
+          return "\\u{" + s(Ze, M) + "}";
         }
-        return a(s(fe, D)) + a(s(pe, D));
+        return a(s(fe, M)) + a(s(pe, M));
       }
-      if (de) return a(s(de.charCodeAt(0), D));
-      if (g == "\0" && !T && !z.test(Ve.charAt(Ge + 1))) return "\\0";
+      if (de) return a(s(de.charCodeAt(0), M));
+      if (g == "\0" && !T && !z.test(Qe.charAt(Xe + 1))) return "\\0";
       if (Y) return Y == V || u.escapeEverything ? "\\" + Y : Y;
-      if (_.test(g)) return k[g];
+      if (_.test(g)) return H[g];
       if (u.minimal && !G.test(g)) return g;
-      const oe = s(g.charCodeAt(0), D);
+      const oe = s(g.charCodeAt(0), M);
       return T || oe.length > 2 ? a(oe) : "\\x" + ("00" + oe).slice(-2);
     }), V == "`" && (w = w.replace(/\$\{/g, "\\${")), u.isScriptContext && (w = w.replace(/<\/(script|style)/gi, "<\\/$1").replace(/<!--/g, T ? "\\u003C!--" : "\\x3C!--")), u.wrap && (w = V + w + V), w;
   };
   return y.version = "3.0.2", se = y, se;
 }
-var Ut = Lt();
-const B = zt(Ut), Jt = `const __TSR_SSR__={matches:[],streamedValues:{},initMatch:o=>(__TSR_SSR__.matches.push(o),o.extracted?.forEach(l=>{if(l.type==="stream"){let r;l.value=new ReadableStream({start(e){r={enqueue:t=>{try{e.enqueue(t)}catch{}},close:()=>{try{e.close()}catch{}}}}}),l.value.controller=r}else{let r,e;l.value=new Promise((t,a)=>{e=a,r=t}),l.value.reject=e,l.value.resolve=r}}),!0),resolvePromise:({matchId:o,id:l,promiseState:r})=>{const e=__TSR_SSR__.matches.find(t=>t.id===o);if(e){const t=e.extracted?.[l];if(t&&t.type==="promise"&&t.value&&r.status==="success")return t.value.resolve(r.data),!0}return!1},injectChunk:({matchId:o,id:l,chunk:r})=>{const e=__TSR_SSR__.matches.find(t=>t.id===o);if(e){const t=e.extracted?.[l];if(t&&t.type==="stream"&&t.value?.controller)return t.value.controller.enqueue(new TextEncoder().encode(r.toString())),!0}return!1},closeStream:({matchId:o,id:l})=>{const r=__TSR_SSR__.matches.find(e=>e.id===o);if(r){const e=r.extracted?.[l];if(e&&e.type==="stream"&&e.value?.controller)return e.value.controller.close(),!0}return!1},cleanScripts:()=>{document.querySelectorAll(".tsr-once").forEach(o=>{o.remove()})}};window.__TSR_SSR__=__TSR_SSR__;
+var Wt = Kt();
+const B = qt(Wt), Gt = `const __TSR_SSR__={matches:[],streamedValues:{},initMatch:o=>(__TSR_SSR__.matches.push(o),o.extracted?.forEach(l=>{if(l.type==="stream"){let r;l.value=new ReadableStream({start(e){r={enqueue:t=>{try{e.enqueue(t)}catch{}},close:()=>{try{e.close()}catch{}}}}}),l.value.controller=r}else{let r,e;l.value=new Promise((t,a)=>{e=a,r=t}),l.value.reject=e,l.value.resolve=r}}),!0),resolvePromise:({matchId:o,id:l,promiseState:r})=>{const e=__TSR_SSR__.matches.find(t=>t.id===o);if(e){const t=e.extracted?.[l];if(t&&t.type==="promise"&&t.value&&r.status==="success")return t.value.resolve(r.data),!0}return!1},injectChunk:({matchId:o,id:l,chunk:r})=>{const e=__TSR_SSR__.matches.find(t=>t.id===o);if(e){const t=e.extracted?.[l];if(t&&t.type==="stream"&&t.value?.controller)return t.value.controller.enqueue(new TextEncoder().encode(r.toString())),!0}return!1},closeStream:({matchId:o,id:l})=>{const r=__TSR_SSR__.matches.find(e=>e.id===o);if(r){const e=r.extracted?.[l];if(e&&e.type==="stream"&&e.value?.controller)return e.value.controller.close(),!0}return!1},cleanScripts:()=>{document.querySelectorAll(".tsr-once").forEach(o=>{o.remove()})}};window.__TSR_SSR__=__TSR_SSR__;
 `;
-function qt(e, r) {
+function Vt(e, r) {
   e.ssr = { manifest: r, serializer: v }, e.serverSsr = { injectedHtml: [], streamedKeys: /* @__PURE__ */ new Set(), injectHtml: (t) => {
     const n = Promise.resolve().then(t);
     return e.serverSsr.injectedHtml.push(n), e.emit({ type: "onInjectedHtml", promise: n }), n.then(() => {
     });
   }, injectScript: (t, n) => e.serverSsr.injectHtml(async () => `<script class='tsr-once'>${await t()}; if (typeof __TSR_SSR__ !== 'undefined') __TSR_SSR__.cleanScripts()<\/script>`), streamValue: (t, n) => {
     e.serverSsr.streamedKeys.has(t), e.serverSsr.streamedKeys.add(t), e.serverSsr.injectScript(() => `__TSR_SSR__.streamedValues['${t}'] = { value: ${B(e.ssr.serializer.stringify(n), { isScriptContext: true, wrap: true, json: true })}}`);
-  }, onMatchSettled: Gt }, e.serverSsr.injectScript(() => Jt, { logScript: false });
+  }, onMatchSettled: Zt }, e.serverSsr.injectScript(() => Gt, { logScript: false });
 }
-function Kt(e) {
+function Xt(e) {
   var r, t;
   const n = { manifest: e.ssr.manifest, dehydratedData: (t = (r = e.options).dehydrate) == null ? void 0 : t.call(r) };
   e.serverSsr.injectScript(() => `__TSR_SSR__.dehydrated = ${B(e.ssr.serializer.stringify(n), { isScriptContext: true, wrap: true, json: true })}`);
 }
-function Wt(e, r) {
+function Qt(e, r) {
   const t = [];
   return { replaced: le(e, (o, a) => {
     if (o instanceof ReadableStream) {
       const [s, i] = o.tee(), c = { type: "stream", path: a, id: t.length, matchIndex: r.match.index, stream: i };
       return t.push(c), s;
     } else if (o instanceof Promise) {
-      const s = bt(o), i = { type: "promise", path: a, id: t.length, matchIndex: r.match.index, promise: s };
+      const s = Et(o), i = { type: "promise", path: a, id: t.length, matchIndex: r.match.index, promise: s };
       t.push(i);
     }
     return o;
   }), extracted: t };
 }
-function Gt(e) {
+function Zt(e) {
   const { router: r, match: t } = e;
   let n, o;
   if (t.loaderData !== void 0) {
-    const c = Wt(t.loaderData, { match: t });
+    const c = Qt(t.loaderData, { match: t });
     t.loaderData = c.replaced, n = c.extracted, o = n.reduce((d, p) => ce(d, ["temp", ...p.path], void 0), { temp: c.replaced }).temp;
   }
-  const a = `__TSR_SSR__.initMatch(${B({ id: t.id, __beforeLoadContext: r.ssr.serializer.stringify(t.__beforeLoadContext), loaderData: r.ssr.serializer.stringify(o), error: r.ssr.serializer.stringify(t.error), extracted: n == null ? void 0 : n.map((c) => gt(c, ["type", "path"])), updatedAt: t.updatedAt, status: t.status }, { isScriptContext: true, wrap: true, json: true })})`;
+  const a = `__TSR_SSR__.initMatch(${B({ id: t.id, __beforeLoadContext: r.ssr.serializer.stringify(t.__beforeLoadContext), loaderData: r.ssr.serializer.stringify(o), error: r.ssr.serializer.stringify(t.error), extracted: n == null ? void 0 : n.map((c) => vt(c, ["type", "path"])), updatedAt: t.updatedAt, status: t.status }, { isScriptContext: true, wrap: true, json: true })})`;
   r.serverSsr.injectScript(() => a), n && n.forEach((c) => c.type === "promise" ? s(c) : i(c));
   function s(c) {
     r.serverSsr.injectScript(async () => (await c.promise, `__TSR_SSR__.resolvePromise(${B({ matchId: t.id, id: c.id, promiseState: c.promise[F] }, { isScriptContext: true, wrap: true, json: true })})`));
@@ -5557,7 +5558,7 @@ function ce(e, r, t) {
   return Array.isArray(e) ? e.map((a, s) => s === Number(n) ? ce(a, o, t) : a) : O(e) ? { ...e, [n]: ce(e[n], o, t) } : e;
 }
 function le(e, r, t = []) {
-  if (_t(e)) return e.map((o, a) => le(o, r, [...t, `${a}`]));
+  if (bt(e)) return e.map((o, a) => le(o, r, [...t, `${a}`]));
   if (O(e)) {
     const o = {};
     for (const a in e) o[a] = le(e[a], r, [...t, a]);
@@ -5566,20 +5567,20 @@ function le(e, r, t = []) {
   const n = r(e, t);
   return n !== e ? n : e;
 }
-function Vt({ createRouter: e, getRouterManifest: r }) {
+function Yt({ createRouter: e, getRouterManifest: r }) {
   return (t) => eventHandler(async (n) => {
-    const o = toWebRequest(n), a = new URL(o.url), s = a.href.replace(a.origin, ""), i = mt({ initialEntries: [s] }), c = e();
-    qt(c, await (r == null ? void 0 : r())), c.update({ history: i }), await c.load(), Kt(c);
-    const d = Xt({ event: n, router: c });
+    const o = toWebRequest(n), a = new URL(o.url), s = a.href.replace(a.origin, ""), i = St({ initialEntries: [s] }), c = e();
+    Vt(c, await (r == null ? void 0 : r())), c.update({ history: i }), await c.load(), Xt(c);
+    const d = er({ event: n, router: c });
     return await t({ request: o, router: c, responseHeaders: d });
   });
 }
-function Xt(e) {
+function er(e) {
   let r = W(getResponseHeaders(e.event), e.event.___ssrRpcResponseHeaders, { "Content-Type": "text/html; charset=UTF-8" }, ...e.router.state.matches.map((n) => n.headers));
   const { redirect: t } = e.router.state;
   return t && (r = W(r, t.headers, { Location: t.href })), r;
 }
-function Zt(e = {}) {
+function tr(e = {}) {
   let r, t = false;
   const n = (s) => {
     if (r && r !== s) throw new Error("Context conflict");
@@ -5625,53 +5626,53 @@ function Zt(e = {}) {
     }
   } };
 }
-function Qt(e = {}) {
+function rr(e = {}) {
   const r = {};
   return { get(t, n = {}) {
-    return r[t] || (r[t] = Zt({ ...e, ...n })), r[t];
+    return r[t] || (r[t] = tr({ ...e, ...n })), r[t];
   } };
 }
-const re = typeof globalThis < "u" ? globalThis : typeof self < "u" ? self : typeof global < "u" ? global : {}, ve = "__unctx__", Yt = re[ve] || (re[ve] = Qt()), er = (e, r = {}) => Yt.get(e, r), be = "__unctx_async_handlers__", Re = re[be] || (re[be] = /* @__PURE__ */ new Set());
-function tr() {
-  return Fe();
+const re = typeof globalThis < "u" ? globalThis : typeof self < "u" ? self : typeof global < "u" ? global : {}, be = "__unctx__", nr = re[be] || (re[be] = rr()), or = (e, r = {}) => nr.get(e, r), xe = "__unctx_async_handlers__", Re = re[xe] || (re[xe] = /* @__PURE__ */ new Set());
+function sr() {
+  return Oe();
 }
-const Ae = Symbol("$HTTPEvent");
-function rr(e) {
-  return typeof e == "object" && (e instanceof H3Event || (e == null ? void 0 : e[Ae]) instanceof H3Event || (e == null ? void 0 : e.__is_event__) === true);
+const Fe = Symbol("$HTTPEvent");
+function ar(e) {
+  return typeof e == "object" && (e instanceof H3Event || (e == null ? void 0 : e[Fe]) instanceof H3Event || (e == null ? void 0 : e.__is_event__) === true);
 }
-function nr(e) {
+function ir(e) {
   return function(...r) {
     var t;
     const n = r[0];
-    if (rr(n)) r[0] = n instanceof H3Event || n.__is_event__ ? n : n[Ae];
+    if (ar(n)) r[0] = n instanceof H3Event || n.__is_event__ ? n : n[Fe];
     else {
       if (!((t = globalThis.app.config.server.experimental) != null && t.asyncContext)) throw new Error("AsyncLocalStorage was not enabled. Use the `server.experimental.asyncContext: true` option in your app configuration to enable it. Or, pass the instance of HTTPEvent that you have as the first argument to the function.");
-      r.unshift(tr());
+      r.unshift(sr());
     }
     return e(...r);
   };
 }
-const or = nr(getHeaders);
-function sr() {
+const cr = ir(getHeaders);
+function lr() {
   var e;
-  return er("nitro-app", { asyncContext: !!((e = globalThis.app.config.server.experimental) != null && e.asyncContext), AsyncLocalStorage: AsyncLocalStorage });
+  return or("nitro-app", { asyncContext: !!((e = globalThis.app.config.server.experimental) != null && e.asyncContext), AsyncLocalStorage: AsyncLocalStorage });
 }
-function Fe() {
-  const e = sr().use().event;
+function Oe() {
+  const e = lr().use().event;
   if (!e) throw new Error("No HTTPEvent found in AsyncLocalStorage. Make sure you are using the function within the server runtime.");
   return e;
 }
-const ar = async ({ request: e, router: r, responseHeaders: t }) => {
+const ur = async ({ request: e, router: r, responseHeaders: t }) => {
   if (typeof ee$1.renderToReadableStream == "function") {
-    const n = await ee$1.renderToReadableStream(jsx(ye, { router: r }), { signal: e.signal });
-    ge(e.headers.get("User-Agent")) && await n.allReady;
-    const o = Rt(r, n);
+    const n = await ee$1.renderToReadableStream(jsx(ge, { router: r }), { signal: e.signal });
+    _e(e.headers.get("User-Agent")) && await n.allReady;
+    const o = jt(r, n);
     return new Response(o, { status: r.state.statusCode, headers: t });
   }
   if (typeof ee$1.renderToPipeableStream == "function") {
     const n = new PassThrough();
     try {
-      const a = ee$1.renderToPipeableStream(jsx(ye, { router: r }), { ...ge(e.headers.get("User-Agent")) ? { onAllReady() {
+      const a = ee$1.renderToPipeableStream(jsx(ge, { router: r }), { ..._e(e.headers.get("User-Agent")) ? { onAllReady() {
         a.pipe(n);
       } } : { onShellReady() {
         a.pipe(n);
@@ -5681,91 +5682,114 @@ const ar = async ({ request: e, router: r, responseHeaders: t }) => {
     } catch (a) {
       console.error("Error in renderToPipeableStream:", a);
     }
-    const o = xt(r, n);
+    const o = Tt(r, n);
     return new Response(o, { status: r.state.statusCode, headers: t });
   }
   throw new Error("No renderToReadableStream or renderToPipeableStream found in react-dom/server. Ensure you are using a version of react-dom that supports streaming.");
-}, ir = () => ({ routes: { __root__: { filePath: "__root.tsx", children: ["/", "/about", "/contact", "/donate", "/events", "/music", "/sermons", "/team"], preloads: ["/_build/assets/client-C2WQU9LZ.js", "/_build/assets/client-KhrFkGyD.js"] }, "/": { filePath: "index.tsx" }, "/about": { filePath: "about.tsx" }, "/contact": { filePath: "contact.tsx" }, "/donate": { filePath: "donate.tsx" }, "/events": { filePath: "events.tsx" }, "/music": { filePath: "music.tsx" }, "/sermons": { filePath: "sermons.tsx" }, "/team": { filePath: "team.tsx" } } });
-function cr(e) {
+}, dr = () => ({ routes: { __root__: { filePath: "__root.tsx", children: ["/", "/about", "/contact", "/donate", "/events", "/music", "/sermons", "/team"], preloads: ["/_build/assets/client-CXSflu94.js", "/_build/assets/client-CXCw_QxF.js"] }, "/": { filePath: "index.tsx" }, "/about": { filePath: "about.tsx" }, "/contact": { filePath: "contact.tsx" }, "/donate": { filePath: "donate.tsx" }, "/events": { filePath: "events.tsx" }, "/music": { filePath: "music.tsx" }, "/sermons": { filePath: "sermons.tsx" }, "/team": { filePath: "team.tsx" } } });
+function fr(e) {
   return globalThis.MANIFEST[e];
 }
-function lr() {
+function pr() {
   var _a;
-  const e = ir(), r = e.routes.__root__ = e.routes.__root__ || {};
+  const e = dr(), r = e.routes.__root__ = e.routes.__root__ || {};
   r.assets = r.assets || [];
   let t = "";
-  const n = cr("client"), o = (_a = n.inputs[n.handler]) == null ? void 0 : _a.output.path;
+  const n = fr("client"), o = (_a = n.inputs[n.handler]) == null ? void 0 : _a.output.path;
   return o || ue(o), r.assets.push({ tag: "script", attrs: { type: "module", suppressHydrationWarning: true, async: true }, children: `${t}import("${o}")` }), e;
 }
-function ur() {
-  const e = lr();
+function hr() {
+  const e = pr();
   return { ...e, routes: Object.fromEntries(Object.entries(e.routes).map(([r, t]) => {
     const { preloads: n, assets: o } = t;
     return [r, { preloads: n, assets: o }];
   })) };
 }
-const dr = () => jsx(HeadContent, {}), fr = () => jsx(Scripts, {}), E = createRootRoute({ head: () => ({ meta: [{ charSet: "utf-8" }, { name: "viewport", content: "width=device-width, initial-scale=1" }, { title: "TanStack Start Starter" }] }), component: pr });
-function pr() {
-  return jsx(hr, { children: jsx(Outlet, {}) });
+const ke = createContext$1(void 0);
+function mr({ children: e }) {
+  const [r, t] = useState("light");
+  useEffect(() => {
+    const o = localStorage.getItem("theme");
+    o ? t(o) : window.matchMedia("(prefers-color-scheme: dark)").matches && t("dark");
+  }, []), useEffect(() => {
+    document.documentElement.classList.toggle("dark", r === "dark"), localStorage.setItem("theme", r);
+  }, [r]);
+  const n = () => t((o) => o === "light" ? "dark" : "light");
+  return jsx(ke.Provider, { value: { theme: r, setTheme: t, toggleTheme: n }, children: e });
 }
-function hr({ children: e }) {
-  return jsxs("html", { children: [jsx("head", { children: jsx(dr, {}) }), jsxs("body", { children: [e, jsx(ScrollRestoration, {}), jsx(fr, {})] })] });
+function Zr() {
+  const e = useContext(ke);
+  if (!e) throw new Error("useTheme must be used within a ThemeProvider");
+  return e;
 }
-const mr = () => import('../build/team-DRR5a8GT.mjs'), Oe = createFileRoute("/team")({ component: lazyRouteComponent(mr, "component", () => Oe.ssr) }), yr = () => import('../build/sermons-zu2_ZZEu.mjs'), He = createFileRoute("/sermons")({ component: lazyRouteComponent(yr, "component", () => He.ssr) }), gr = () => import('../build/music-Badlr5GP.mjs'), ke = createFileRoute("/music")({ component: lazyRouteComponent(gr, "component", () => ke.ssr) }), _r = () => import('../build/events-CV_BIea9.mjs'), Ie = createFileRoute("/events")({ component: lazyRouteComponent(_r, "component", () => Ie.ssr) }), Sr = () => import('../build/donate-Bx6kU925.mjs'), De = createFileRoute("/donate")({ component: lazyRouteComponent(Sr, "component", () => De.ssr) }), wr = () => import('../build/contact-D_SEO6t2.mjs'), Me = createFileRoute("/contact")({ component: lazyRouteComponent(wr, "component", () => Me.ssr) }), vr = () => import('../build/about-CzFvV-7i.mjs'), Be = createFileRoute("/about")({ component: lazyRouteComponent(vr, "component", () => Be.ssr) });
-async function br(e, r, t) {
+const E = createRootRoute({ head: () => ({ meta: [{ charSet: "utf-8" }, { name: "viewport", content: "width=device-width, initial-scale=1" }, { title: "Monakho Ministry" }] }), component: yr });
+function yr() {
+  return jsx(mr, { children: jsx(gr, { children: jsx(Outlet, {}) }) });
+}
+function gr({ children: e }) {
+  return jsxs("html", { children: [jsx("head", { children: jsx(HeadContent, {}) }), jsxs("body", { children: [e, jsx(Scripts, {})] })] });
+}
+const _r = () => import('../build/team-DRR5a8GT.mjs'), He = createFileRoute("/team")({ component: lazyRouteComponent(_r, "component", () => He.ssr) }), Sr = () => import('../build/sermons-zu2_ZZEu.mjs'), Ie = createFileRoute("/sermons")({ component: lazyRouteComponent(Sr, "component", () => Ie.ssr) }), wr = () => import('../build/music-Badlr5GP.mjs'), Me = createFileRoute("/music")({ component: lazyRouteComponent(wr, "component", () => Me.ssr) }), vr = () => import('../build/events-CV_BIea9.mjs'), De = createFileRoute("/events")({ component: lazyRouteComponent(vr, "component", () => De.ssr) }), br = () => import('../build/donate-Bx6kU925.mjs'), Be = createFileRoute("/donate")({ component: lazyRouteComponent(br, "component", () => Be.ssr) }), xr = () => import('../build/contact-D_SEO6t2.mjs'), Ne = createFileRoute("/contact")({ component: lazyRouteComponent(xr, "component", () => Ne.ssr) }), Rr = () => import('../build/about-CzFvV-7i.mjs'), ze = createFileRoute("/about")({ component: lazyRouteComponent(Rr, "component", () => ze.ssr) });
+async function Cr(e, r, t) {
   var n;
   const o = r[0];
   if (O(o) && o.method) {
     const i = o, c = i.data instanceof FormData ? "formData" : "payload", d = new Headers({ ...c === "payload" ? { "content-type": "application/json", accept: "application/json" } : {}, ...i.headers instanceof Headers ? Object.fromEntries(i.headers.entries()) : i.headers });
     if (i.method === "GET") {
-      const f = wt({ payload: v.stringify({ data: i.data, context: i.context }) });
+      const f = Rt({ payload: v.stringify({ data: i.data, context: i.context }) });
       f && (e.includes("?") ? e += `&${f}` : e += `?${f}`);
     }
     e.includes("?") ? e += "&createServerFn" : e += "?createServerFn", i.response === "raw" && (e += "&raw");
-    const p = await t(e, { method: i.method, headers: d, signal: i.signal, ...Rr(i) }), m = await xe(p);
+    const p = await t(e, { method: i.method, headers: d, signal: i.signal, ...Er(i) }), m = await Ce(p);
     if ((n = m.headers.get("content-type")) != null && n.includes("application/json")) {
       const f = v.decode(await m.json());
-      if (Te(f) || je(f) || f instanceof Error) throw f;
+      if (Pe(f) || Te(f) || f instanceof Error) throw f;
       return f;
     }
     return m;
   }
-  const a = await xe(await t(e, { method: "POST", headers: { Accept: "application/json", "Content-Type": "application/json" }, body: JSON.stringify(r) })), s = a.headers.get("content-type");
+  const a = await Ce(await t(e, { method: "POST", headers: { Accept: "application/json", "Content-Type": "application/json" }, body: JSON.stringify(r) })), s = a.headers.get("content-type");
   return s && s.includes("application/json") ? v.decode(await a.json()) : a.text();
 }
-function Rr(e) {
+function Er(e) {
   var _a;
   return e.method === "POST" ? e.data instanceof FormData ? (e.data.set("__TSR_CONTEXT", v.stringify(e.context)), { body: e.data }) : { body: v.stringify({ data: (_a = e.data) != null ? _a : null, context: e.context }) } : {};
 }
-async function xe(e) {
+async function Ce(e) {
   if (!e.ok) {
     const r = e.headers.get("content-type");
     throw r && r.includes("application/json") ? v.decode(await e.json()) : new Error(await e.text());
   }
   return e;
 }
-function xr(e) {
+function jr(e) {
   return e.replace(/^\/|\/$/g, "");
 }
-const Ne = (e, r) => {
-  const t = `/${xr(r)}/${e}`;
-  return Object.assign((...o) => br(t, o, async (a, s) => {
-    s.headers = W(or(), s.headers);
-    const i = await $fetch.native(a, s), c = Fe(), d = W(i.headers, c.___ssrRpcResponseHeaders);
+const Le = (e, r) => {
+  const t = `/${jr(r)}/${e}`;
+  return Object.assign((...o) => Cr(t, o, async (a, s) => {
+    s.headers = W(cr(), s.headers);
+    const i = await $fetch.native(a, s), c = Oe(), d = W(i.headers, c.___ssrRpcResponseHeaders);
     return c.___ssrRpcResponseHeaders = d, i;
   }), { url: t, functionId: e });
-}, Cr = Ne("app_functions_ts--getCount_createServerFn_handler", "/_server"), Er = K({ method: "GET" }).handler(Cr), jr = Ne("app_functions_ts--updateCount_createServerFn_handler", "/_server");
-K({ method: "POST" }).validator((e) => e).handler(jr);
-const Tr = () => import('../build/index-B-ufCL2F.mjs'), ze = createFileRoute("/")({ component: lazyRouteComponent(Tr, "component", () => ze.ssr), loader: async () => await Er() }), Pr = Oe.update({ id: "/team", path: "/team", getParentRoute: () => E }), $r = He.update({ id: "/sermons", path: "/sermons", getParentRoute: () => E }), Ar = ke.update({ id: "/music", path: "/music", getParentRoute: () => E }), Fr = Ie.update({ id: "/events", path: "/events", getParentRoute: () => E }), Or = De.update({ id: "/donate", path: "/donate", getParentRoute: () => E }), Hr = Me.update({ id: "/contact", path: "/contact", getParentRoute: () => E }), kr = Be.update({ id: "/about", path: "/about", getParentRoute: () => E }), Ir = ze.update({ id: "/", path: "/", getParentRoute: () => E }), Dr = { IndexRoute: Ir, AboutRoute: kr, ContactRoute: Hr, DonateRoute: Or, EventsRoute: Fr, MusicRoute: Ar, SermonsRoute: $r, TeamRoute: Pr }, Mr = E._addFileChildren(Dr)._addFileTypes();
-function Br() {
-  return createRouter$2({ routeTree: Mr });
+}, Tr = Le("app_functions_ts--getCount_createServerFn_handler", "/_server"), Pr = K({ method: "GET" }).handler(Tr), $r = Le("app_functions_ts--updateCount_createServerFn_handler", "/_server");
+K({ method: "POST" }).validator((e) => e).handler($r);
+const Ar = () => import('../build/index-DOa1lz9E.mjs'), Ue = createFileRoute("/")({ component: lazyRouteComponent(Ar, "component", () => Ue.ssr), loader: async () => {
+  try {
+    return await Pr();
+  } catch (e) {
+    return console.error("Failed to load count:", e), null;
+  }
+} }), Fr = He.update({ id: "/team", path: "/team", getParentRoute: () => E }), Or = Ie.update({ id: "/sermons", path: "/sermons", getParentRoute: () => E }), kr = Me.update({ id: "/music", path: "/music", getParentRoute: () => E }), Hr = De.update({ id: "/events", path: "/events", getParentRoute: () => E }), Ir = Be.update({ id: "/donate", path: "/donate", getParentRoute: () => E }), Mr = Ne.update({ id: "/contact", path: "/contact", getParentRoute: () => E }), Dr = ze.update({ id: "/about", path: "/about", getParentRoute: () => E }), Br = Ue.update({ id: "/", path: "/", getParentRoute: () => E }), Nr = { IndexRoute: Br, AboutRoute: Dr, ContactRoute: Mr, DonateRoute: Ir, EventsRoute: Hr, MusicRoute: kr, SermonsRoute: Or, TeamRoute: Fr }, zr = E._addFileChildren(Nr)._addFileTypes();
+function Lr() {
+  return createRouter$2({ routeTree: zr });
 }
-const Gr = Vt({ createRouter: Br, getRouterManifest: ur })(ar);
+const Yr = Yt({ createRouter: Lr, getRouterManifest: hr })(ur);
 
 const handlers = [
   { route: '', handler: _KHb47b, lazy: false, middleware: true, method: undefined },
   { route: '/_server', handler: le$1, lazy: false, middleware: true, method: undefined },
-  { route: '/', handler: Gr, lazy: false, middleware: true, method: undefined }
+  { route: '/', handler: Yr, lazy: false, middleware: true, method: undefined }
 ];
 
 function createNitroApp() {
@@ -6183,5 +6207,5 @@ trapUnhandledNodeErrors();
 setupGracefulShutdown(listener, nitroApp);
 const nodeServer = {};
 
-export { L, O$1 as O, V, l, nodeServer as n, ze as z };
+export { L, O$1 as O, V, Zr as Z, l, nodeServer as n };
 //# sourceMappingURL=nitro.mjs.map
