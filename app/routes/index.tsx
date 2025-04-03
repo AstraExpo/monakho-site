@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { getCount } from "../functions";
-import { Footer } from "../components/layout/footer";
 import { Main } from "../components/layout/Main";
 
 export const Route = createFileRoute("/")({
