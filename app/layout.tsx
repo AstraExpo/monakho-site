@@ -9,6 +9,9 @@ const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: "Monakho Ministry - Modern Worship Experience",
+  icons: {
+    icon: "/favIcon.ico",
+  },
   description:
     "Join us for a transformative worship experience. Discover our mission, upcoming events, and connect with our community.",
   keywords: "worship, ministry, church, music, events, community, faith",
