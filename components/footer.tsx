@@ -1,4 +1,4 @@
-import { Heart, Music, Mail, Phone, MapPin } from "lucide-react";
+import { Heart, Music } from "lucide-react";
 import Image from "next/image";
 import { QuickLinks } from "./QuickLinks";
 import { ContactInfo } from "./ContactInfo";

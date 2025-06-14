@@ -26,8 +26,7 @@ export function Mission() {
             To see generations across nations awakened to a lifestyle of true
             worship where sacred music, truth, and the Glorious presence of God
             that brings healing, revival, and intimacy with Christ in order to
-            satisfy God's Pleasure. Doing the impossible with GOD{" "}
-            <strong>John 14:12-14</strong>
+            satisfy Gods Pleasure. Doing the impossible with GOD <strong>John 14:12-14</strong>
           </p>
         </div>
 

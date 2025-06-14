@@ -18,7 +18,7 @@ export function OriginStory() {
               has grown into a thriving community that spans continents.
             </p>
             <p className="text-gray-300 mb-6">
-              We recognized that traditional worship formats weren't reaching
+              We recognized that traditional worship formats were not reaching
               everyone, especially younger generations who grew up in the
               digital age. Our mission became clear: create worship experiences
               that are both deeply spiritual and culturally relevant.
