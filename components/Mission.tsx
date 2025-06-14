@@ -42,7 +42,8 @@ export function Mission() {
             </li>
             <li className="mb-4">
               <strong>SACRED MUSIC:</strong> Every song, lyrics and messages are
-              Spirit led grounded in the Word of God: <strong>John 1:1</strong> and <strong>Romans 8:14</strong>
+              Spirit led grounded in the Word of God: <strong>John 1:1</strong>{" "}
+              and <strong>Romans 8:14</strong>
             </li>
             <li className="mb-4">
               <strong>HOLINESS:</strong> Pursuing purity in Spirit, Heart and
@@ -52,13 +53,15 @@ export function Mission() {
             <li className="mb-4">
               <strong>EXCELLENCE WITH HUMILITY:</strong> We offer our best in
               the Word Of God, Music and ministry with contrite heart and humble
-              spirit to God: <strong>Isaiah 57:15</strong>, <strong>Colossians 3:23</strong>
+              spirit to God: <strong>Isaiah 57:15</strong>,{" "}
+              <strong>Colossians 3:23</strong>
             </li>
             <li className="mb-4">
               <strong>TRANSFORMATION THROUGH WORSHIP:</strong> Worship that
               transforms and establish good change in lives and brings freedom,
               healing, and salvation to all Heads of state and their nations :
-              <strong> Revelation 21:21-27</strong>, <strong>2 Corinthians 3:18</strong>
+              <strong> Revelation 21:21-27</strong>,{" "}
+              <strong>2 Corinthians 3:18</strong>
             </li>
           </ol>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto">
