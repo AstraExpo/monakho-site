@@ -1,4 +1,5 @@
 import { Mail, Phone, MapPin } from 'lucide-react'
+import Link from 'next/link'
 import React from 'react'
 
 export function ContactInfo() {
@@ -11,8 +12,10 @@ export function ContactInfo() {
                 <span>hello@monakho.org</span>
               </li>
               <li className="flex items-center space-x-2 text-gray-400">
-                <Phone className="h-4 w-4" />
-                <span>+254 711 547617</span>
+                <Link className='flex items-center space-x-2' href="tel:+254711547617">
+                  <Phone className="h-4 w-4" />
+                  <span>+254 711 547617</span>
+                </Link>
               </li>
               <li className="flex items-center space-x-2 text-gray-400">
                 <MapPin className="h-4 w-4" />
