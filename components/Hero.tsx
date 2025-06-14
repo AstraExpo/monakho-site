@@ -9,7 +9,7 @@ export function Hero() {
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20"></div>
       <Image
-        src="/Hero.png"
+        src="/logo.png"
         alt="Worship Background"
         fill
         className="object-cover opacity-20"

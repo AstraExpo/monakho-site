@@ -1,20 +1,22 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Link from "next/link"
-import { Menu, X, Heart } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { useState } from "react";
+import Link from "next/link";
+import { Menu, X, Heart } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { DesktopNav } from "./DesktopNav";
+import Image from "next/image";
 
 export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
 
   const navItems = [
     { href: "/", label: "Home" },
     { href: "/about", label: "About" },
     { href: "/worship-events", label: "Events" },
-    { href: "/music", label: "Music" },
+    { href: "/gifts", label: "Content" },
     { href: "/contact", label: "Contact" },
-  ]
+  ];
 
   return (
     <nav className="fixed top-0 w-full z-50 bg-black/20 backdrop-blur-md border-b border-white/10">
@@ -22,7 +24,7 @@ export default function Navbar() {
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="flex items-center space-x-2 group">
             <div className="relative">
-              <Heart className="h-8 w-8 text-blue-400 group-hover:text-blue-300 transition-colors" />
+              <Image width={40} height={40} className="h-8 w-8 text-blue-400 group-hover:text-blue-300 transition-colors" src={"/logo.png"} alt={"Monakho Ministry Logo"} />
               <div className="absolute inset-0 h-8 w-8 bg-blue-400/20 rounded-full blur-md group-hover:bg-blue-300/30 transition-colors"></div>
             </div>
             <span className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
@@ -31,18 +33,7 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="text-gray-300 hover:text-white transition-colors relative group"
-              >
-                {item.label}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-400 to-purple-400 group-hover:w-full transition-all duration-300"></span>
-              </Link>
-            ))}
-          </div>
+          <DesktopNav navItems={navItems} />
 
           {/* Mobile menu button */}
           <div className="md:hidden">
@@ -52,7 +43,11 @@ export default function Navbar() {
               onClick={() => setIsOpen(!isOpen)}
               className="text-gray-300 hover:text-white"
             >
-              {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              {isOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
             </Button>
           </div>
         </div>
@@ -76,5 +71,5 @@ export default function Navbar() {
         )}
       </div>
     </nav>
-  )
+  );
 }
