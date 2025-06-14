@@ -1,3 +1,6 @@
+import { CarFront, Music, Cross, Star, Rotate3d } from "lucide-react";
+import { Metadata } from "next";
+
 export const navItems = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
@@ -5,3 +8,62 @@ export const navItems = [
   { href: "/gifts", label: "Content" },
   { href: "/contact", label: "Contact" },
 ];
+
+export const values = [
+    {
+      icon: CarFront,
+      title: "GOD - DRIVEN WORSHIP:",
+      description: "Centered in Truth and Spirit: <strong>John 4:23</strong>",
+    },
+    {
+      icon: Music,
+      title: "SACRED MUSIC:",
+      description:
+        "Every song, lyrics and messages areSpirit led grounded in the Word of God: <strong>John 1:1</strong> and <strong>Romans 8:14</strong>",
+    },
+    {
+      icon: Cross,
+      title: "HOLINESS:",
+      description:
+        "Pursuing purity in Spirit, Heart and Intimacy with God with a lifestyle to honor the Glorious of God: <strong> Psalm 24:3-4</strong>, <strong>John 4:23</strong>",
+    },
+    {
+      icon: Star,
+      title: "EXCELLENCE WITH HUMILITY:",
+      description:
+        "We offer our best in the Word Of God, Music and ministry with contrite heart and humble spirit to God: <strong>Isaiah 57:15</strong>, <strong>Colossians 3:23</strong>",
+    },
+    {
+      icon: Rotate3d,
+      title: "TRANSFORMATION THROUGH WORSHIP:",
+      description:
+        " Worship that transforms and establish good change in lives and brings freedom, healing, and salvation to all Heads of state and their nations :<strong> Revelation 21:21-27</strong>, <strong>2 Corinthians 3:18</strong>",
+    },
+  ];
+
+  export const leadership = [
+    {
+      name: "Valentine Monakho",
+      role: "Founder & Lead Pastor",
+      image: "/placeholder.svg?height=300&width=300",
+      bio: "Valentine has been leading worship communities for over 10 years, with a passion for bridging traditional faith with contemporary expression.",
+    },
+    {
+      name: "Winnie Monakho",
+      role: "Lead Vocalist & Worship Leader",
+      image: "/placeholder.svg?height=300&width=300",
+      bio: "Winnie brings her background in music and worship leading to create powerful and engaging worship experiences.",
+    },
+    {
+      name: "Producer Brian",
+      role: "Music Producer & Band Director",
+      image: "/placeholder.svg?height=300&width=300",
+      bio: "Brian focuses on crafting the sound of Monakho Ministry, blending modern production techniques with sacred music traditions.",
+    },
+  ];
+
+  export const metadata: Metadata = {
+  title: "About Us - Monakho Ministry",
+  description:
+    "Learn about our mission, values, and leadership team at Monakho Ministry.",
+};
