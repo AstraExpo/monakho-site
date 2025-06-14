@@ -6,17 +6,10 @@ import { Menu, X, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DesktopNav } from "./DesktopNav";
 import Image from "next/image";
+import { navItems } from "./data/Items";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-
-  const navItems = [
-    { href: "/", label: "Home" },
-    { href: "/about", label: "About" },
-    { href: "/worship-events", label: "Events" },
-    { href: "/gifts", label: "Content" },
-    { href: "/contact", label: "Contact" },
-  ];
 
   return (
     <nav className="fixed top-0 w-full z-50 bg-black/20 backdrop-blur-md border-b border-white/10">
