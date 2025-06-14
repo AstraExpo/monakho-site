@@ -31,47 +31,6 @@ export function Mission() {
           </p>
         </div>
 
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-            Our Core Values
-          </h2>
-          <ol className="text-lg text-gray-300 max-w-3xl mx-auto">
-            <li className="mb-4">
-              <strong>GOD - DRIVEN WORSHIP:</strong> Centered in Truth and
-              Spirit: <strong>John 4:23</strong>
-            </li>
-            <li className="mb-4">
-              <strong>SACRED MUSIC:</strong> Every song, lyrics and messages are
-              Spirit led grounded in the Word of God: <strong>John 1:1</strong>{" "}
-              and <strong>Romans 8:14</strong>
-            </li>
-            <li className="mb-4">
-              <strong>HOLINESS:</strong> Pursuing purity in Spirit, Heart and
-              Intimacy with God with a lifestyle to honor the Glorious of God:
-              <strong> Psalm 24:3-4</strong>, <strong>John 4:23</strong>
-            </li>
-            <li className="mb-4">
-              <strong>EXCELLENCE WITH HUMILITY:</strong> We offer our best in
-              the Word Of God, Music and ministry with contrite heart and humble
-              spirit to God: <strong>Isaiah 57:15</strong>,{" "}
-              <strong>Colossians 3:23</strong>
-            </li>
-            <li className="mb-4">
-              <strong>TRANSFORMATION THROUGH WORSHIP:</strong> Worship that
-              transforms and establish good change in lives and brings freedom,
-              healing, and salvation to all Heads of state and their nations :
-              <strong> Revelation 21:21-27</strong>,{" "}
-              <strong>2 Corinthians 3:18</strong>
-            </li>
-          </ol>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            Worship that transforms and establish good change in lives and
-            brings freedom, healing, and salvation to all Heads of state and
-            their nations :{" "}
-            <strong>Revelation 21:21-27, 2 Corinthians 3:18</strong>
-          </p>
-        </div>
-
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <Card className="bg-white/5 backdrop-blur-md border-white/10 hover:bg-white/10 transition-all duration-300 group">
             <CardContent className="p-8 text-center">
