@@ -1,7 +1,8 @@
 import { Heart, Music, Mail, Phone, MapPin } from "lucide-react";
 import Image from "next/image";
 import { QuickLinks } from "./QuickLinks";
-import { ContsctInfo } from "./ContsctInfo";
+import { ContactInfo } from "./ContactInfo";
+import Link from "next/link";
 
 export default function Footer() {
   return (
@@ -30,12 +31,18 @@ export default function Footer() {
               <strong>John 3:16</strong>
             </p>
             <div className="flex space-x-4">
-              <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center cursor-pointer hover:scale-110 transition-transform">
+              <Link
+                href={"/gifts"}
+                className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center cursor-pointer hover:scale-110 transition-transform"
+              >
                 <Music className="h-5 w-5 text-white" />
-              </div>
-              <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center cursor-pointer hover:scale-110 transition-transform">
+              </Link>
+              <Link
+                href={"/about"}
+                className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center cursor-pointer hover:scale-110 transition-transform"
+              >
                 <Heart className="h-5 w-5 text-white" />
-              </div>
+              </Link>
             </div>
           </div>
 
@@ -43,7 +50,7 @@ export default function Footer() {
           <QuickLinks />
 
           {/* Contact Info */}
-          <ContsctInfo />
+          <ContactInfo />
         </div>
 
         <div className="border-t border-white/10 mt-8 pt-8 text-center">

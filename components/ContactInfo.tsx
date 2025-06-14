@@ -1,7 +1,7 @@
 import { Mail, Phone, MapPin } from 'lucide-react'
 import React from 'react'
 
-export function ContsctInfo() {
+export function ContactInfo() {
   return (
           <div>
             <h3 className="text-white font-semibold mb-4">Connect</h3>
