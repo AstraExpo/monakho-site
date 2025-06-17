@@ -8,9 +8,13 @@ export function ContactInfo() {
       <h3 className="text-white font-semibold mb-4">Connect</h3>
       <ul className="space-y-2">
         <li className="flex items-center space-x-2 text-gray-400">
-          <Mail className="h-4 w-4" />
-          {/* TODO: Add mailto link and change the eamil to a valid email */}
-          <span>hello@monakho.org</span>
+          <Link
+            href="mailto:monakhoministry@gmail.com"
+            className="flex items-center space-x-2"
+          >
+            <Mail className="h-4 w-4" />
+            <span>monakhoministry@gmail.com</span>
+          </Link>
         </li>
         <li className="flex items-center space-x-2 text-gray-400">
           <Link
