@@ -22,7 +22,8 @@ export default function Contact() {
       <QuickActions />
 
       {/* Location & Hours */}
-      <Location />
+      {/* TODO: Update the location section if it is needed */}
+      {/* <Location /> */}
     </div>
   );
 }
