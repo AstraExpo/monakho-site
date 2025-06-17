@@ -1,16 +1,16 @@
-import type React from "react"
-import type { Metadata } from "next"
-import { Inter } from "next/font/google"
-import './globals.css';
-import Navbar from "@/components/navbar"
-import Footer from "@/components/footer"
+import type React from "react";
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
+import Navbar from "@/components/navbar";
+import Footer from "@/components/footer";
 
-const inter = Inter({ subsets: ["latin"] })
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Monakho Ministry - Modern Worship Experience",
   icons: {
-    icon: "/favIcon.ico",
+    icon: "/favicon.ico",
   },
   description:
     "Join us for a transformative worship experience. Discover our mission, upcoming events, and connect with our community.",
@@ -20,16 +20,21 @@ export const metadata: Metadata = {
     description: "Join us for a transformative worship experience",
     type: "website",
   },
-}
+  other: {
+    "data-gramm": "false",
+  },
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <html lang="en" className="dark">
-      <body className={`${inter.className} bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 min-h-screen`}>
+      <body
+        className={`${inter.className} bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 min-h-screen`}
+      >
         <div className="relative min-h-screen">
           <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 opacity-50"></div>
           <div
@@ -47,5 +52,5 @@ export default function RootLayout({
         </div>
       </body>
     </html>
-  )
+  );
 }
