@@ -48,8 +48,7 @@ export function OriginStory() {
           </div>
           <div className="relative">
             <Image
-              // TODO: Replace with actual image URL
-              src="/placeholder.svg?height=500&width=600"
+              src="/Milestone.png"
               alt="Ministry Origin"
               width={600}
               height={500}

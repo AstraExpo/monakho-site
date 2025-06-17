@@ -17,7 +17,7 @@ export default function About() {
             experiences that speak to the modern soul while honoring timeless
             spiritual truths. Valentin Daniel Monakho, born in 1983, began his
             ministry journey at the age of three in 1985. Encouraged by his
-            Christian upbringing, especially his mother's influence, he gave his
+            Christian upbringing, especially his mother&apos;s influence, he gave his
             first public song presentation during a weekday church service. This
             marked the official beginning of a ministry that now spans over 39
             years (as of 2025).
