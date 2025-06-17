@@ -28,8 +28,8 @@ export default function Leadership() {
                   <Image
                     src={leader.image || "/placeholder.svg"}
                     alt={leader.name}
-                    width={200}
-                    height={200}
+                    width={800}
+                    height={800}
                     className="rounded-full mx-auto group-hover:scale-105 transition-transform duration-300"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-purple-500/20 to-transparent rounded-full"></div>

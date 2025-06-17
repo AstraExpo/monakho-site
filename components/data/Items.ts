@@ -55,21 +55,39 @@ export const values = [
 export const leadership = [
   {
     name: "Valentine Monakho",
-    role: "Founder & Lead Pastor",
-    image: "/placeholder.svg?height=300&width=300",
+    role: "Founder & Ministry Leaderr",
+    image: "/Monakho_PhotoGrid (1) (1).png",
     bio: "Valentine has been leading worship communities for over 10 years, with a passion for bridging traditional faith with contemporary expression.",
   },
   {
     name: "Winnie Monakho",
     role: "Lead Vocalist & Worship Leader",
-    image: "/placeholder.svg?height=300&width=300",
+    image: "/Winnie (1).png",
     bio: "Winnie brings her background in music and worship leading to create powerful and engaging worship experiences.",
+  },
+  {
+    name: "PA Flourence",
+    role: "Personal Assistant to Valentin Monakho",
+    image: "/Florence_PhotoGrid (1) (1).png",
+    bio: "Flourence is the Personal Assistant to Valentin Monakho and is Responsible for passing Ministry Information to the entire team.",
   },
   {
     name: "Producer Brian",
     role: "Music Producer & Band Director",
-    image: "/placeholder.svg?height=300&width=300",
+    image: "/Chekea (1).png",
     bio: "Brian focuses on crafting the sound of Monakho Ministry, blending modern production techniques with sacred music traditions.",
+  },
+  {
+    name: "Pianist Dominic",
+    role: "Deputy Band Director",
+    image: "/Domonic_PhotoGrid (1) (1).png",
+    bio: "Dominic is the lead Pianist and Deputy Band Director.",
+  },
+  {
+    name: "Secretary Emmanuel",
+    role: "Secretary and Pianist",
+    image: "/Emmanuel (1).png",
+    bio: "Emmanuel is a Prayer worrior and the secretary to the Ministry. He is responsible for planning and Organising events.",
   },
 ];
 
@@ -127,7 +145,7 @@ export const quickActions = [
     title: "Attend an Event",
     description: "Find upcoming worship services",
     action: "Watch on YouTube",
-    url: "https://www.youtube.com/@yourchannel", // TODO: Update the url to a valid youtube link
+    url: "https://www.youtube.com/@monakho.",
   },
   {
     icon: MessageCircle,

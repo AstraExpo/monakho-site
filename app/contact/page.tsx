@@ -4,7 +4,6 @@ import { HeroContact } from "@/components/HeroContact";
 import { ContactMethods } from "@/components/ContactMethods";
 import { ContactForm } from "@/components/ContactForm";
 import { QuickActions } from "@/components/QuickActions";
-import { Location } from "@/components/Location";
 
 export default function Contact() {
   return (
@@ -22,7 +21,8 @@ export default function Contact() {
       <QuickActions />
 
       {/* Location & Hours */}
-      <Location />
+      {/* TODO: Update the location section if it is needed */}
+      {/* <Location /> */}
     </div>
   );
 }
