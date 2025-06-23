@@ -138,7 +138,7 @@ export const quickActions = [
     title: "Join Our Community",
     description: "Connect with fellow believers",
     action: "Join WhatsApp Group",
-    url: "https://chat.whatsapp.com/your-whatsapp-group-id", // TODO: Update the url to a valid whatsapp group link
+    url: "https://chat.whatsapp.com/CTtggWUqWRdHH8Zltqy3Mr",
   },
   {
     icon: Calendar,
