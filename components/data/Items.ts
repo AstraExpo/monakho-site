@@ -155,3 +155,100 @@ export const quickActions = [
     url: "https://wa.me/254711547617",
   },
 ];
+
+export const featuredAlbums = [
+  // TODO: Update the albums with real data
+  // The images are just placeholders, you can replace them with actual album cover images
+  {
+    id: 1,
+    title: "Digital Sanctuary",
+    artist: "Monakho Worship",
+    year: "2023",
+    image: "/placeholder.svg?height=300&width=300",
+    description:
+      "Our latest album exploring themes of faith in the digital age.",
+    tracks: 12,
+    duration: "48:32",
+    gradient: "from-blue-500 to-purple-500",
+  },
+  {
+    id: 2,
+    title: "Acoustic Sessions",
+    artist: "Monakho Collective",
+    year: "2023",
+    image: "/placeholder.svg?height=300&width=300",
+    description:
+      "Intimate acoustic versions of our most beloved worship songs.",
+    tracks: 8,
+    duration: "32:15",
+    gradient: "from-purple-500 to-pink-500",
+  },
+  {
+    id: 3,
+    title: "Live from the Heart",
+    artist: "Monakho Ministry",
+    year: "2022",
+    image: "/placeholder.svg?height=300&width=300",
+    description: "Recorded live during our most powerful worship services.",
+    tracks: 10,
+    duration: "52:18",
+    gradient: "from-pink-500 to-red-500",
+  },
+];
+
+export const popularTracks = [
+  // TODO: Update the tracks with real data
+  // The images are just placeholders, you can replace them with actual track cover images
+  {
+    title: "Future Hope",
+    artist: "Monakho Worship",
+    duration: "4:23",
+    plays: "12.5K",
+  },
+  {
+    title: "Digital Prayers",
+    artist: "Sarah Johnson",
+    duration: "3:45",
+    plays: "8.9K",
+  },
+  {
+    title: "Connected Hearts",
+    artist: "Marcus Chen",
+    duration: "5:12",
+    plays: "15.2K",
+  },
+  {
+    title: "Infinite Grace",
+    artist: "Elena Rodriguez",
+    duration: "4:01",
+    plays: "11.7K",
+  },
+  {
+    title: "Modern Psalms",
+    artist: "Monakho Collective",
+    duration: "3:58",
+    plays: "9.3K",
+  },
+];
+
+export const liveRecordings = [
+  // TODO: Update the recordings with real data
+    {
+      title: "Sunday Service - December 3, 2023",
+      duration: "1:15:32",
+      views: "2.1K",
+      thumbnail: "/placeholder.svg?height=200&width=350",
+    },
+    {
+      title: "Acoustic Night - November 24, 2023",
+      duration: "45:18",
+      views: "1.8K",
+      thumbnail: "/placeholder.svg?height=200&width=350",
+    },
+    {
+      title: "Youth Worship - November 18, 2023",
+      duration: "52:45",
+      views: "3.2K",
+      thumbnail: "/placeholder.svg?height=200&width=350",
+    },
+  ]
