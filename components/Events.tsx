@@ -8,9 +8,10 @@ export function Events() {
   return (
     <section className="py-20 px-4 bg-black/20">
       <div className="max-w-6xl mx-auto">
+        {/* Section Header */}
         <div className="flex justify-between items-center mb-12">
           <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-            Upcoming Events
+            Monakho Ministry Events
           </h2>
           <Link href="/worship-events">
             <Button
@@ -23,7 +24,9 @@ export function Events() {
           </Link>
         </div>
 
+        {/* Events Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* Event 1: Tehilla Worship */}
           <Card className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 backdrop-blur-md border-white/10 hover:scale-105 transition-transform duration-300">
             <CardContent className="p-6">
               <div className="flex items-center mb-4">
@@ -33,17 +36,20 @@ export function Events() {
                 </span>
               </div>
               <h3 className="text-2xl font-bold text-white mb-2">
-                Tehilla Worship
+                Tehilla Worship – Hosted by Monakho Ministry
               </h3>
               <p className="text-gray-300 mb-4">
-                Join us for an immersive worship experience featuring live
-                music, inspiring messages, and community connection live on{" "}
-                <strong>YouTube</strong> and <strong>Facebook</strong>.
+                Join <strong>Monakho Ministry</strong> every Monday for{" "}
+                <em>Tehilla Worship</em>—an immersive experience of live praise,
+                music, and messages that uplift and ignite faith. Streaming live
+                on
+                <strong> YouTube</strong> and <strong>Facebook</strong>.
               </p>
-              <p className="text-sm text-gray-400">6:00 PM - 8:00 PM</p>
+              <p className="text-sm text-gray-400">6:00 PM – 8:00 PM (EAT)</p>
             </CardContent>
           </Card>
 
+          {/* Event 2: Night Prayer Session */}
           <Card className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 backdrop-blur-md border-white/10 hover:scale-105 transition-transform duration-300">
             <CardContent className="p-6">
               <div className="flex items-center mb-4">
@@ -53,12 +59,14 @@ export function Events() {
                 </span>
               </div>
               <h3 className="text-2xl font-bold text-white mb-2">
-                Night Prayer Session
+                Night Prayer Session – By Monakho
               </h3>
               <p className="text-gray-300 mb-4">
-                An intimate evening of prayer, worship, and reflection.
+                A powerful hour of prayer, worship, and reflection hosted by{" "}
+                <strong>Monakho Ministry</strong>. Recharge your spirit and
+                align with God’s heart in a quiet, focused environment.
               </p>
-              <p className="text-sm text-gray-400">9:00 PM - 10:00 PM</p>
+              <p className="text-sm text-gray-400">9:00 PM – 10:00 PM (EAT)</p>
             </CardContent>
           </Card>
         </div>

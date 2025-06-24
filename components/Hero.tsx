@@ -10,7 +10,7 @@ export function Hero() {
       <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20"></div>
       <Image
         src="/logo.png"
-        alt="Worship Background"
+        alt="Monakho Ministry Worship Background"
         fill
         className="object-cover opacity-20"
         priority
@@ -19,12 +19,12 @@ export function Hero() {
       <div className="relative z-10 text-center max-w-4xl mx-auto px-4">
         <div className="animate-float">
           <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-            Welcome to the Future of Worship
+            Welcome to Monakho Ministry, the Future of Worship
           </h1>
         </div>
         <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-2xl mx-auto">
-          Experience transformative worship in a digital age. Join our community
-          as we explore faith, love, music, and connection.
+          Discover the heart of Monakho — a worship movement devoted to faith, love, music, and community.
+          Be part of a transformative journey that blends sound and spirit in the digital age.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link href={"/gifts"}>
