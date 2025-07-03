@@ -57,7 +57,7 @@ export const leadership = [
     name: "Valentine Monakho",
     role: "Founder & Ministry Leaderr",
     image: "/Monakho_PhotoGrid (1) (1).png",
-    bio: "Valentine has been leading worship communities for over 10 years, with a passion for bridging traditional faith with contemporary expression.",
+    bio: "Valentin has been leading worship communities for over 10 years, with a passion for bridging traditional faith with contemporary expression.",
   },
   {
     name: "Winnie Monakho",
