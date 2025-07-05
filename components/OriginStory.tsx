@@ -46,9 +46,9 @@ export function OriginStory() {
               </li>
             </ul>
           </div>
-          <div className="relative">
+          <div className="relative mb-10">
             <Image
-              src="/Milestone.png"
+              src="/Monakho.png"
               alt="Ministry Origin"
               width={600}
               height={500}
@@ -58,17 +58,6 @@ export function OriginStory() {
           </div>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className="relative">
-            <Image
-              // TODO: Replace with actual image URL
-              src="/placeholder.svg?height=500&width=600"
-              alt="Ministry Origin"
-              width={600}
-              height={500}
-              className="rounded-lg opacity-80"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-purple-500/20 to-transparent rounded-lg"></div>
-          </div>
           <div>
             <h2 className="text-4xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
               Growth into Digital Ministry{" "}
@@ -76,7 +65,7 @@ export function OriginStory() {
             <p className="text-gray-300 mb-6 text-lg">
               The ministry embraced digital platforms in <strong>2022</strong>{" "}
               and officially launched online in <strong>2024</strong>. Current
-              digital efforts focus on:{" "}
+              digital efforts focus on:
             </p>
             <ul className="text-gray-300 mb-6 text-md">
               <li>
@@ -91,6 +80,16 @@ export function OriginStory() {
               Though major viral reach is yet to be achieved, the goal remains
               to reach a larger audience for the glory of God.
             </p>
+          </div>
+          <div className="relative mb-10">
+            <Image
+              src="/Growth.jpeg"
+              alt="Ministry Origin"
+              width={600}
+              height={500}
+              className="rounded-lg opacity-80"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-purple-500/20 to-transparent rounded-lg"></div>
           </div>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -118,10 +117,9 @@ export function OriginStory() {
               <li>Other individuals and groups by God’s leading</li>
             </ul>
           </div>
-          <div className="relative">
+          <div className="relative mb-10">
             <Image
-              // TODO: Replace with actual image URL
-              src="/placeholder.svg?height=500&width=600"
+              src="/Ministry Leadership.jpeg"
               alt="Ministry Origin"
               width={600}
               height={500}
@@ -131,17 +129,6 @@ export function OriginStory() {
           </div>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className="relative">
-            <Image
-              // TODO: Replace with actual image URL
-              src="/placeholder.svg?height=500&width=600"
-              alt="Ministry Origin"
-              width={600}
-              height={500}
-              className="rounded-lg opacity-80"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-purple-500/20 to-transparent rounded-lg"></div>
-          </div>
           <div>
             <h2 className="text-4xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
               Financial Support
@@ -158,6 +145,16 @@ export function OriginStory() {
               <li>Income from his personal work and music ministry</li>
               <li>Support from friends and family</li>
             </ul>
+          </div>
+          <div className="relative mb-10">
+            <Image
+              src="/Ministry Support.jpeg"
+              alt="Ministry Origin"
+              width={600}
+              height={500}
+              className="rounded-lg opacity-80"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-purple-500/20 to-transparent rounded-lg"></div>
           </div>
         </div>
       </div>
