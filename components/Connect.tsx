@@ -12,9 +12,10 @@ export function Connect() {
         </h2>
         <p className="text-xl text-gray-300 mb-8">
           Take the first step in your journey of faith, worship, and
-          transformation with <strong>Monakho Ministry</strong>. Whether you&apos;re
-          looking to join our events, serve, grow spiritually, or just explore
-          what we&apos;re all about—we&apos;d love to hear from you.
+          transformation with <strong>Monakho Ministry</strong>. Whether
+          you&apos;re looking to join our events, serve, grow spiritually, or
+          just explore what we&apos;re all about—we&apos;d love to hear from
+          you.
         </p>
         <Link href="/contact">
           <Button

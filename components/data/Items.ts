@@ -9,6 +9,7 @@ import {
   MessageCircle,
   Phone,
   Users,
+  Heart,
 } from "lucide-react";
 import { Metadata } from "next";
 
@@ -258,3 +259,97 @@ export const liveRecordings = [
     thumbnail: "/placeholder.svg?height=200&width=350",
   },
 ];
+
+  export const upcomingEvents = [
+    {
+      id: 1,
+      title: "Tehillah Worship Experience",
+      date: "Every Monday",
+      time: "06:00 PM - 08:30 PM",
+      location: "Online via Youtube Live and Tiktok",
+      description:
+        "Join us for our weekly worship service featuring contemporary music, inspiring messages, and community connection.",
+      type: "Weekly Tehillah Worship",
+      icon: Heart,
+      gradient: "from-blue-500 to-purple-500",
+    },
+    {
+      id: 2,
+      title: "Nakuru City Mission fellowship",
+      date: "July 13, 2025",
+      time: "7:00 AM - 9:00 PM",
+      location: "At City Mission Fellowship, Nakuru",
+      description: "Nakuru City Mission fellowship – One day God- Driven  Worship Impartation At City Mission Fellowship, Nakuru Town.",
+      type: "Special Event",
+      icon: Music,
+      gradient: "from-purple-500 to-pink-500",
+    },
+    {
+      id: 3,
+      title: "Youth Worship Gathering",
+      date: "Saturday, Dec 16",
+      time: "6:00 PM - 8:30 PM",
+      location: "TBD",
+      description:
+        "High-energy worship designed for teens and young adults with contemporary music and relevant messages.",
+      type: "Youth Event",
+      icon: Star,
+      gradient: "from-pink-500 to-red-500",
+    },
+    {
+      id: 4,
+      title: "Christmas Eve Service",
+      date: "Sunday, Dec 24",
+      time: "7:00 PM - 8:30 PM",
+      location: "TBD",
+      description:
+        "Celebrate the birth of Christ with a special candlelight service featuring carols, communion, and reflection.",
+      type: "Holiday Service",
+      icon: Heart,
+      gradient: "from-red-500 to-orange-500",
+    },
+    {
+      id: 5,
+      title: "New Year Prayer & Worship",
+      date: "Wednesday, Dec 31",
+      time: "TBD",
+      location: "Online & In-Person",
+      description: "Welcome the new year with prayer, worship, and setting intentions for the year ahead.",
+      type: "Special Service",
+      icon: Star,
+      gradient: "from-blue-500 to-cyan-500",
+    },
+    {
+      id: 6,
+      title: "Community Outreach Day",
+      date: "Regularly",
+      time: "9:00 AM - 3:00 PM",
+      location: "Various Locations",
+      description: "Join us as we serve our local community through various outreach projects and acts of kindness.",
+      type: "Community Service",
+      icon: Users,
+      gradient: "from-green-500 to-blue-500",
+    },
+  ]
+
+    export const pastEvents = [
+      {
+        title: "Overnight Kesha - Prayer  & Worship Experience",
+        date: "June 27th 2025",
+        description: "Overnight Kesha - Prayer  & Worship Experience, Huruma Ethiopian Church on Friday, June 27, 2025 All Night",
+        attendees: 15,
+      },
+      {
+        title: "Street Worship at the Marketplace",
+        date: "Saturday , June 28, 2025",
+        description: "DECIBEL Shop, Luthuli Avenue - Nairobi, Kenya  From 12:00 Noon.",
+        attendees: 30,
+      },
+      {
+        title: "God-Driven Worship Impartation.",
+        date: "Wednesday, July 2 – Friday, July 4, 2025",
+        description: "God-Driven Worship Impartation Muradi, Embakasi  from Wednesday, July 2 – Friday, July 4, 2025 Time: 5:00 p.m. – 8:30 p.m.",
+        attendees: 200,
+      },
+    ]
+  

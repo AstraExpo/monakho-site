@@ -44,7 +44,7 @@ const handleSubmit = async (e: React.FormEvent) => {
     });
   };
   return (
-    <section className="py-20 px-4 bg-black/20">
+    <section className="py-20 px-4 bg-black/20" id="ContactForm">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">

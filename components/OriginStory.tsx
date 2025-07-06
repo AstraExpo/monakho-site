@@ -48,7 +48,7 @@ export function OriginStory() {
           </div>
           <div className="relative mb-10">
             <Image
-              src="/Monakho.png"
+              src="/Monakho.jpg"
               alt="Ministry Origin"
               width={600}
               height={500}
