@@ -9,6 +9,7 @@ import {
   MessageCircle,
   Phone,
   Users,
+  Heart,
 } from "lucide-react";
 import { Metadata } from "next";
 
@@ -23,71 +24,77 @@ export const navItems = [
 export const values = [
   {
     icon: CarFront,
-    title: "GOD - DRIVEN WORSHIP:",
-    description: "Centered in Truth and Spirit: <strong>John 4:23</strong>",
+    title: "GOD-DRIVEN WORSHIP:",
+    description: "Centered in truth and spirit: <strong>John 4:23</strong>",
   },
   {
     icon: Music,
     title: "SACRED MUSIC:",
     description:
-      "Every song, lyrics and messages areSpirit led grounded in the Word of God: <strong>John 1:1</strong> and <strong>Romans 8:14</strong>",
+      "Every song, lyric, and message is Spirit-led and grounded in the Word of God: <strong>John 1:1</strong>, <strong>Romans 8:14</strong>",
   },
   {
     icon: Cross,
     title: "HOLINESS:",
     description:
-      "Pursuing purity in Spirit, Heart and Intimacy with God with a lifestyle to honor the Glorious of God: <strong> Psalm 24:3-4</strong>, <strong>John 4:23</strong>",
+      "Pursuing purity in spirit, heart, and intimacy with God — living a lifestyle that honors the glory of God: <strong>Psalm 24:3–4</strong>, <strong>John 4:23</strong>",
   },
   {
     icon: Star,
     title: "EXCELLENCE WITH HUMILITY:",
     description:
-      "We offer our best in the Word Of God, Music and ministry with contrite heart and humble spirit to God: <strong>Isaiah 57:15</strong>, <strong>Colossians 3:23</strong>",
+      "Offering our best in the Word, music, and ministry — with a contrite heart and humble spirit to God: <strong>Isaiah 57:15</strong>, <strong>Colossians 3:23</strong>",
   },
   {
     icon: Rotate3d,
     title: "TRANSFORMATION THROUGH WORSHIP:",
     description:
-      " Worship that transforms and establish good change in lives and brings freedom, healing, and salvation to all Heads of state and their nations :<strong> Revelation 21:21-27</strong>, <strong>2 Corinthians 3:18</strong>",
+      "Worship that brings transformation, freedom, healing, and salvation — impacting lives, leaders, and nations: <strong>Revelation 21:21–27</strong>, <strong>2 Corinthians 3:18</strong>",
   },
 ];
 
 export const leadership = [
   {
-    name: "Valentine Monakho",
+    name: "VALENTIN MONAKHO",
     role: "Founder & Ministry Leaderr",
     image: "/Monakho_PhotoGrid (1) (1).png",
-    bio: "Valentine has been leading worship communities for over 10 years, with a passion for bridging traditional faith with contemporary expression.",
+    bio: "Valentin Monakho is an anointed spiritual worship leader and gifted music arranger, known for stirring revival through truth, mentorship, and Spirit-led worship. God moves powerfully through his voice and guitar, creating sacred moments where lives are transformed. He is also a great crowd mover and puller, drawing hearts into deep worship and divine encounter—where the presence of God becomes tangible and undeniable.",
   },
   {
-    name: "Winnie Monakho",
+    name: "WINNIE MONAKHO",
     role: "Lead Vocalist & Worship Leader",
     image: "/Winnie (1).png",
-    bio: "Winnie brings her background in music and worship leading to create powerful and engaging worship experiences.",
+    bio: "Winnie Monakho, a fervent worshipper graced with a voice that moves the soul, stands faithfully beside her husband, the vision bearer Valentin Monakho, in the sacred calling of divine worship and service.",
   },
   {
-    name: "PA Flourence",
+    name: "FLORENCE MAKOKHA",
     role: "Personal Assistant to Valentin Monakho",
     image: "/Florence_PhotoGrid (1) (1).png",
-    bio: "Flourence is the Personal Assistant to Valentin Monakho and is Responsible for passing Ministry Information to the entire team.",
+    bio: "The Personal Assistant to Valentin Monakho, entrusted with overseeing ministry operations, ensuring order, coordinating communication, advising team members, and supporting strategic planning and event organization.",
   },
   {
-    name: "Producer Brian",
+    name: "PRISILA MONAKHO",
+    role: "Treasurer and Lead Vocalist",
+    image: "/Priscila Monakho_preview_rev_1.png",
+    bio: "She is the Treasurer and longest-serving worshipper in Monakho Ministry, a dynamic gospel singer known for her unique, crowd, drawing voice, unwavering zeal, and unquestioning obedience in service to God.",
+  },
+  {
+    name: "BRIAN ISUTSA",
     role: "Music Producer & Band Director",
     image: "/Chekea (1).png",
-    bio: "Brian focuses on crafting the sound of Monakho Ministry, blending modern production techniques with sacred music traditions.",
+    bio: "He is the producer of his own music ministry and Band Director in Monakho Ministry,  skillfully shaping sound, including signature snapping elementsreflecting the vision bearer’s creative musical arrangements and Spirit- led worship.",
   },
   {
-    name: "Pianist Dominic",
-    role: "Deputy Band Director",
-    image: "/Domonic_PhotoGrid (1) (1).png",
-    bio: "Dominic is the lead Pianist and Deputy Band Director.",
-  },
-  {
-    name: "Secretary Emmanuel",
-    role: "Secretary and Pianist",
+    name: "ANTHONY KIBASO",
+    role: "Secretary and Prayer Cordinator",
     image: "/Emmanuel (1).png",
-    bio: "Emmanuel is a Prayer worrior and the secretary to the Ministry. He is responsible for planning and Organising events.",
+    bio: "Serves as the Secretary and Prayer Cordinator of Monakho Ministry, carrying an unwavering zeal and a sacred devotion to God's work with radiant excellence.",
+  },
+  {
+    name: "MR THOMAS WILSING",
+    role: "Lead Coordinator – Germany and the Entire European Region",
+    image: "/Avatar.png",
+    bio: "With a heart of reverence and humility, Mr. Thomas Wilsing faithfully serves and worships God through the sacred calling of Monakho Ministry. As the appointed coordinator for Germany and the broader European sphere, he embodies the vision of the God-Driven Worship Movement, advancing the ministry’s mission with excellence, devotion, and unwavering commitment to the glory of God.",
   },
 ];
 
@@ -233,22 +240,116 @@ export const popularTracks = [
 
 export const liveRecordings = [
   // TODO: Update the recordings with real data
+  {
+    title: "Sunday Service - December 3, 2023",
+    duration: "1:15:32",
+    views: "2.1K",
+    thumbnail: "/placeholder.svg?height=200&width=350",
+  },
+  {
+    title: "Acoustic Night - November 24, 2023",
+    duration: "45:18",
+    views: "1.8K",
+    thumbnail: "/placeholder.svg?height=200&width=350",
+  },
+  {
+    title: "Youth Worship - November 18, 2023",
+    duration: "52:45",
+    views: "3.2K",
+    thumbnail: "/placeholder.svg?height=200&width=350",
+  },
+];
+
+  export const upcomingEvents = [
     {
-      title: "Sunday Service - December 3, 2023",
-      duration: "1:15:32",
-      views: "2.1K",
-      thumbnail: "/placeholder.svg?height=200&width=350",
+      id: 1,
+      title: "Tehillah Worship Experience",
+      date: "Every Monday",
+      time: "06:00 PM - 08:30 PM",
+      location: "Online via Youtube Live and Tiktok",
+      description:
+        "Join us for our weekly worship service featuring contemporary music, inspiring messages, and community connection.",
+      type: "Weekly Tehillah Worship",
+      icon: Heart,
+      gradient: "from-blue-500 to-purple-500",
     },
     {
-      title: "Acoustic Night - November 24, 2023",
-      duration: "45:18",
-      views: "1.8K",
-      thumbnail: "/placeholder.svg?height=200&width=350",
+      id: 2,
+      title: "Nakuru City Mission fellowship",
+      date: "July 13, 2025",
+      time: "7:00 AM - 9:00 PM",
+      location: "At City Mission Fellowship, Nakuru",
+      description: "Nakuru City Mission fellowship – One day God- Driven  Worship Impartation At City Mission Fellowship, Nakuru Town.",
+      type: "Special Event",
+      icon: Music,
+      gradient: "from-purple-500 to-pink-500",
     },
     {
-      title: "Youth Worship - November 18, 2023",
-      duration: "52:45",
-      views: "3.2K",
-      thumbnail: "/placeholder.svg?height=200&width=350",
+      id: 3,
+      title: "Youth Worship Gathering",
+      date: "Saturday, Dec 16",
+      time: "6:00 PM - 8:30 PM",
+      location: "TBD",
+      description:
+        "High-energy worship designed for teens and young adults with contemporary music and relevant messages.",
+      type: "Youth Event",
+      icon: Star,
+      gradient: "from-pink-500 to-red-500",
+    },
+    {
+      id: 4,
+      title: "Christmas Eve Service",
+      date: "Sunday, Dec 24",
+      time: "7:00 PM - 8:30 PM",
+      location: "TBD",
+      description:
+        "Celebrate the birth of Christ with a special candlelight service featuring carols, communion, and reflection.",
+      type: "Holiday Service",
+      icon: Heart,
+      gradient: "from-red-500 to-orange-500",
+    },
+    {
+      id: 5,
+      title: "New Year Prayer & Worship",
+      date: "Wednesday, Dec 31",
+      time: "TBD",
+      location: "Online & In-Person",
+      description: "Welcome the new year with prayer, worship, and setting intentions for the year ahead.",
+      type: "Special Service",
+      icon: Star,
+      gradient: "from-blue-500 to-cyan-500",
+    },
+    {
+      id: 6,
+      title: "Community Outreach Day",
+      date: "Regularly",
+      time: "9:00 AM - 3:00 PM",
+      location: "Various Locations",
+      description: "Join us as we serve our local community through various outreach projects and acts of kindness.",
+      type: "Community Service",
+      icon: Users,
+      gradient: "from-green-500 to-blue-500",
     },
   ]
+
+    export const pastEvents = [
+      {
+        title: "Overnight Kesha - Prayer  & Worship Experience",
+        date: "June 27th 2025",
+        description: "Overnight Kesha - Prayer  & Worship Experience, Huruma Ethiopian Church on Friday, June 27, 2025 All Night",
+        attendees: 15,
+      },
+      {
+        title: "Street Worship at the Marketplace",
+        date: "Saturday , June 28, 2025",
+        description: "DECIBEL Shop, Luthuli Avenue - Nairobi, Kenya  From 12:00 Noon.",
+        attendees: 30,
+      },
+      {
+        title: "God-Driven Worship Impartation.",
+        date: "Wednesday, July 2 – Friday, July 4, 2025",
+        description: "God-Driven Worship Impartation Muradi, Embakasi  from Wednesday, July 2 – Friday, July 4, 2025 Time: 5:00 p.m. – 8:30 p.m.",
+        attendees: 200,
+      },
+    ]
+  

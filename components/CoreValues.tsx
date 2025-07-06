@@ -29,7 +29,7 @@ export function CoreValues() {
                 <h3 className="text-xl font-bold text-white mb-4">
                   {value.title}
                 </h3>
-                <p className="text-gray-300">{value.description}</p>
+                <p className="text-gray-300" dangerouslySetInnerHTML={{ __html: value.description }}/>
               </CardContent>
             </Card>
           ))}

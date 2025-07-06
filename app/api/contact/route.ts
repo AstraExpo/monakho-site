@@ -8,7 +8,7 @@ export async function POST(req: Request) {
 
   try {
     await resend.emails.send({
-        // TODO: Use a verified domain later
+      // TODO: Use a verified domain later
       from: "onboarding@resend.dev", // use a verified domain later
       to: "monakhoministry@gmail.com",
       subject: `Contact Form: ${subject}`,

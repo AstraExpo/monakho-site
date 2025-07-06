@@ -43,7 +43,7 @@ export function Events() {
                 <em>Tehilla Worship</em>—an immersive experience of live praise,
                 music, and messages that uplift and ignite faith. Streaming live
                 on
-                <strong> YouTube</strong> and <strong>Facebook</strong>.
+                <strong> YouTube</strong>, <strong> Tiktok</strong> and <strong>Facebook</strong>.
               </p>
               <p className="text-sm text-gray-400">6:00 PM – 8:00 PM (EAT)</p>
             </CardContent>
