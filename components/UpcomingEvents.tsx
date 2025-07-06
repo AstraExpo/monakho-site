@@ -47,10 +47,6 @@ export function UpcomingEvents() {
                   </div>
 
                   <p className="text-gray-300 text-sm mb-6">{event.description}</p>
-
-                  <Button className={`w-full bg-gradient-to-r ${event.gradient} hover:opacity-90 text-white`}>
-                    Learn More
-                  </Button>
                 </CardContent>
               </Card>
             ))}
