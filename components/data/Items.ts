@@ -15,10 +15,10 @@ import { Metadata } from "next";
 
 export const navItems = [
   { href: "/", label: "Home" },
-  { href: "/about", label: "About" },
-  { href: "/worship-events", label: "Events" },
-  { href: "/gifts", label: "Content" },
-  { href: "/contact", label: "Contact" },
+  { href: "/client/about", label: "About" },
+  { href: "/client/worship-events", label: "Events" },
+  { href: "//client/gifts", label: "Content" },
+  { href: "/client/contact", label: "Contact" },
 ];
 
 export const values = [
