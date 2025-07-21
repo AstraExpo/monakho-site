@@ -1,6 +1,10 @@
 "use client";
 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -13,8 +17,66 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { UserPlus } from "lucide-react";
+import { auth } from "@/lib/server/firebase";
+import { doc, setDoc } from "firebase/firestore";
+import { db } from "@/lib/server/firebase";
 
 export default function RegisterPage() {
+  const router = useRouter();
+
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [agreeTerms, setAgreeTerms] = useState(false);
+  const [newsletter, setNewsletter] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleSignup = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (password !== confirmPassword) {
+      alert("Passwords do not match.");
+      return;
+    }
+
+    if (!agreeTerms) {
+      alert("You must agree to the Terms and Privacy Policy.");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const response = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email,
+          password,
+          firstName,
+          lastName,
+          phone,
+          newsletter,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Something went wrong.");
+      }
+
+      router.push("/client");
+    } catch (error: any) {
+      alert(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <Card className="border-0 bg-gradient-to-br from-card/80 to-card/40 backdrop-blur-xl shadow-2xl">
       <CardHeader className="space-y-4 text-center">
@@ -29,7 +91,7 @@ export default function RegisterPage() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={handleSignup}>
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="firstName">First Name</Label>
@@ -37,6 +99,8 @@ export default function RegisterPage() {
                 id="firstName"
                 placeholder="John"
                 required
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
                 className="bg-background/50 backdrop-blur-sm border-border/50"
               />
             </div>
@@ -46,6 +110,8 @@ export default function RegisterPage() {
                 id="lastName"
                 placeholder="Doe"
                 required
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
                 className="bg-background/50 backdrop-blur-sm border-border/50"
               />
             </div>
@@ -56,8 +122,10 @@ export default function RegisterPage() {
             <Input
               id="email"
               type="email"
-              placeholder="your@email.com"
               required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
               className="bg-background/50 backdrop-blur-sm border-border/50"
             />
           </div>
@@ -67,6 +135,8 @@ export default function RegisterPage() {
             <Input
               id="phone"
               type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
               placeholder="(555) 123-4567"
               className="bg-background/50 backdrop-blur-sm border-border/50"
             />
@@ -78,6 +148,8 @@ export default function RegisterPage() {
               id="password"
               type="password"
               required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="bg-background/50 backdrop-blur-sm border-border/50"
             />
           </div>
@@ -88,12 +160,18 @@ export default function RegisterPage() {
               id="confirmPassword"
               type="password"
               required
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
               className="bg-background/50 backdrop-blur-sm border-border/50"
             />
           </div>
 
           <div className="flex items-center space-x-2">
-            <Checkbox id="terms" />
+            <Checkbox
+              id="terms"
+              checked={agreeTerms}
+              onCheckedChange={() => setAgreeTerms(!agreeTerms)}
+            />
             <Label htmlFor="terms" className="text-sm">
               I agree to the{" "}
               <Link href="#" className="text-primary hover:underline">
@@ -107,7 +185,11 @@ export default function RegisterPage() {
           </div>
 
           <div className="flex items-center space-x-2">
-            <Checkbox id="newsletter" />
+            <Checkbox
+              id="newsletter"
+              checked={newsletter}
+              onCheckedChange={() => setNewsletter(!newsletter)}
+            />
             <Label htmlFor="newsletter" className="text-sm">
               Subscribe to our newsletter for updates and events
             </Label>
@@ -115,9 +197,10 @@ export default function RegisterPage() {
 
           <Button
             type="submit"
+            disabled={loading}
             className="w-full bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70"
           >
-            Create Account
+            {loading ? "Creating..." : "Create Account"}
           </Button>
         </form>
 

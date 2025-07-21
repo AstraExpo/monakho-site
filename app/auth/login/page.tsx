@@ -1,6 +1,9 @@
 "use client";
 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -14,6 +17,37 @@ import { Label } from "@/components/ui/label";
 import { LogIn, ArrowRight } from "lucide-react";
 
 export default function LoginPage() {
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const res = await fetch("/api/auth/signin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to sign in");
+      }
+
+      // Optional: Save user session info to state/context/cookie
+      router.push("/client");
+    } catch (error: any) {
+      alert(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <Card className="bg-white/10 backdrop-blur-md border border-white/20 shadow-2xl">
       <CardHeader className="space-y-4 text-center">
@@ -30,7 +64,7 @@ export default function LoginPage() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={handleLogin}>
           <div className="space-y-2">
             <Label htmlFor="email" className="text-white">
               Email
@@ -40,6 +74,8 @@ export default function LoginPage() {
               type="email"
               placeholder="your@email.com"
               required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="bg-white/10 backdrop-blur-sm border-white/20 text-white placeholder:text-gray-400"
             />
           </div>
@@ -51,14 +87,17 @@ export default function LoginPage() {
               id="password"
               type="password"
               required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="bg-white/10 backdrop-blur-sm border-white/20 text-white placeholder:text-gray-400"
             />
           </div>
           <Button
             type="submit"
+            disabled={loading}
             className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg shadow-blue-500/25"
           >
-            Sign In
+            {loading ? "Signing In..." : "Sign In"}
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </form>
@@ -71,7 +110,7 @@ export default function LoginPage() {
             Forgot your password?
           </Link>
           <div className="text-sm text-gray-300">
-            Don't have an account?{" "}
+            Don&apos;t have an account?{" "}
             <Link
               href="/auth/register"
               className="text-purple-400 hover:text-purple-300 hover:underline font-medium"
