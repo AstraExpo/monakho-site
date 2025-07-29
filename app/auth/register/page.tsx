@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -17,9 +16,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { UserPlus } from "lucide-react";
-import { auth } from "@/lib/server/firebase";
-import { doc, setDoc } from "firebase/firestore";
-import { db } from "@/lib/server/firebase";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -63,15 +59,29 @@ export default function RegisterPage() {
         }),
       });
 
-      const data = await response.json();
+      // ✅ Check if the server returned JSON before parsing
+      const contentType = response.headers.get("content-type");
+      let data: any;
+
+      if (contentType && contentType.includes("application/json")) {
+        data = await response.json();
+      } else {
+        // Fallback to reading plain text (HTML error page, etc.)
+        const text = await response.text();
+        throw new Error(
+          `Server returned non-JSON response: ${text.slice(0, 100)}...`
+        );
+      }
 
       if (!response.ok) {
         throw new Error(data.error || "Something went wrong.");
       }
 
+      console.log("Signup successful", data);
       router.push("/client");
     } catch (error: any) {
-      alert(error.message);
+      console.error("Signup error:", error);
+      alert(error.message || "An error occurred during signup.");
     } finally {
       setLoading(false);
     }

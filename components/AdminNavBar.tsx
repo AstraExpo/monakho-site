@@ -1,18 +1,29 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-} from "@/components/ui/navigation-menu"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Menu, LogOut, Shield } from "lucide-react"
-import { ThemeToggle } from "@/components/theme-toggle"
+} from "@/components/ui/navigation-menu";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Menu, LogOut, Shield } from "lucide-react";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { useRouter } from "next/navigation";
 
 export function AdminNavbar() {
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/auth/signout", { method: "POST" });
+      router.push("/");
+    } catch (err) {
+      console.error("Logout failed", err);
+    }
+  };
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-slate-900 dark:bg-slate-950 text-white">
       <div className="container mx-auto flex h-16 items-center px-4">
@@ -28,22 +39,41 @@ export function AdminNavbar() {
         {/* Mobile Navigation */}
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="md:hidden text-white hover:bg-slate-800">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden text-white hover:bg-slate-800"
+            >
               <Menu className="h-5 w-5" />
             </Button>
           </SheetTrigger>
-          <SheetContent side="left" className="bg-slate-900 text-white border-slate-700">
+          <SheetContent
+            side="left"
+            className="bg-slate-900 text-white border-slate-700"
+          >
             <nav className="flex flex-col space-y-4 mt-8">
-              <Link href="/admin/events" className="text-lg font-medium hover:text-emerald-300 transition-colors">
+              <Link
+                href="/admin/events"
+                className="text-lg font-medium hover:text-emerald-300 transition-colors"
+              >
                 Events
               </Link>
-              <Link href="/admin/content" className="text-lg font-medium hover:text-emerald-300 transition-colors">
+              <Link
+                href="/admin/content"
+                className="text-lg font-medium hover:text-emerald-300 transition-colors"
+              >
                 Content
               </Link>
-              <Link href="/admin/about" className="text-lg font-medium hover:text-emerald-300 transition-colors">
+              <Link
+                href="/admin/about"
+                className="text-lg font-medium hover:text-emerald-300 transition-colors"
+              >
                 About
               </Link>
-              <Link href="/admin/marchandise" className="text-lg font-medium hover:text-emerald-300 transition-colors">
+              <Link
+                href="/admin/marchandise"
+                className="text-lg font-medium hover:text-emerald-300 transition-colors"
+              >
                 Merchandise
               </Link>
             </nav>
@@ -99,16 +129,24 @@ export function AdminNavbar() {
         <div className="ml-auto flex items-center space-x-2">
           <ThemeToggle />
           <Link href="/client">
-            <Button variant="ghost" size="sm" className="text-white hover:bg-slate-800">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-white hover:bg-slate-800"
+            >
               View Site
             </Button>
           </Link>
-          <Button variant="ghost" size="sm" className="text-white hover:bg-slate-800">
-            <LogOut className="h-4 w-4 mr-2" />
-            Logout
+          <Button
+            variant="ghost"
+            onClick={handleLogout}
+            className="flex items-center space-x-2 text-lg font-medium hover:text-red-500 transition-colors"
+          >
+            <LogOut className="h-5 w-5" />
+            <span>Logout</span>
           </Button>
         </div>
       </div>
     </header>
-  )
+  );
 }

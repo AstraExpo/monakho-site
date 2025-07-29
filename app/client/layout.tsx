@@ -46,26 +46,24 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark">
-      <body
-        className={`${inter.className} bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 min-h-screen`}
-      >
-        <div className="relative min-h-screen">
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 opacity-50"></div>
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundImage: `radial-gradient(circle at 25px 25px, rgba(156, 146, 172, 0.05) 2px, transparent 0)`,
-              backgroundSize: "50px 50px",
-            }}
-          ></div>
-          <div className="relative z-10">
-            <Navbar />
-            <main className="min-h-screen">{children}</main>
-            <Footer />
-          </div>
+    <div
+      className={`${inter.className} bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 min-h-screen`}
+    >
+      <div className="relative min-h-screen">
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 opacity-50"></div>
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `radial-gradient(circle at 25px 25px, rgba(156, 146, 172, 0.05) 2px, transparent 0)`,
+            backgroundSize: "50px 50px",
+          }}
+        ></div>
+        <div className="relative z-10">
+          <Navbar />
+          <main className="min-h-screen">{children}</main>
+          <Footer />
         </div>
-      </body>
-    </html>
+      </div>
+    </div>
   );
 }
