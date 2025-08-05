@@ -6,7 +6,7 @@ const FIREBASE_API_KEY = process.env.FIREBASE_API_KEY as string;
 
 export async function POST(req: Request) {
   try {
-    const { email, password } = await req.json();
+    const { email, password, redirect } = await req.json();
 
     // 1️⃣ Sign in with Firebase REST API to get idToken
     const res = await fetch(
@@ -43,14 +43,27 @@ export async function POST(req: Request) {
 
     // 4️⃣ Verify token to get user info
     const decoded = await adminAuth.verifyIdToken(idToken);
+    const isAdmin =
+      decoded.email?.trim().toLowerCase() ===
+      "monakhoministry@gmail.com".toLowerCase();
 
-    // 5️⃣ Return safe user data
+    // 5️⃣ Decide redirect
+    let redirectTo = "/client"; // default
+    if (redirect) {
+      if (redirect.startsWith("/admin") && !isAdmin) {
+        redirectTo = "/unauthorized?reason=admin";
+      } else {
+        redirectTo = redirect;
+      }
+    } else if (isAdmin) {
+      redirectTo = "/admin";
+    }
+
     return NextResponse.json({
       uid: decoded.uid,
       email: decoded.email,
       displayName: decoded.name || null,
-      redirectTo:
-        decoded.email === "monakhoministry@gmail.com" ? "/admin" : "/client",
+      redirectTo,
     });
   } catch (error: any) {
     console.error("Signin error:", error);

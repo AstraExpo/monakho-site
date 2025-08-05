@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { JSX, useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -23,7 +23,6 @@ import {
   Users,
   MapPin,
   MoreHorizontal,
-  Table,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -33,68 +32,70 @@ import {
 } from "@/components/ui/drop-down-menu";
 import { CreateEventForm } from "@/components/forms/create-event-form";
 import {
+  Table,
   TableHeader,
   TableRow,
   TableHead,
   TableBody,
   TableCell,
 } from "@/components/ui/table";
+import { Skeleton } from "@/components/ui/Skeleton";
+import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import { db } from "@/lib/server/firebase";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function AdminEventsPage() {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [events, setEvents] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [editingEvent, setEditingEvent] = useState<any>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterStatus, setFilterStatus] = useState("All");
 
-  const events = [
-    {
-      id: 1,
-      title: "Sunday Worship Service",
-      date: "2024-01-21",
-      time: "10:00 AM",
-      location: "Main Sanctuary",
-      category: "Worship",
-      attendees: 150,
-      status: "Published",
-    },
-    {
-      id: 2,
-      title: "Youth Bible Study",
-      date: "2024-01-24",
-      time: "7:00 PM",
-      location: "Youth Center",
-      category: "Study",
-      attendees: 45,
-      status: "Published",
-    },
-    {
-      id: 3,
-      title: "Community Outreach",
-      date: "2024-01-27",
-      time: "2:00 PM",
-      location: "Downtown Shelter",
-      category: "Service",
-      attendees: 30,
-      status: "Draft",
-    },
-    {
-      id: 4,
-      title: "Prayer & Meditation",
-      date: "2024-01-30",
-      time: "6:30 PM",
-      location: "Prayer Garden",
-      category: "Prayer",
-      attendees: 25,
-      status: "Published",
-    },
-    {
-      id: 5,
-      title: "Family Fun Day",
-      date: "2024-02-03",
-      time: "12:00 PM",
-      location: "Community Park",
-      category: "Fellowship",
-      attendees: 200,
-      status: "Scheduled",
-    },
-  ];
+  // Filtered events
+  const filteredEvents = events.filter((event) => {
+    const matchesSearch =
+      event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (event.venueName?.toLowerCase() || "").includes(
+        searchQuery.toLowerCase()
+      ) ||
+      (event.venueUrl?.toLowerCase() || "").includes(searchQuery.toLowerCase());
+
+    const matchesStatus =
+      filterStatus === "All" || event.status === filterStatus;
+
+    return matchesSearch && matchesStatus;
+  });
+
+  useEffect(() => {
+    const q = query(collection(db, "events"), orderBy("date", "desc"));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const eventsData = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setEvents(eventsData);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  // Stats
+  const totalEvents = events.length;
+  const thisMonthEvents = events.filter((e) => {
+    const eventDate = new Date(e.date.seconds * 1000);
+    const now = new Date();
+    return (
+      eventDate.getMonth() === now.getMonth() &&
+      eventDate.getFullYear() === now.getFullYear()
+    );
+  }).length;
+  const totalAttendees = events.reduce((sum, e) => sum + (e.attendees || 0), 0);
+  const locationsCount = new Set(
+    events.map((e) => (e.venueType === "Physical" ? e.venueName : e.venueUrl))
+  ).size;
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -140,150 +141,471 @@ export default function AdminEventsPage() {
         </Dialog>
       </div>
 
-      {/* Stats Cards */}
+      {/* Stats */}
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card className="bg-white/10 dark:bg-white/5 backdrop-blur-md border border-white/20">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-white">
-              Total Events
-            </CardTitle>
-            <Calendar className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-white">24</div>
-            <p className="text-xs text-gray-300">+2 from last month</p>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-white/10 dark:bg-white/5 backdrop-blur-md border border-white/20">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-white">
-              This Month
-            </CardTitle>
-            <Calendar className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-white">8</div>
-            <p className="text-xs text-gray-300">Scheduled events</p>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-white/10 dark:bg-white/5 backdrop-blur-md border border-white/20">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-white">
-              Total Attendees
-            </CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-white">1,234</div>
-            <p className="text-xs text-gray-300">+15% from last month</p>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-white/10 dark:bg-white/5 backdrop-blur-md border border-white/20">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-white">
-              Locations
-            </CardTitle>
-            <MapPin className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-white">6</div>
-            <p className="text-xs text-gray-300">Active venues</p>
-          </CardContent>
-        </Card>
+        {loading ? (
+          Array(4)
+            .fill(0)
+            .map((_, idx) => (
+              <Card
+                key={idx}
+                className="bg-white/10 backdrop-blur-md border border-white/20 p-4"
+              >
+                <Skeleton className="h-4 w-24 mb-2" />
+                <Skeleton className="h-8 w-16" />
+              </Card>
+            ))
+        ) : (
+          <>
+            <StatCard
+              title="Total Events"
+              value={totalEvents}
+              icon={<Calendar />}
+              note="+2 from last month"
+            />
+            <StatCard
+              title="This Month"
+              value={thisMonthEvents}
+              icon={<Calendar />}
+              note="Scheduled events"
+            />
+            <StatCard
+              title="Total Attendees"
+              value={totalAttendees}
+              icon={<Users />}
+              note="+15% from last month"
+            />
+            <StatCard
+              title="Locations"
+              value={locationsCount}
+              icon={<MapPin />}
+              note="Active venues"
+            />
+          </>
+        )}
       </div>
 
-      {/* Search and Filter */}
+      {/* Search + Filter */}
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
             placeholder="Search events..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10 bg-white/10 backdrop-blur-sm border-white/20 text-white placeholder:text-gray-400"
           />
         </div>
-        <Button
-          variant="outline"
-          className="bg-white/10 backdrop-blur-sm border-white/20 text-white hover:bg-white/20"
-        >
-          <Filter className="w-4 h-4 mr-2" />
-          Filter
-        </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="outline"
+              className="bg-white/10 backdrop-blur-sm border-white/20 text-white hover:bg-white/20"
+            >
+              <Filter className="w-4 h-4 mr-2" />
+              {filterStatus}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            {["All", "Published", "Draft", "Scheduled"].map((status) => (
+              <DropdownMenuItem
+                key={status}
+                onClick={() => setFilterStatus(status)}
+              >
+                {status}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       {/* Events Table */}
       <Card className="bg-white/10 dark:bg-white/5 backdrop-blur-md border border-white/20">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="text-white">Event</TableHead>
-              <TableHead className="text-white">Date & Time</TableHead>
-              <TableHead className="text-white">Location</TableHead>
-              <TableHead className="text-white">Category</TableHead>
-              <TableHead className="text-white">Attendees</TableHead>
-              <TableHead className="text-white">Status</TableHead>
-              <TableHead className="text-right text-white">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {events.map((event) => (
-              <TableRow key={event.id}>
-                <TableCell className="font-medium text-white">
-                  {event.title}
-                </TableCell>
-                <TableCell>
-                  <div className="text-sm text-white">
-                    <div>{new Date(event.date).toLocaleDateString()}</div>
-                    <div className="text-gray-300">{event.time}</div>
-                  </div>
-                </TableCell>
-                <TableCell className="text-white">{event.location}</TableCell>
-                <TableCell>
-                  <Badge
-                    variant="outline"
-                    className="text-white border-white/20"
-                  >
-                    {event.category}
-                  </Badge>
-                </TableCell>
-                <TableCell className="text-white">{event.attendees}</TableCell>
-                <TableCell>
-                  <Badge className={getStatusColor(event.status)}>
-                    {event.status}
-                  </Badge>
-                </TableCell>
-                <TableCell className="text-right">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        className="h-8 w-8 p-0 text-white hover:bg-white/10"
-                      >
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent
-                      align="end"
-                      className="bg-white/10 backdrop-blur-md border-white/20"
-                    >
-                      <DropdownMenuItem className="text-white hover:bg-white/20">
-                        <Edit className="mr-2 h-4 w-4" />
-                        Edit
-                      </DropdownMenuItem>
-                      <DropdownMenuItem className="text-destructive hover:bg-white/20">
-                        <Trash2 className="mr-2 h-4 w-4" />
-                        Delete
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
+        {loading ? (
+          <LoadingTable />
+        ) : (
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="text-white">Event</TableHead>
+                <TableHead className="text-white">Date & Time</TableHead>
+                <TableHead className="text-white">Venue</TableHead>
+                <TableHead className="text-white">Category</TableHead>
+                <TableHead className="text-white">Recurrence</TableHead>
+                <TableHead className="text-white">Attendees</TableHead>
+                <TableHead className="text-white">Status</TableHead>
+                <TableHead className="text-right text-white">Actions</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {filteredEvents.map((event) => (
+                <TableRow key={event.id}>
+                  {/* Event Title */}
+                  <TableCell className="font-medium text-white">
+                    {event.title}
+                  </TableCell>
+
+                  {/* Date & Time */}
+                  <TableCell>
+                    <div className="text-sm text-white">
+                      <div>
+                        {event.date?.seconds
+                          ? new Date(
+                              event.date.seconds * 1000
+                            ).toLocaleDateString()
+                          : "N/A"}
+                      </div>
+                      <div className="text-gray-300">{event.time || "N/A"}</div>
+                    </div>
+                  </TableCell>
+
+                  {/* Venue */}
+                  <TableCell className="text-white">
+                    {event.venueType === "Physical"
+                      ? event.venueName || "N/A"
+                      : event.venueUrl || "N/A"}
+                  </TableCell>
+
+                  {/* Category */}
+                  <TableCell>
+                    <Badge
+                      variant="outline"
+                      className="text-white border-white/20"
+                    >
+                      {event.category || "Uncategorized"}
+                    </Badge>
+                  </TableCell>
+
+                  {/* Recurrence */}
+                  <TableCell className="text-white">
+                    {event.isRecurring && event.recurrenceEndDate?.seconds
+                      ? `${event.recurrenceType} until ${new Date(
+                          event.recurrenceEndDate.seconds * 1000
+                        ).toLocaleDateString()}`
+                      : "One-time"}
+                  </TableCell>
+
+                  {/* Attendees */}
+                  <TableCell className="text-white">
+                    {event.attendees ?? 0}
+                  </TableCell>
+
+                  {/* Status */}
+                  <TableCell>
+                    <Badge className={getStatusColor(event.status)}>
+                      {event.status || "Draft"}
+                    </Badge>
+                  </TableCell>
+
+                  {/* Actions */}
+                  <TableCell className="text-right">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          className="h-8 w-8 p-0 text-white hover:bg-white/10"
+                        >
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent
+                        align="end"
+                        className="bg-white/10 backdrop-blur-md border-white/20"
+                      >
+                        <DropdownMenuItem
+                          className="text-white hover:bg-white/20"
+                          onClick={() => {
+                            setEditingEvent(event);
+                            setIsEditDialogOpen(true);
+                          }}
+                        >
+                          <Edit className="mr-2 h-4 w-4" />
+                          Edit
+                        </DropdownMenuItem>
+
+                        <DropdownMenuItem
+                          className="text-destructive hover:bg-white/20"
+                          onClick={() => deleteEvent(event.id)}
+                        >
+                          <Trash2 className="mr-2 h-4 w-4" />
+                          Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        )}
       </Card>
+      {/* Edit Event Dialog */}
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <DialogContent className="max-w-2xl bg-white/10 backdrop-blur-md border border-white/20">
+          <DialogHeader>
+            <DialogTitle className="text-white">Edit Event</DialogTitle>
+            <DialogDescription className="text-gray-300">
+              Update the details for this event.
+            </DialogDescription>
+          </DialogHeader>
+
+          {editingEvent && (
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                const formData = new FormData(e.currentTarget);
+                const updates = Object.fromEntries(formData.entries());
+                await updateEvent(editingEvent.id, updates);
+                setIsEditDialogOpen(false);
+              }}
+              className="space-y-4"
+            >
+              {/* Title */}
+              <Input
+                name="title"
+                defaultValue={editingEvent.title}
+                placeholder="Event title"
+                className="bg-white/10 border-white/20 text-white"
+                required
+              />
+
+              {/* Description */}
+              <Textarea
+                name="description"
+                defaultValue={editingEvent.description}
+                placeholder="Event description"
+                className="bg-white/10 border-white/20 text-white"
+              />
+
+              {/* Date */}
+              <Input
+                type="date"
+                name="date"
+                defaultValue={
+                  editingEvent.date?.seconds
+                    ? new Date(editingEvent.date.seconds * 1000)
+                        .toISOString()
+                        .split("T")[0]
+                    : ""
+                }
+                className="bg-white/10 border-white/20 text-white"
+                required
+              />
+
+              {/* Time */}
+              <Input
+                type="time"
+                name="time"
+                defaultValue={editingEvent.time}
+                className="bg-white/10 border-white/20 text-white"
+                required
+              />
+
+              {/* Venue Type */}
+              <select
+                name="venueType"
+                defaultValue={editingEvent.venueType}
+                className="bg-white/10 border-white/20 text-white p-2 rounded"
+              >
+                <option value="Physical">Physical</option>
+                <option value="Online">Online</option>
+              </select>
+
+              {/* Venue Name (Physical) */}
+              {editingEvent.venueType === "Physical" && (
+                <Input
+                  name="venueName"
+                  defaultValue={editingEvent.venueName || ""}
+                  placeholder="Venue name"
+                  className="bg-white/10 border-white/20 text-white"
+                />
+              )}
+
+              {/* Venue URL (Online) */}
+              {editingEvent.venueType === "Online" && (
+                <Input
+                  name="venueUrl"
+                  defaultValue={editingEvent.venueUrl || ""}
+                  placeholder="Online event link"
+                  className="bg-white/10 border-white/20 text-white"
+                />
+              )}
+
+              {/* Category */}
+              <select
+                name="category"
+                defaultValue={editingEvent.category}
+                className="bg-white/10 border-white/20 text-white p-2 rounded"
+              >
+                {[
+                  "Prayer Meeting",
+                  "Live Recording",
+                  "Worship Practice",
+                  "Livestream Worship",
+                  "Bible Study",
+                  "Outreach",
+                  "Conference",
+                  "Other",
+                ].map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
+                ))}
+              </select>
+
+              {/* Attendees */}
+              <Input
+                type="number"
+                name="attendees"
+                defaultValue={editingEvent.attendees || 0}
+                placeholder="Current attendees"
+                className="bg-white/10 border-white/20 text-white"
+              />
+
+              {/* Max Attendees */}
+              <Input
+                type="number"
+                name="maxAttendees"
+                defaultValue={editingEvent.maxAttendees || ""}
+                placeholder="Leave empty for unlimited"
+                className="bg-white/10 border-white/20 text-white"
+              />
+
+              {/* Status */}
+              <select
+                name="status"
+                defaultValue={editingEvent.status || "Draft"}
+                className="bg-white/10 border-white/20 text-white p-2 rounded"
+              >
+                <option value="Draft">Draft</option>
+                <option value="Published">Published</option>
+                <option value="Scheduled">Scheduled</option>
+              </select>
+
+              {/* Is Public */}
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  name="isPublic"
+                  defaultChecked={editingEvent.isPublic ?? true}
+                  className="accent-primary"
+                />
+                <label className="text-white">Make event public</label>
+              </div>
+
+              {/* Recurrence */}
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  name="isRecurring"
+                  defaultChecked={editingEvent.isRecurring ?? false}
+                  className="accent-primary"
+                />
+                <label className="text-white">Recurring event</label>
+              </div>
+
+              {editingEvent.isRecurring && (
+                <>
+                  <select
+                    name="recurrenceType"
+                    defaultValue={editingEvent.recurrenceType || "Weekly"}
+                    className="bg-white/10 border-white/20 text-white p-2 rounded"
+                  >
+                    <option value="Daily">Daily</option>
+                    <option value="Weekly">Weekly</option>
+                    <option value="Monthly">Monthly</option>
+                  </select>
+
+                  <Input
+                    type="date"
+                    name="recurrenceEndDate"
+                    defaultValue={
+                      editingEvent.recurrenceEndDate?.seconds
+                        ? new Date(
+                            editingEvent.recurrenceEndDate.seconds * 1000
+                          )
+                            .toISOString()
+                            .split("T")[0]
+                        : ""
+                    }
+                    className="bg-white/10 border-white/20 text-white"
+                  />
+                </>
+              )}
+
+              {/* Save */}
+              <Button type="submit" className="bg-primary">
+                Save Changes
+              </Button>
+            </form>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
+}
+
+// Small reusable stat card
+function StatCard({
+  title,
+  value,
+  icon,
+  note,
+}: {
+  title: string;
+  value: any;
+  icon: JSX.Element;
+  note?: string;
+}) {
+  return (
+    <Card className="bg-white/10 dark:bg-white/5 backdrop-blur-md border border-white/20">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <CardTitle className="text-sm font-medium text-white">
+          {title}
+        </CardTitle>
+        {icon}
+      </CardHeader>
+      <CardContent>
+        <div className="text-2xl font-bold text-white">{value}</div>
+        {note && <p className="text-xs text-gray-300">{note}</p>}
+      </CardContent>
+    </Card>
+  );
+}
+
+function LoadingTable() {
+  return (
+    <div className="p-6 space-y-4">
+      {Array(5)
+        .fill(0)
+        .map((_, idx) => (
+          <div key={idx} className="flex justify-between items-center gap-4">
+            <Skeleton className="h-4 w-32" />
+            <Skeleton className="h-4 w-20" />
+            <Skeleton className="h-4 w-24" />
+            <Skeleton className="h-4 w-16" />
+          </div>
+        ))}
+    </div>
+  );
+}
+
+async function deleteEvent(id: string) {
+  if (!confirm("Are you sure you want to delete this event?")) return;
+
+  const res = await fetch(`/api/updateevent/${id}`, { method: "DELETE" });
+  if (!res.ok) {
+    alert("Failed to delete event");
+  }
+}
+
+async function updateEvent(id: string, updates: any) {
+  const res = await fetch(`/api/updateevent/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(updates),
+  });
+  if (!res.ok) {
+    alert("Failed to update event");
+  }
 }

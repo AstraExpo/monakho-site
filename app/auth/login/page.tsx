@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
@@ -18,6 +18,9 @@ import { LogIn, ArrowRight } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectPath = searchParams.get("redirect") || "/client";
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -30,18 +33,13 @@ export default function LoginPage() {
       const res = await fetch("/api/auth/signin", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, redirect: redirectPath }),
       });
 
-      const contentType = res.headers.get("content-type");
-      const data = contentType?.includes("application/json")
-        ? await res.json()
-        : { error: await res.text() };
-
+      const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to sign in");
-      if (data.redirectTo) {
-        router.push(data.redirectTo);
-      }
+
+      router.push(data.redirectTo);
     } catch (error: any) {
       alert(error.message);
     } finally {
