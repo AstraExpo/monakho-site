@@ -7,9 +7,11 @@ if (!admin.apps.length) {
       clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
       privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
     }),
+    storageBucket: "monakho-ministry.firebasestorage.app",
   });
 }
 
 export const adminAuth = admin.auth();
 export const adminDb = admin.firestore();
-export {admin}
+export const adminStorage = admin.storage().bucket();
+export { admin };

@@ -546,7 +546,7 @@ export default function AdminEventsPage() {
 }
 
 // Small reusable stat card
-function StatCard({
+export function StatCard({
   title,
   value,
   icon,
@@ -573,7 +573,7 @@ function StatCard({
   );
 }
 
-function LoadingTable() {
+export function LoadingTable() {
   return (
     <div className="p-6 space-y-4">
       {Array(5)

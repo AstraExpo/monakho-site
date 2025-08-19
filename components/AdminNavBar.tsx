@@ -71,7 +71,7 @@ export function AdminNavbar() {
                 About
               </Link>
               <Link
-                href="/admin/marchandise"
+                href="/admin/merchandise"
                 className="text-lg font-medium hover:text-emerald-300 transition-colors"
               >
                 Merchandise
@@ -116,7 +116,7 @@ export function AdminNavbar() {
             <NavigationMenuItem>
               <NavigationMenuLink asChild>
                 <Link
-                  href="/admin/marchandise"
+                  href="/admin/merchandise"
                   className="group inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-slate-800 focus:bg-slate-800 focus:outline-none text-white"
                 >
                   Merchandise
