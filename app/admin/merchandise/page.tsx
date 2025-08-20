@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useEffect, useState, useMemo } from "react";
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -19,9 +19,6 @@ import {
   Filter,
   Edit,
   Trash2,
-  Package,
-  DollarSign,
-  TrendingUp,
   Eye,
   MoreHorizontal,
   Calendar,
@@ -48,32 +45,61 @@ import { db } from "@/lib/server/firebase";
 import { LoadingTable, StatCard } from "../events/page";
 import { Skeleton } from "@/components/ui/Skeleton";
 
+// ------------------ Utility ------------------
+
+/**
+ * Map product status to corresponding badge colors
+ */
+function getProductStatusColor(status: string) {
+  switch (status) {
+    case "Active":
+      return "bg-emerald-500/10 text-emerald-500 border-emerald-500/20";
+    case "Out of Stock":
+      return "bg-red-500/10 text-red-500 border-red-500/20";
+    case "Low Stock":
+      return "bg-orange-500/10 text-orange-500 border-orange-500/20";
+    case "Inactive":
+      return "bg-gray-500/10 text-gray-500 border-gray-500/20";
+    default:
+      return "bg-gray-500/10 text-gray-500 border-gray-500/20";
+  }
+}
+
+/**
+ * Small debounce hook to prevent search lag
+ */
+function useDebouncedValue<T>(value: T, delay = 3000): T {
+  const [debounced, setDebounced] = useState(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => setDebounced(value), delay);
+    return () => clearTimeout(handler);
+  }, [value, delay]);
+
+  return debounced;
+}
+
+// ------------------ Main Page ------------------
+
 export default function AdminMerchandisePage() {
+  // UI states
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
-  const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Data states
+  const [products, setProducts] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("All");
 
-  // Filtered products
-  const filteredProducts = products.filter((product) => {
-    const matchesSearch =
-      product.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (product.venueName?.toLowerCase() || "").includes(
-        searchQuery.toLowerCase()
-      ) ||
-      (product.venueUrl?.toLowerCase() || "").includes(
-        searchQuery.toLowerCase()
-      );
+  // Debounced search to optimize performance
+  const debouncedSearch = useDebouncedValue(searchQuery, 300);
 
-    const matchesStatus =
-      filterStatus === "All" || product.status === filterStatus;
-
-    return matchesSearch && matchesStatus;
-  });
-
+  // ------------------ Firestore Listener ------------------
   useEffect(() => {
+    // Create a query to fetch products sorted by creation date
     const q = query(collection(db, "products"), orderBy("createdAt", "desc"));
+
+    // Listen for real-time updates
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const productsData = snapshot.docs.map((doc) => ({
         id: doc.id,
@@ -83,49 +109,42 @@ export default function AdminMerchandisePage() {
       setLoading(false);
     });
 
-    return () => unsubscribe();
+    return () => unsubscribe(); // cleanup on unmount
   }, []);
 
-  // Stats for Products
+  // ------------------ Derived Data ------------------
+
+  // Filtered products memoized for performance
+  const filteredProducts = useMemo(() => {
+    return products.filter((product) => {
+      const matchesSearch =
+        product.name?.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+        (product.venueName?.toLowerCase() || "").includes(
+          debouncedSearch.toLowerCase()
+        ) ||
+        (product.venueUrl?.toLowerCase() || "").includes(
+          debouncedSearch.toLowerCase()
+        );
+
+      const matchesStatus =
+        filterStatus === "All" || product.status === filterStatus;
+
+      return matchesSearch && matchesStatus;
+    });
+  }, [products, debouncedSearch, filterStatus]);
+
+  console.log("Filtered Products:", filteredProducts);
+
+  // Stats
   const totalProducts = products.length;
-
-  // const thisMonthProducts = products.filter((p) => {
-  //   const productDate = new Date(p.date.seconds * 1000);
-  //   const now = new Date();
-  //   return (
-  //     productDate.getMonth() === now.getMonth() &&
-  //     productDate.getFullYear() === now.getFullYear()
-  //   );
-  // }).length;
-
-  // Example: total stock (sum of all product quantities)
   const totalStock = products.reduce((sum, p) => sum + (p.stock || 0), 0);
-
-  // Example: total sales (if you’re tracking sales per product)
   const totalSales = products.reduce((sum, p) => sum + (p.sales || 0), 0);
-
-  // Example: number of unique categories
   const categoriesCount = new Set(products.map((p) => p.category)).size;
 
-  // Product status color mapping
-  const getProductStatusColor = (status: string) => {
-    switch (status) {
-      case "Active":
-        return "bg-emerald-500/10 text-emerald-500 border-emerald-500/20";
-      case "Out of Stock":
-        return "bg-red-500/10 text-red-500 border-red-500/20";
-      case "Low Stock":
-        return "bg-orange-500/10 text-orange-500 border-orange-500/20";
-      case "Inactive":
-        return "bg-gray-500/10 text-gray-500 border-gray-500/20";
-      default:
-        return "bg-gray-500/10 text-gray-500 border-gray-500/20";
-    }
-  };
-
+  // ------------------ Render ------------------
   return (
     <div className="space-y-8">
-      {/* Header */}
+      {/* Header Section */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-3xl font-bold bg-gradient-to-r from-foreground to-primary bg-clip-text text-transparent">
@@ -135,6 +154,8 @@ export default function AdminMerchandisePage() {
             Manage ministry products and inventory
           </p>
         </div>
+
+        {/* New Product Dialog */}
         <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
           <DialogTrigger asChild>
             <Button className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70">
@@ -144,7 +165,9 @@ export default function AdminMerchandisePage() {
           </DialogTrigger>
           <DialogContent className="max-w-2xl bg-white/10 backdrop-blur-md border border-white/20">
             <DialogHeader>
-              <DialogTitle className="text-white">Create New Event</DialogTitle>
+              <DialogTitle className="text-white">
+                Create New Product
+              </DialogTitle>
               <DialogDescription className="text-gray-300">
                 Fill in the details below to add a product
               </DialogDescription>
@@ -154,7 +177,7 @@ export default function AdminMerchandisePage() {
         </Dialog>
       </div>
 
-      {/* Stats Cards */}
+      {/* Stats Section */}
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {loading ? (
           Array(4)
@@ -176,12 +199,6 @@ export default function AdminMerchandisePage() {
               icon={<Calendar />}
               note="+2 from last month"
             />
-            {/* <StatCard
-              title="This Month"
-              value={thisMonthProducts}
-              icon={<Calendar />}
-              note="Scheduled events"
-            /> */}
             <StatCard
               title="Total Sales"
               value={totalSales}
@@ -192,24 +209,26 @@ export default function AdminMerchandisePage() {
               title="Total Stock"
               value={totalStock}
               icon={<MapPin />}
-              note="Active venues"
+              note="Across all items"
             />
             <StatCard
               title="Categories Count"
               value={categoriesCount}
               icon={<MapPin />}
-              note="Active venues"
+              note="Unique categories"
             />
           </>
         )}
       </div>
 
-      {/* Search and Filter */}
+      {/* Search + Filter Section */}
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
             placeholder="Search products..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10 bg-card/50 backdrop-blur-sm border-border/50"
           />
         </div>
@@ -242,24 +261,29 @@ export default function AdminMerchandisePage() {
             <TableBody>
               {filteredProducts.map((product) => (
                 <TableRow key={product.id}>
+                  {/* Product Info */}
                   <TableCell>
                     <div className="flex items-center gap-3">
                       <div className="w-12 h-12 rounded-lg overflow-hidden bg-muted">
                         <img
-                          src={product.image || "/placeholder.svg"}
+                          src={product.images || "/placeholder.svg"}
                           alt={product.name}
                           className="w-full h-full object-cover"
                         />
                       </div>
-                      <div>
-                        <div className="font-medium">{product.name}</div>
-                      </div>
+                      <div className="font-medium">{product.name}</div>
                     </div>
                   </TableCell>
+
+                  {/* Category */}
                   <TableCell>
                     <Badge variant="outline">{product.category}</Badge>
                   </TableCell>
+
+                  {/* Price */}
                   <TableCell>${product.price}</TableCell>
+
+                  {/* Stock */}
                   <TableCell>
                     <span
                       className={
@@ -269,12 +293,18 @@ export default function AdminMerchandisePage() {
                       {product.stock}
                     </span>
                   </TableCell>
+
+                  {/* Sold */}
                   <TableCell>{product.sold}</TableCell>
+
+                  {/* Status */}
                   <TableCell>
                     <Badge className={getProductStatusColor(product.status)}>
                       {product.status}
                     </Badge>
                   </TableCell>
+
+                  {/* Actions */}
                   <TableCell className="text-right">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>

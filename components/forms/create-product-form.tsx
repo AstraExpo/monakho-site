@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DialogFooter } from "@/components/ui/dialog";
+
 import {
   Tag,
   Package,
@@ -25,21 +26,35 @@ import {
   FileText,
   Music,
 } from "lucide-react";
+
 import { uploadFileViaApi } from "@/lib/server/uploadFile";
+import type { Category, Status } from "@/lib/types/product";
 
-// 🔑 Firebase upload helpers
-
-const PRODUCT_CATEGORIES = [
-  "Apparel",
+// --- Allowed Categories & Status (from shared types)
+const CATEGORIES: Category[] = [
   "Books",
   "Music",
   "Accessories",
-  "Digital",
+  "Clothing",
+  "Video",
+  "Merch",
   "Other",
 ];
 
+const STATUSES: Status[] = ["Active", "Inactive", "Out of Stock"];
+
+interface FormData {
+  name: string;
+  description: string;
+  price: string; // keep as string for <input>
+  stock: string; // keep as string for <input>
+  category: Category | "";
+  status: Status;
+  isFeatured: boolean;
+}
+
 export function CreateProductForm({ onClose }: { onClose: () => void }) {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     name: "",
     description: "",
     price: "",
@@ -52,10 +67,12 @@ export function CreateProductForm({ onClose }: { onClose: () => void }) {
   const [images, setImages] = useState<File[]>([]);
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
 
+  // Category-specific files
   const [bookFile, setBookFile] = useState<File | null>(null);
   const [musicFile, setMusicFile] = useState<File | null>(null);
-  const [digitalFile, setDigitalFile] = useState<File | null>(null);
+  const [videoFile, setVideoFile] = useState<File | null>(null);
 
+  // --- Handlers
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const files = Array.from(e.target.files);
@@ -82,54 +99,51 @@ export function CreateProductForm({ onClose }: { onClose: () => void }) {
     ) {
       return false;
     }
-
-    // Require at least 1 image
     if (images.length === 0) return false;
 
-    // Category-specific checks
+    // category-specific validation
     if (formData.category === "Books" && !bookFile) return false;
     if (formData.category === "Music" && !musicFile) return false;
-    if (formData.category === "Digital" && !digitalFile) return false;
+    if (formData.category === "Video" && !videoFile) return false;
 
     return true;
-  }, [formData, images, bookFile, musicFile, digitalFile]);
+  }, [formData, images, bookFile, musicFile, videoFile]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
-      // ✅ Upload images via API route
+      // --- Upload images
       const imageUrls = await Promise.all(
         images.map((file) =>
           uploadFileViaApi(file, `products/${formData.category}/images`)
         )
       );
-      // ✅ Upload category-specific files
+
+      // --- Upload category-specific files
       let pdfUrl: string | null = null;
-      let audioUrl: string | null = null;
-      let fileUrl: string | null = null;
+      let musicUrl: string | null = null;
+      let videoUrl: string | null = null;
 
       if (bookFile) {
         pdfUrl = await uploadFileViaApi(bookFile, "products/Books/pdfs");
       }
-
       if (musicFile) {
-        audioUrl = await uploadFileViaApi(musicFile, "products/Music/audio");
+        musicUrl = await uploadFileViaApi(musicFile, "products/Music/audio");
+      }
+      if (videoFile) {
+        videoUrl = await uploadFileViaApi(videoFile, "products/Video/files");
       }
 
-      if (digitalFile) {
-        fileUrl = await uploadFileViaApi(digitalFile, "products/Digital/files");
-      }
-
-      // ✅ Final payload for DB (backend will now recognize it)
+      // --- Final payload
       const payload = {
         ...formData,
         price: Number(formData.price),
         stock: Number(formData.stock),
         images: imageUrls,
         pdfUrl,
-        audioUrl,
-        fileUrl,
+        musicUrl,
+        videoUrl,
       };
 
       const res = await fetch("/api/product/create", {
@@ -150,13 +164,12 @@ export function CreateProductForm({ onClose }: { onClose: () => void }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="grid grid-cols-2 gap-4">
-        {/* Product Name */}
-        <div className="col-span-2">
+    <form onSubmit={handleSubmit} className="space-y-8">
+      <div className="grid grid-cols-2 gap-6">
+        {/* Name */}
+        <div className="col-span-2 space-y-2">
           <Label htmlFor="name" className="flex items-center gap-2">
-            <Tag className="w-4 h-4" />
-            Product Name
+            <Tag className="w-4 h-4" /> Product Name
           </Label>
           <Input
             id="name"
@@ -168,7 +181,7 @@ export function CreateProductForm({ onClose }: { onClose: () => void }) {
         </div>
 
         {/* Description */}
-        <div className="col-span-2">
+        <div className="col-span-2 space-y-2">
           <Label htmlFor="description">Description</Label>
           <Textarea
             id="description"
@@ -182,10 +195,9 @@ export function CreateProductForm({ onClose }: { onClose: () => void }) {
         </div>
 
         {/* Price */}
-        <div>
+        <div className="space-y-2">
           <Label htmlFor="price" className="flex items-center gap-2">
-            <DollarSign className="w-4 h-4" />
-            Price
+            <DollarSign className="w-4 h-4" /> Price
           </Label>
           <Input
             id="price"
@@ -201,10 +213,9 @@ export function CreateProductForm({ onClose }: { onClose: () => void }) {
         </div>
 
         {/* Stock */}
-        <div>
+        <div className="space-y-2">
           <Label htmlFor="stock" className="flex items-center gap-2">
-            <Package className="w-4 h-4" />
-            Stock
+            <Package className="w-4 h-4" /> Stock
           </Label>
           <Input
             id="stock"
@@ -219,22 +230,21 @@ export function CreateProductForm({ onClose }: { onClose: () => void }) {
         </div>
 
         {/* Category */}
-        <div>
+        <div className="space-y-2">
           <Label htmlFor="category" className="flex items-center gap-2">
-            <Layers className="w-4 h-4" />
-            Category
+            <Layers className="w-4 h-4" /> Category
           </Label>
           <Select
             value={formData.category}
             onValueChange={(value) =>
-              setFormData({ ...formData, category: value })
+              setFormData({ ...formData, category: value as Category })
             }
           >
             <SelectTrigger>
               <SelectValue placeholder="Select category" />
             </SelectTrigger>
             <SelectContent>
-              {PRODUCT_CATEGORIES.map((cat) => (
+              {CATEGORIES.map((cat) => (
                 <SelectItem key={cat} value={cat}>
                   {cat}
                 </SelectItem>
@@ -243,11 +253,32 @@ export function CreateProductForm({ onClose }: { onClose: () => void }) {
           </Select>
         </div>
 
-        {/* Always show Images */}
-        <div className="col-span-2">
+        {/* Status */}
+        <div className="space-y-2">
+          <Label htmlFor="status">Status</Label>
+          <Select
+            value={formData.status}
+            onValueChange={(value) =>
+              setFormData({ ...formData, status: value as Status })
+            }
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select status" />
+            </SelectTrigger>
+            <SelectContent>
+              {STATUSES.map((s) => (
+                <SelectItem key={s} value={s}>
+                  {s}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Images */}
+        <div className="col-span-2 space-y-2">
           <Label htmlFor="images" className="flex items-center gap-2">
-            <ImageIcon className="w-4 h-4" />
-            Upload Images
+            <ImageIcon className="w-4 h-4" /> Upload Images
           </Label>
           <Input
             id="images"
@@ -257,25 +288,24 @@ export function CreateProductForm({ onClose }: { onClose: () => void }) {
             onChange={handleImageChange}
           />
           {previewUrls.length > 0 && (
-            <div className="mt-3 flex gap-2 flex-wrap">
+            <div className="mt-3 flex gap-3 flex-wrap">
               {previewUrls.map((url, idx) => (
                 <img
                   key={idx}
                   src={url}
                   alt={`Preview ${idx + 1}`}
-                  className="w-20 h-20 object-cover rounded-md border"
+                  className="w-24 h-24 object-cover rounded-lg border"
                 />
               ))}
             </div>
           )}
         </div>
 
-        {/* Category-Specific Uploads */}
+        {/* Category-specific uploads */}
         {formData.category === "Books" && (
-          <div className="col-span-2">
+          <div className="col-span-2 space-y-2">
             <Label htmlFor="bookFile" className="flex items-center gap-2">
-              <FileText className="w-4 h-4" />
-              Upload Book File (PDF)
+              <FileText className="w-4 h-4" /> Upload Book File (PDF)
             </Label>
             <Input
               id="bookFile"
@@ -287,10 +317,9 @@ export function CreateProductForm({ onClose }: { onClose: () => void }) {
         )}
 
         {formData.category === "Music" && (
-          <div className="col-span-2">
+          <div className="col-span-2 space-y-2">
             <Label htmlFor="musicFile" className="flex items-center gap-2">
-              <Music className="w-4 h-4" />
-              Upload Music File (MP3)
+              <Music className="w-4 h-4" /> Upload Music File (MP3)
             </Label>
             <Input
               id="musicFile"
@@ -301,24 +330,23 @@ export function CreateProductForm({ onClose }: { onClose: () => void }) {
           </div>
         )}
 
-        {formData.category === "Digital" && (
-          <div className="col-span-2">
-            <Label htmlFor="digitalFile" className="flex items-center gap-2">
-              <FileText className="w-4 h-4" />
-              Upload Digital File (ZIP/PDF/Other)
+        {formData.category === "Video" && (
+          <div className="col-span-2 space-y-2">
+            <Label htmlFor="videoFile" className="flex items-center gap-2">
+              <FileText className="w-4 h-4" /> Upload Video File (MP4)
             </Label>
             <Input
-              id="digitalFile"
+              id="videoFile"
               type="file"
-              accept=".zip,.pdf,.rar,.7z,.docx,.pptx"
-              onChange={(e) => handleFileChange(e, setDigitalFile)}
+              accept="video/*"
+              onChange={(e) => handleFileChange(e, setVideoFile)}
             />
           </div>
         )}
       </div>
 
-      {/* Featured Checkbox */}
-      <div className="flex items-center space-x-2">
+      {/* Featured */}
+      <div className="flex items-center space-x-3">
         <Checkbox
           id="isFeatured"
           checked={formData.isFeatured}
@@ -331,15 +359,12 @@ export function CreateProductForm({ onClose }: { onClose: () => void }) {
         </Label>
       </div>
 
+      {/* Actions */}
       <DialogFooter>
         <Button type="button" variant="outline" onClick={onClose}>
           Cancel
         </Button>
-        <Button
-          type="submit"
-          disabled={!isFormValid}
-          className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600"
-        >
+        <Button type="submit" disabled={!isFormValid}>
           Create Product
         </Button>
       </DialogFooter>

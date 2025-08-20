@@ -2,8 +2,9 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { adminAuth, adminDb, admin } from "@/lib/server/firebase-admin";
+import { BaseProduct, Category, Status } from "@/lib/types/product";
 
-const CATEGORIES = [
+const CATEGORIES: Category[] = [
   "Books",
   "Music",
   "Merch",
@@ -11,9 +12,9 @@ const CATEGORIES = [
   "Accessories",
   "Video",
   "Other",
-] as const;
+];
 
-const STATUS = ["Active", "Inactive", "Out of Stock"] as const;
+const STATUS: Status[] = ["Active", "Inactive", "Out of Stock"];
 
 export async function POST(req: Request) {
   try {
@@ -34,7 +35,7 @@ export async function POST(req: Request) {
     // ✅ Parse request body
     const productData = await req.json();
 
-    // ✅ Required field validation (common)
+    // ✅ Required field validation
     if (!productData.name || !productData.price) {
       return NextResponse.json(
         { error: "Missing required fields: name, price" },
@@ -42,17 +43,17 @@ export async function POST(req: Request) {
       );
     }
 
-    // ✅ Category validation (fallback to Other)
+    // ✅ Category validation
     if (!CATEGORIES.includes(productData.category)) {
       productData.category = "Other";
     }
 
-    // ✅ Status validation (fallback to Active)
+    // ✅ Status validation
     if (!STATUS.includes(productData.status)) {
       productData.status = "Active";
     }
 
-    // ✅ Price validation
+    // ✅ Price & stock
     if (typeof productData.price !== "number" || productData.price <= 0) {
       return NextResponse.json(
         { error: "Invalid price. Must be a positive number" },
@@ -60,29 +61,12 @@ export async function POST(req: Request) {
       );
     }
 
-    // ✅ Stock validation (only if no variants)
     if (
       !productData.variants &&
       (!Number.isInteger(productData.stock) || productData.stock < 0)
     ) {
       return NextResponse.json(
         { error: "Invalid stock. Must be a non-negative integer" },
-        { status: 400 }
-      );
-    }
-
-    // ✅ Images validation
-    if (productData.images && !Array.isArray(productData.images)) {
-      return NextResponse.json(
-        { error: "Images must be an array of URLs" },
-        { status: 400 }
-      );
-    }
-
-    // ✅ Variants validation
-    if (productData.variants && !Array.isArray(productData.variants)) {
-      return NextResponse.json(
-        { error: "Variants must be an array" },
         { status: 400 }
       );
     }
@@ -146,13 +130,16 @@ export async function POST(req: Request) {
         break;
     }
 
-    // ✅ Generate slug (SEO-friendly)
+    // ✅ Generate slug
     const slug =
       productData.slug ||
-      productData.name.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9\-]/g, "");
+      productData.name
+        .toLowerCase()
+        .replace(/\s+/g, "-")
+        .replace(/[^a-z0-9\-]/g, "");
 
-    // ✅ Prepare document for Firestore
-    const newProduct = {
+    // ✅ Prepare product document
+    const newProduct: Omit<BaseProduct, "id"> = {
       name: productData.name,
       slug,
       description: productData.description || "",
@@ -160,24 +147,18 @@ export async function POST(req: Request) {
       price: productData.price,
       stock: productData.stock ?? 0,
       status: productData.status,
-
-      // 🔑 Files (category dependent)
       images: productData.images || [],
       pdfUrl: productData.pdfUrl || null,
       musicUrl: productData.musicUrl || null,
       videoUrl: productData.videoUrl || null,
       thumbnail: productData.thumbnail || null,
-
-      // 🔑 Extra
       variants: productData.variants || [],
       sold: productData.sold ?? 0,
       views: 0,
       ratings: [],
       averageRating: 0,
-
-      // 👤 Audit
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      createdAt: admin.firestore.FieldValue.serverTimestamp() as any,
+      updatedAt: admin.firestore.FieldValue.serverTimestamp() as any,
       createdBy: decoded.email,
       updatedBy: decoded.email,
     };
@@ -187,7 +168,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({
       success: true,
-      product: { id: docRef.id, ...newProduct },
+      product: { id: docRef.id, ...newProduct } satisfies BaseProduct,
     });
   } catch (err: any) {
     console.error("Error creating product:", err);
