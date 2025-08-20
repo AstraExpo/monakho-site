@@ -32,10 +32,10 @@ export default function MusicPage() {
       <FeaturedAlbums />
 
       {/* Popular Tracks */}
-      <PopularTracks />
+      {/* <PopularTracks /> */}
 
       {/* Live Recordings */}
-      <LiveRecording />
+      {/* <LiveRecording /> */}
 
       {/* Streaming Platforms */}
       <StreamingPlatforms />
