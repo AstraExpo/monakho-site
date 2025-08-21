@@ -1,8 +1,8 @@
-// app/api/events/route.ts
 import { NextResponse } from "next/server";
 import { adminDb } from "@/lib/server/firebase-admin";
+import { getErrorMessage } from "@/utils/error";
 
-export async function GET(req: Request) {
+export async function GET() {
   try {
     const snapshot = await adminDb
       .collection("events")
@@ -15,7 +15,7 @@ export async function GET(req: Request) {
     }));
 
     return NextResponse.json(events);
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+  } catch (err: unknown) {
+    return NextResponse.json({ error: getErrorMessage(err) }, { status: 500 });
   }
 }

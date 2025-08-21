@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { adminDb, admin } from "@/lib/server/firebase-admin";
+import { getErrorMessage } from "@/utils/error";
 
 export async function POST() {
   try {
@@ -9,7 +10,7 @@ export async function POST() {
     const now = new Date();
     for (let i = 1; i <= 30; i++) {
       const futureDate = new Date();
-      futureDate.setDate(now.getDate() + i); // i days from now
+      futureDate.setDate(now.getDate() + i); 
 
       const newEventRef = eventsRef.doc();
 
@@ -18,7 +19,7 @@ export async function POST() {
         description: `This is the description for Dummy Event ${i}.`,
         category: i % 2 === 0 ? "Conference" : "Workshop",
         location: `Venue ${i}`,
-        date: futureDate.toISOString(), // or Timestamp if you prefer
+        date: futureDate.toISOString(),
         time: "10:00 AM",
         attendees: Math.floor(Math.random() * 100),
         status: "Published",
@@ -30,8 +31,7 @@ export async function POST() {
     await batch.commit();
 
     return NextResponse.json({ success: true, message: "30 dummy events created" });
-  } catch (error: any) {
-    console.error("Error seeding events:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    return NextResponse.json({ error: getErrorMessage(error) }, { status: 500 });
   }
 }

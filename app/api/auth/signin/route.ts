@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { adminAuth } from "@/lib/server/firebase-admin";
+import { getErrorMessage } from "@/utils/error";
 
 const FIREBASE_API_KEY = process.env.FIREBASE_API_KEY as string;
 
@@ -65,8 +66,10 @@ export async function POST(req: Request) {
       displayName: decoded.name || null,
       redirectTo,
     });
-  } catch (error: any) {
-    console.error("Signin error:", error);
-    return NextResponse.json({ error: error.message }, { status: 401 });
+  } catch (error: unknown) {
+    return NextResponse.json(
+      { error: getErrorMessage(error) },
+      { status: 401 }
+    );
   }
 }

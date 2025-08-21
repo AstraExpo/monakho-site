@@ -8,6 +8,7 @@ import {
   EventCreateRequest,
   EventDocument,
 } from "@/lib/types/events";
+import { getErrorMessage } from "@/utils/error";
 
 /**
  * POST /api/events/create
@@ -154,10 +155,9 @@ export async function POST(req: Request) {
     await adminDb.collection("events").add(newEvent);
 
     return NextResponse.json({ success: true, event: newEvent });
-  } catch (err: any) {
-    console.error("Error creating event:", err);
+  } catch (err: unknown) {
     return NextResponse.json(
-      { error: err.message || "Failed to create event" },
+      { error: getErrorMessage(err) || "Failed to create event" },
       { status: 500 }
     );
   }

@@ -16,6 +16,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { UserPlus } from "lucide-react";
+import { getErrorMessage } from "@/utils/error";
+
+interface SignupResponse {
+  success?: boolean;
+  error?: string;
+  [key: string]: unknown;
+}
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -61,7 +68,7 @@ export default function RegisterPage() {
 
       // ✅ Check if the server returned JSON before parsing
       const contentType = response.headers.get("content-type");
-      let data: any;
+      let data: SignupResponse;
 
       if (contentType && contentType.includes("application/json")) {
         data = await response.json();
@@ -79,9 +86,8 @@ export default function RegisterPage() {
 
       console.log("Signup successful", data);
       router.push("/client");
-    } catch (error: any) {
-      console.error("Signup error:", error);
-      alert(error.message || "An error occurred during signup.");
+    } catch (error: unknown) {
+      alert(getErrorMessage(error) || "An error occurred during signup.");
     } finally {
       setLoading(false);
     }

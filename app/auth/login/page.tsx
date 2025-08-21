@@ -15,6 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { LogIn, ArrowRight } from "lucide-react";
+import { getErrorMessage } from "@/utils/error";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -40,8 +41,8 @@ export default function LoginPage() {
       if (!res.ok) throw new Error(data.error || "Failed to sign in");
 
       router.push(data.redirectTo);
-    } catch (error: any) {
-      alert(error.message);
+    } catch (error: unknown) {
+      alert(getErrorMessage(error));
     } finally {
       setLoading(false);
     }

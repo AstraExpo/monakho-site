@@ -1,4 +1,5 @@
 import { adminStorage } from "@/lib/server/firebase-admin";
+import { getErrorMessage } from "@/utils/error";
 import { NextRequest, NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
 
@@ -23,15 +24,17 @@ export async function POST(req: NextRequest) {
     const upload = adminStorage.file(filename);
     await upload.save(buffer, {
       contentType: file.type,
-      public: true, // 👈 makes it accessible via URL
+      public: true,
     });
 
     // Public URL
     const publicUrl = `https://storage.googleapis.com/${adminStorage.name}/${filename}`;
 
     return NextResponse.json({ url: publicUrl });
-  } catch (error: any) {
-    console.error("Upload error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    return NextResponse.json(
+      { error: getErrorMessage(error) },
+      { status: 500 }
+    );
   }
 }

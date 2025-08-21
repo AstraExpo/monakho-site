@@ -24,7 +24,7 @@ export default function ForgotPasswordPage() {
           Reset Password
         </CardTitle>
         <CardDescription className="text-center">
-          Enter your email address and we'll send you a link to reset your
+          Enter your email address and we&apos;ll send you a link to reset your
           password
         </CardDescription>
       </CardHeader>
@@ -51,7 +51,7 @@ export default function ForgotPasswordPage() {
 
         <div className="mt-6 text-center space-y-4">
           <div className="text-sm text-muted-foreground">
-            Remember your password?{" "}
+            Remember your password?
             <Link
               href="/auth/login"
               className="text-primary hover:underline font-medium"

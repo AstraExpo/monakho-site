@@ -3,6 +3,8 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { adminAuth, adminDb, admin } from "@/lib/server/firebase-admin";
 import { BaseProduct, Category, Status } from "@/lib/types/product";
+import { FieldValue } from "firebase-admin/firestore";
+import { getErrorMessage } from "@/utils/error";
 
 const CATEGORIES: Category[] = [
   "Books",
@@ -157,8 +159,8 @@ export async function POST(req: Request) {
       views: 0,
       ratings: [],
       averageRating: 0,
-      createdAt: admin.firestore.FieldValue.serverTimestamp() as any,
-      updatedAt: admin.firestore.FieldValue.serverTimestamp() as any,
+      createdAt: admin.firestore.FieldValue.serverTimestamp() as FieldValue,
+      updatedAt: admin.firestore.FieldValue.serverTimestamp() as FieldValue,
       createdBy: decoded.email,
       updatedBy: decoded.email,
     };
@@ -170,10 +172,9 @@ export async function POST(req: Request) {
       success: true,
       product: { id: docRef.id, ...newProduct } satisfies BaseProduct,
     });
-  } catch (err: any) {
-    console.error("Error creating product:", err);
+  } catch (err: unknown) {
     return NextResponse.json(
-      { error: err.message || "Failed to create product" },
+      { error: getErrorMessage(err) || "Failed to create product" },
       { status: 500 }
     );
   }

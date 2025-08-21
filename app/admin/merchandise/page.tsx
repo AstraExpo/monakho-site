@@ -42,8 +42,9 @@ import {
 import { CreateProductForm } from "@/components/forms/create-product-form";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { db } from "@/lib/server/firebase";
-import { LoadingTable, StatCard } from "../events/page";
 import { Skeleton } from "@/components/ui/Skeleton";
+import { StatCard } from "@/components/StatsCard";
+import { LoadingTable } from "@/components/LoadingTable";
 
 // ------------------ Utility ------------------
 

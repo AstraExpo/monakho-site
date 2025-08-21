@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { adminAuth, adminDb } from "@/lib/server/firebase-admin";
+import { getErrorMessage } from "@/utils/error";
 
 const FIREBASE_API_KEY = process.env.FIREBASE_API_KEY as string;
 
@@ -65,8 +66,11 @@ export async function POST(req: Request) {
       uid: userRecord.uid,
       email: userRecord.email,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Signup error:", error);
-    return NextResponse.json({ error: error.message }, { status: 400 });
+    return NextResponse.json(
+      { error: getErrorMessage(error) },
+      { status: 400 }
+    );
   }
 }

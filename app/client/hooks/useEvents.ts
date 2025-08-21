@@ -3,9 +3,10 @@
 import { useEffect, useState } from "react";
 import { collection, getDocs, query, orderBy } from "firebase/firestore";
 import { db } from "@/lib/server/firebase";
+import { BaseEvent, EventDocument, mapEventDoc } from "@/lib/types/events";
 
 export function useEvents() {
-  const [events, setEvents] = useState<any[]>([]);
+  const [events, setEvents] = useState<BaseEvent[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
@@ -15,15 +16,13 @@ export function useEvents() {
         const q = query(collection(db, "events"), orderBy("date", "desc"));
         const snapshot = await getDocs(q);
 
-        const list = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
+        const list: BaseEvent[] = snapshot.docs.map((doc) =>
+          mapEventDoc(doc.id, doc.data() as EventDocument)
+        );
 
         setEvents(list);
-      } catch (err) {
-        console.error("Error fetching events:", err);
-        setError(err as Error);
+      } catch (err: unknown) {
+        setError(err instanceof Error ? err : new Error("Unknown error"));
       } finally {
         setIsLoading(false);
       }

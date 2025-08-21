@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import { FeaturedAlbums } from "@/components/FeaturedAlbums";
-import { PopularTracks } from "@/components/PopularTracks";
-import { LiveRecording } from "@/components/LiveRecording";
 import { StreamingPlatforms } from "@/components/StreamingPlatforms";
 
 export const metadata: Metadata = {

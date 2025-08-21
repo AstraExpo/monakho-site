@@ -1,3 +1,5 @@
+import { FieldValue } from "firebase-admin/firestore";
+
 export type Category =
   | "Books"
   | "Music"
@@ -28,8 +30,8 @@ export interface BaseProduct {
   views: number;
   ratings: any[]; // TODO: define rating type
   averageRating: number;
-  createdAt: FirebaseFirestore.Timestamp;
-  updatedAt: FirebaseFirestore.Timestamp;
+  createdAt: FirebaseFirestore.Timestamp | FieldValue;
+  updatedAt: FirebaseFirestore.Timestamp| FieldValue;
   createdBy: string;
   updatedBy: string;
 }
