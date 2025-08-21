@@ -1,25 +1,21 @@
-// app/api/events/create/route.ts
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { adminAuth, adminDb, admin } from "@/lib/server/firebase-admin";
+import {
+  CATEGORIES,
+  VENUE_TYPES,
+  RECURRENCE_TYPES,
+  EventCreateRequest,
+  EventDocument,
+} from "@/lib/types/events";
 
-const CATEGORIES = [
-  "Prayer Meeting",
-  "Live Recording",
-  "Worship Practice",
-  "Livestream Worship",
-  "Bible Study",
-  "Outreach",
-  "Conference",
-  "Other",
-] as const;
-
-const VENUE_TYPES = ["Physical", "Online"] as const;
-const RECURRENCE_TYPES = ["Daily", "Weekly", "Monthly"] as const;
-
+/**
+ * POST /api/events/create
+ * Creates a new event in Firestore
+ */
 export async function POST(req: Request) {
   try {
-    // ✅ Authenticate admin
+    // 🔐 Authenticate admin user
     const sessionCookie = (await cookies()).get("session")?.value;
     if (!sessionCookie) {
       return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
@@ -33,10 +29,10 @@ export async function POST(req: Request) {
       );
     }
 
-    // ✅ Get event data
-    const eventData = await req.json();
+    // 📥 Parse incoming request
+    const eventData: EventCreateRequest = await req.json();
 
-    // ✅ Required field validation
+    // ✅ Required fields validation
     if (
       !eventData.title ||
       !eventData.description ||
@@ -49,7 +45,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // ✅ Validate category (fallback to Other)
+    // ✅ Validate category (fallback to "Other" if invalid)
     if (!CATEGORIES.includes(eventData.category)) {
       eventData.category = "Other";
     }
@@ -64,14 +60,13 @@ export async function POST(req: Request) {
       );
     }
 
-    // ✅ Venue-specific checks
+    // Venue-specific validation
     if (eventData.venueType === "Physical" && !eventData.venueName) {
       return NextResponse.json(
         { error: "venueName is required for Physical events" },
         { status: 400 }
       );
     }
-
     if (eventData.venueType === "Online" && !eventData.venueUrl) {
       return NextResponse.json(
         { error: "venueUrl is required for Online events" },
@@ -79,7 +74,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // ✅ Convert main date to Timestamp
+    // ✅ Validate main event date
     const eventDate = new Date(eventData.date);
     if (isNaN(eventDate.getTime())) {
       return NextResponse.json(
@@ -88,10 +83,13 @@ export async function POST(req: Request) {
       );
     }
 
-    // ✅ Recurrence validation if enabled
-    let recurrenceEndDateTimestamp = null;
+    // 🔁 Recurrence validation
+    let recurrenceEndDateTimestamp: admin.firestore.Timestamp | null = null;
     if (eventData.isRecurring) {
-      if (!RECURRENCE_TYPES.includes(eventData.recurrenceType)) {
+      if (
+        !eventData.recurrenceType ||
+        !RECURRENCE_TYPES.includes(eventData.recurrenceType)
+      ) {
         return NextResponse.json(
           {
             error: `Invalid recurrenceType. Must be one of: ${RECURRENCE_TYPES.join(
@@ -121,30 +119,38 @@ export async function POST(req: Request) {
         admin.firestore.Timestamp.fromDate(recurrenceEnd);
     }
 
-    // ✅ Prepare document for Firestore
-    const newEvent = {
+    // 📝 Prepare document for Firestore
+    const newEvent: EventDocument = {
       title: eventData.title,
       description: eventData.description,
       date: admin.firestore.Timestamp.fromDate(eventDate),
       time: eventData.time,
+
       venueType: eventData.venueType,
       venueName:
-        eventData.venueType === "Physical" ? eventData.venueName : null,
-      venueUrl: eventData.venueType === "Online" ? eventData.venueUrl : null,
+        eventData.venueType === "Physical" ? eventData.venueName! : null,
+      venueUrl: eventData.venueType === "Online" ? eventData.venueUrl! : null,
+
       category: eventData.category,
       status: eventData.status || "Draft",
+      posterUrl: eventData.posterUrl || "",
+
       isPublic: eventData.isPublic ?? true,
       attendees: eventData.attendees ?? 0,
       maxAttendees: eventData.maxAttendees ?? null,
+
       isRecurring: eventData.isRecurring ?? false,
-      recurrenceType: eventData.isRecurring ? eventData.recurrenceType : null,
+      recurrenceType: eventData.isRecurring ? eventData.recurrenceType! : null,
       recurrenceEndDate: recurrenceEndDateTimestamp,
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+
+      createdAt:
+        admin.firestore.FieldValue.serverTimestamp() as admin.firestore.Timestamp,
+      updatedAt:
+        admin.firestore.FieldValue.serverTimestamp() as admin.firestore.Timestamp,
       createdBy: decoded.email,
     };
 
-    // ✅ Save to Firestore
+    // 💾 Save to Firestore
     await adminDb.collection("events").add(newEvent);
 
     return NextResponse.json({ success: true, event: newEvent });

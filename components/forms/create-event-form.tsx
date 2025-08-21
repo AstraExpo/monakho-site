@@ -1,7 +1,6 @@
 "use client";
 
-import type React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -23,75 +22,68 @@ import {
   Tag,
   Link2,
   Repeat,
+  Image as ImageIcon,
 } from "lucide-react";
-
-const CATEGORIES = [
-  "Prayer Meeting",
-  "Live Recording",
-  "Worship Practice",
-  "Livestream Worship",
-  "Bible Study",
-  "Outreach",
-  "Conference",
-  "Other",
-];
-
-const RECURRENCE_TYPES = ["Daily", "Weekly", "Monthly"];
+import {
+  CATEGORIES,
+  RECURRENCE_TYPES,
+  EventCreateRequest,
+  Category,
+  VenueType,
+  RecurrenceType,
+} from "@/lib/types/events";
+import { uploadFileViaApi } from "@/lib/server/uploadFile";
 
 export function CreateEventForm({ onClose }: { onClose: () => void }) {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<EventCreateRequest>({
     title: "",
     description: "",
     date: "",
     time: "",
-    venueType: "",
+
+    venueType: "Physical",
     venueName: "",
     venueUrl: "",
-    category: "",
+
+    category: "Other",
     status: "Draft",
-    attendees: 0,
-    maxAttendees: "",
+
     isPublic: true,
+    attendees: 0,
+    maxAttendees: null,
+
     isRecurring: false,
-    recurrenceType: "",
-    recurrenceEndDate: "",
+    recurrenceType: undefined,
+    recurrenceEndDate: undefined,
+
+    posterUrl: "",
   });
+
+  const [posterFile, setPosterFile] = useState<File | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setPosterFile(e.target.files[0]);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    // Venue type validation
-    if (formData.venueType === "Physical" && !formData.venueName) {
-      alert("Please enter the venue name for a physical event.");
-      return;
-    }
-    if (formData.venueType === "Online" && !formData.venueUrl) {
-      alert("Please enter the online event link.");
-      return;
-    }
-
-    // Recurrence validation
-    if (formData.isRecurring) {
-      if (!formData.recurrenceType) {
-        alert("Please select a recurrence type.");
-        return;
-      }
-      if (!formData.date) {
-        alert("Please select a start date for the recurring event.");
-        return;
-      }
-      if (!formData.recurrenceEndDate) {
-        alert("Please select an end date for the recurring event.");
-        return;
-      }
-    }
+    setLoading(true);
 
     try {
-      const payload = {
+      let posterUrl: string | undefined = formData.posterUrl;
+      if (posterFile) {
+        posterUrl = await uploadFileViaApi(
+          posterFile,
+          `events/${formData.category}/posters`
+        );
+      }
+
+      const payload: EventCreateRequest = {
         ...formData,
-        maxAttendees: formData.maxAttendees
-          ? Number(formData.maxAttendees)
-          : null,
+        posterUrl,
       };
 
       const res = await fetch("/api/events/create", {
@@ -108,14 +100,19 @@ export function CreateEventForm({ onClose }: { onClose: () => void }) {
       onClose();
     } catch (err: any) {
       alert(`❌ ${err.message}`);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="grid grid-cols-2 gap-4">
+    <form
+      onSubmit={handleSubmit}
+      className="space-y-6"
+    >
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {/* Title */}
-        <div className="col-span-2">
+        <div className="sm:col-span-2">
           <Label htmlFor="title" className="flex items-center gap-2">
             <Tag className="w-4 h-4" />
             Event Title
@@ -123,9 +120,7 @@ export function CreateEventForm({ onClose }: { onClose: () => void }) {
           <Input
             id="title"
             value={formData.title}
-            onChange={(e) =>
-              setFormData({ ...formData, title: e.target.value })
-            }
+            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
             placeholder="Enter event title"
             required
             className="bg-white/10 backdrop-blur-sm border-white/20"
@@ -133,7 +128,7 @@ export function CreateEventForm({ onClose }: { onClose: () => void }) {
         </div>
 
         {/* Description */}
-        <div className="col-span-2">
+        <div className="sm:col-span-2">
           <Label htmlFor="description">Description</Label>
           <Textarea
             id="description"
@@ -147,7 +142,22 @@ export function CreateEventForm({ onClose }: { onClose: () => void }) {
           />
         </div>
 
-        {/* Start Date */}
+        {/* Poster Upload */}
+        <div className="sm:col-span-2">
+          <Label htmlFor="poster" className="flex items-center gap-2">
+            <ImageIcon className="w-4 h-4" />
+            Event Poster (Optional)
+          </Label>
+          <Input
+            id="poster"
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            className="bg-white/10 backdrop-blur-sm border-white/20"
+          />
+        </div>
+
+        {/* Date */}
         <div>
           <Label htmlFor="date" className="flex items-center gap-2">
             <Calendar className="w-4 h-4" />
@@ -157,7 +167,9 @@ export function CreateEventForm({ onClose }: { onClose: () => void }) {
             id="date"
             type="date"
             value={formData.date}
-            onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, date: e.target.value })
+            }
             required
             className="bg-white/10 backdrop-blur-sm border-white/20"
           />
@@ -173,21 +185,26 @@ export function CreateEventForm({ onClose }: { onClose: () => void }) {
             id="time"
             type="time"
             value={formData.time}
-            onChange={(e) => setFormData({ ...formData, time: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, time: e.target.value })
+            }
             required
             className="bg-white/10 backdrop-blur-sm border-white/20"
           />
         </div>
 
-        {/* Recurrence Type & End Date (Only if recurring) */}
+        {/* Recurrence fields */}
         {formData.isRecurring && (
           <>
             <div>
               <Label htmlFor="recurrenceType">Recurrence Type</Label>
               <Select
-                value={formData.recurrenceType}
+                value={formData.recurrenceType ?? ""}
                 onValueChange={(value) =>
-                  setFormData({ ...formData, recurrenceType: value })
+                  setFormData({
+                    ...formData,
+                    recurrenceType: value as RecurrenceType,
+                  })
                 }
               >
                 <SelectTrigger className="bg-white/10 backdrop-blur-sm border-white/20">
@@ -207,14 +224,14 @@ export function CreateEventForm({ onClose }: { onClose: () => void }) {
               <Input
                 id="recurrenceEndDate"
                 type="date"
-                value={formData.recurrenceEndDate}
+                value={formData.recurrenceEndDate ?? ""}
                 onChange={(e) =>
                   setFormData({
                     ...formData,
                     recurrenceEndDate: e.target.value,
                   })
                 }
-                required={formData.isRecurring}
+                required
                 className="bg-white/10 backdrop-blur-sm border-white/20"
               />
             </div>
@@ -229,7 +246,7 @@ export function CreateEventForm({ onClose }: { onClose: () => void }) {
             onValueChange={(value) =>
               setFormData({
                 ...formData,
-                venueType: value,
+                venueType: value as VenueType,
                 venueName: "",
                 venueUrl: "",
               })
@@ -254,7 +271,7 @@ export function CreateEventForm({ onClose }: { onClose: () => void }) {
             </Label>
             <Input
               id="venueName"
-              value={formData.venueName}
+              value={formData.venueName ?? ""}
               onChange={(e) =>
                 setFormData({ ...formData, venueName: e.target.value })
               }
@@ -274,7 +291,7 @@ export function CreateEventForm({ onClose }: { onClose: () => void }) {
             <Input
               id="venueUrl"
               type="url"
-              value={formData.venueUrl}
+              value={formData.venueUrl ?? ""}
               onChange={(e) =>
                 setFormData({ ...formData, venueUrl: e.target.value })
               }
@@ -290,7 +307,7 @@ export function CreateEventForm({ onClose }: { onClose: () => void }) {
           <Select
             value={formData.category}
             onValueChange={(value) =>
-              setFormData({ ...formData, category: value })
+              setFormData({ ...formData, category: value as Category })
             }
           >
             <SelectTrigger className="bg-white/10 backdrop-blur-sm border-white/20">
@@ -307,7 +324,7 @@ export function CreateEventForm({ onClose }: { onClose: () => void }) {
         </div>
 
         {/* Max Attendees */}
-        <div className="col-span-2">
+        <div className="sm:col-span-2">
           <Label htmlFor="maxAttendees" className="flex items-center gap-2">
             <Users className="w-4 h-4" />
             Maximum Attendees (Optional)
@@ -315,9 +332,12 @@ export function CreateEventForm({ onClose }: { onClose: () => void }) {
           <Input
             id="maxAttendees"
             type="number"
-            value={formData.maxAttendees}
+            value={formData.maxAttendees ?? ""}
             onChange={(e) =>
-              setFormData({ ...formData, maxAttendees: e.target.value })
+              setFormData({
+                ...formData,
+                maxAttendees: e.target.value ? Number(e.target.value) : null,
+              })
             }
             placeholder="Leave empty for unlimited"
             className="bg-white/10 backdrop-blur-sm border-white/20"
@@ -334,8 +354,8 @@ export function CreateEventForm({ onClose }: { onClose: () => void }) {
             setFormData({
               ...formData,
               isRecurring: checked as boolean,
-              recurrenceType: "",
-              recurrenceEndDate: "",
+              recurrenceType: checked ? "Weekly" : undefined,
+              recurrenceEndDate: checked ? formData.date : undefined,
             })
           }
         />
@@ -362,9 +382,10 @@ export function CreateEventForm({ onClose }: { onClose: () => void }) {
         </Button>
         <Button
           type="submit"
+          disabled={loading}
           className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
         >
-          Create Event
+          {loading ? "Creating..." : "Create Event"}
         </Button>
       </DialogFooter>
     </form>

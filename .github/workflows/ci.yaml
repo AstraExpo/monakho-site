@@ -11,8 +11,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
 
     steps:
       - name: Checkout code
@@ -28,6 +26,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18
+
+      # ✅ Recreate .env file from GitHub secret
+      - name: Create .env file
+        run: |
+          echo "${{ secrets.ENV_FILE }}" > .env
+        shell: bash
 
       - name: Install dependencies
         run: pnpm install

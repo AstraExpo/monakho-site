@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
+import Image from "next/image";
 import {
   Plus,
   Edit,
@@ -222,7 +223,7 @@ export default function AdminAboutPage() {
               >
                 <CardHeader className="text-center space-y-4">
                   <div className="mx-auto w-20 h-20 rounded-full overflow-hidden bg-gradient-to-br from-primary/20 to-primary/10">
-                    <img
+                    <Image
                       src={member.image || "/placeholder.svg"}
                       alt={member.name}
                       className="w-full h-full object-cover"

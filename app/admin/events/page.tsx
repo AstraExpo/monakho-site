@@ -43,13 +43,15 @@ import { Skeleton } from "@/components/ui/Skeleton";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { db } from "@/lib/server/firebase";
 import { Textarea } from "@/components/ui/textarea";
+import { deleteEvent, updateEvent } from "../hooks/events";
+import { BaseEvent } from "@/lib/types/events";
 
 export default function AdminEventsPage() {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
-  const [events, setEvents] = useState<any[]>([]);
+  const [events, setEvents] = useState<BaseEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [editingEvent, setEditingEvent] = useState<any>(null);
+  const [editingEvent, setEditingEvent] = useState<BaseEvent | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("All");
 
@@ -74,7 +76,7 @@ export default function AdminEventsPage() {
       const eventsData = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
-      }));
+      })) as BaseEvent[];
       setEvents(eventsData);
       setLoading(false);
     });
@@ -85,7 +87,16 @@ export default function AdminEventsPage() {
   // Stats
   const totalEvents = events.length;
   const thisMonthEvents = events.filter((e) => {
-    const eventDate = new Date(e.date.seconds * 1000);
+    let eventDate: Date;
+    if (typeof e.date === "object" && e.date !== null && "seconds" in e.date) {
+      // Firestore Timestamp
+      eventDate = new Date((e.date as any).seconds * 1000);
+    } else if (typeof e.date === "string") {
+      // ISO string or date string
+      eventDate = new Date(e.date);
+    } else {
+      return false;
+    }
     const now = new Date();
     return (
       eventDate.getMonth() === now.getMonth() &&
@@ -249,10 +260,12 @@ export default function AdminEventsPage() {
                   <TableCell>
                     <div className="text-sm text-white">
                       <div>
-                        {event.date?.seconds
+                        {typeof event.date === "object" && event.date !== null && "seconds" in event.date
                           ? new Date(
-                              event.date.seconds * 1000
+                              (event.date as any).seconds * 1000
                             ).toLocaleDateString()
+                          : typeof event.date === "string"
+                          ? new Date(event.date).toLocaleDateString()
                           : "N/A"}
                       </div>
                       <div className="text-gray-300">{event.time || "N/A"}</div>
@@ -278,10 +291,24 @@ export default function AdminEventsPage() {
 
                   {/* Recurrence */}
                   <TableCell className="text-white">
-                    {event.isRecurring && event.recurrenceEndDate?.seconds
-                      ? `${event.recurrenceType} until ${new Date(
-                          event.recurrenceEndDate.seconds * 1000
-                        ).toLocaleDateString()}`
+                    {event.isRecurring && event.recurrenceEndDate
+                      ? (() => {
+                          if (
+                            typeof event.recurrenceEndDate === "object" &&
+                            event.recurrenceEndDate !== null &&
+                            "seconds" in event.recurrenceEndDate
+                          ) {
+                            return `${event.recurrenceType} until ${new Date(
+                              (event.recurrenceEndDate as any).seconds * 1000
+                            ).toLocaleDateString()}`;
+                          } else if (typeof event.recurrenceEndDate === "string") {
+                            return `${event.recurrenceType} until ${new Date(
+                              event.recurrenceEndDate
+                            ).toLocaleDateString()}`;
+                          } else {
+                            return "One-time";
+                          }
+                        })()
                       : "One-time"}
                   </TableCell>
 
@@ -382,10 +409,14 @@ export default function AdminEventsPage() {
                 type="date"
                 name="date"
                 defaultValue={
-                  editingEvent.date?.seconds
-                    ? new Date(editingEvent.date.seconds * 1000)
+                  typeof editingEvent.date === "object" &&
+                  editingEvent.date !== null &&
+                  "seconds" in editingEvent.date
+                    ? new Date((editingEvent.date as any).seconds * 1000)
                         .toISOString()
                         .split("T")[0]
+                    : typeof editingEvent.date === "string"
+                    ? new Date(editingEvent.date).toISOString().split("T")[0]
                     : ""
                 }
                 className="bg-white/10 border-white/20 text-white"
@@ -520,12 +551,16 @@ export default function AdminEventsPage() {
                     type="date"
                     name="recurrenceEndDate"
                     defaultValue={
-                      editingEvent.recurrenceEndDate?.seconds
+                      typeof editingEvent.recurrenceEndDate === "object" &&
+                      editingEvent.recurrenceEndDate !== null &&
+                      "seconds" in editingEvent.recurrenceEndDate
                         ? new Date(
-                            editingEvent.recurrenceEndDate.seconds * 1000
+                            (editingEvent.recurrenceEndDate as any).seconds * 1000
                           )
                             .toISOString()
                             .split("T")[0]
+                        : typeof editingEvent.recurrenceEndDate === "string"
+                        ? new Date(editingEvent.recurrenceEndDate).toISOString().split("T")[0]
                         : ""
                     }
                     className="bg-white/10 border-white/20 text-white"
@@ -548,6 +583,7 @@ export default function AdminEventsPage() {
 // Small reusable stat card
 export function StatCard({
   title,
+
   value,
   icon,
   note,
@@ -588,24 +624,4 @@ export function LoadingTable() {
         ))}
     </div>
   );
-}
-
-async function deleteEvent(id: string) {
-  if (!confirm("Are you sure you want to delete this event?")) return;
-
-  const res = await fetch(`/api/updateevent/${id}`, { method: "DELETE" });
-  if (!res.ok) {
-    alert("Failed to delete event");
-  }
-}
-
-async function updateEvent(id: string, updates: any) {
-  const res = await fetch(`/api/updateevent/${id}`, {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(updates),
-  });
-  if (!res.ok) {
-    alert("Failed to update event");
-  }
 }
