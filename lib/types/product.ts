@@ -11,6 +11,20 @@ export type Category =
 
 export type Status = "Active" | "Inactive" | "Out of Stock";
 
+export interface ProductVariant {
+  id: string;
+  name: string; 
+  price?: number;
+  stock?: number;
+}
+
+export interface ProductRating {
+  userId: string;
+  rating: number; // 1–5
+  comment?: string;
+  createdAt: FirebaseFirestore.Timestamp | FieldValue;
+}
+
 export interface BaseProduct {
   id: string;
   name: string;
@@ -25,13 +39,13 @@ export interface BaseProduct {
   pdfUrl: string | null;
   musicUrl: string | null;
   videoUrl: string | null;
-  variants: any[]; // TODO: define properly if you support sizes/colors
+  variants: ProductVariant[];   
   sold: number;
   views: number;
-  ratings: any[]; // TODO: define rating type
+  ratings: ProductRating[]; 
   averageRating: number;
   createdAt: FirebaseFirestore.Timestamp | FieldValue;
-  updatedAt: FirebaseFirestore.Timestamp| FieldValue;
+  updatedAt: FirebaseFirestore.Timestamp | FieldValue;
   createdBy: string;
   updatedBy: string;
 }
