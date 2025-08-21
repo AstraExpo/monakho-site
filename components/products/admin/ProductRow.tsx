@@ -16,8 +16,13 @@ import { BaseProduct } from "@/lib/types/product";
 import { Badge } from "@/components/ui/badge";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/ToastContext";
+import ProductView from "./ProductView";
+import { useState } from "react";
+import { EditProductDialog } from "./EditProductDialog";
 
 export function ProductRow({ product }: { product: BaseProduct }) {
+  const [viewOpen, setViewOpen] = useState(false);
+    const [isEditOpen, setIsEditOpen] = useState(false);
   const router = useRouter();
   const { showToast } = useToast();
 
@@ -28,12 +33,12 @@ export function ProductRow({ product }: { product: BaseProduct }) {
     if (!confirmed) return;
 
     try {
-      const res = await fetch(`/api/products/${product.id}/delete`, {
+      const res = await fetch(`/api/product/${product.id}/delete`, {
         method: "DELETE",
       });
+      const data = await res.json();
 
-      if (!res.ok) throw new Error("Failed request");
-
+      if (!res.ok) throw new Error(data.error || "Failed request");
       showToast("Product deleted successfully", "success");
     } catch (err) {
       console.error(err);
@@ -86,15 +91,13 @@ export function ProductRow({ product }: { product: BaseProduct }) {
 
           <DropdownMenuContent align="end">
             <DropdownMenuItem
-              onClick={() => router.push(`/admin/products/${product.id}`)}
+              onClick={() => setViewOpen(true)} // open the dialog on click
             >
               <Eye className="mr-2 h-4 w-4" />
               View
             </DropdownMenuItem>
 
-            <DropdownMenuItem
-              onClick={() => router.push(`/admin/products/${product.id}/edit`)}
-            >
+            <DropdownMenuItem onClick={() => setIsEditOpen(true)}>
               <Edit className="mr-2 h-4 w-4" />
               Edit
             </DropdownMenuItem>
@@ -108,6 +111,19 @@ export function ProductRow({ product }: { product: BaseProduct }) {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+        <ProductView
+          onOpenChange={setViewOpen}
+          product={product}
+          open={viewOpen}
+        />
+                <EditProductDialog
+          product={product}
+          open={isEditOpen}
+          onOpenChange={setIsEditOpen}
+          onUpdate={updatedProduct => {
+            // Update local state or refetch
+          }}
+        />
       </TableCell>
     </TableRow>
   );
