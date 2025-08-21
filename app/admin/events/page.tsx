@@ -1,7 +1,7 @@
 "use client";
 
-import { JSX, useEffect, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useEffect, useState } from "react";
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -44,7 +44,9 @@ import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { db } from "@/lib/server/firebase";
 import { Textarea } from "@/components/ui/textarea";
 import { deleteEvent, updateEvent } from "../hooks/events";
-import { BaseEvent } from "@/lib/types/events";
+import { BaseEvent, CATEGORIES, EventDocument, mapEventDoc } from "@/lib/types/events";
+import { LoadingTable } from "@/components/LoadingTable";
+import { StatCard } from "@/components/StatsCard";
 
 export default function AdminEventsPage() {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
@@ -55,7 +57,20 @@ export default function AdminEventsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("All");
 
-  // Filtered events
+  // Subscribe to events collection
+  useEffect(() => {
+    const q = query(collection(db, "events"), orderBy("date", "desc"));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const eventsData: BaseEvent[] = snapshot.docs.map((doc) =>
+        mapEventDoc(doc.id, doc.data() as EventDocument)
+      );
+      setEvents(eventsData);
+      setLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  // Filtering
   const filteredEvents = events.filter((event) => {
     const matchesSearch =
       event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -70,33 +85,10 @@ export default function AdminEventsPage() {
     return matchesSearch && matchesStatus;
   });
 
-  useEffect(() => {
-    const q = query(collection(db, "events"), orderBy("date", "desc"));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const eventsData = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as BaseEvent[];
-      setEvents(eventsData);
-      setLoading(false);
-    });
-
-    return () => unsubscribe();
-  }, []);
-
   // Stats
   const totalEvents = events.length;
   const thisMonthEvents = events.filter((e) => {
-    let eventDate: Date;
-    if (typeof e.date === "object" && e.date !== null && "seconds" in e.date) {
-      // Firestore Timestamp
-      eventDate = new Date((e.date as any).seconds * 1000);
-    } else if (typeof e.date === "string") {
-      // ISO string or date string
-      eventDate = new Date(e.date);
-    } else {
-      return false;
-    }
+    const eventDate = new Date(e.date);
     const now = new Date();
     return (
       eventDate.getMonth() === now.getMonth() &&
@@ -251,35 +243,20 @@ export default function AdminEventsPage() {
             <TableBody>
               {filteredEvents.map((event) => (
                 <TableRow key={event.id}>
-                  {/* Event Title */}
                   <TableCell className="font-medium text-white">
                     {event.title}
                   </TableCell>
-
-                  {/* Date & Time */}
                   <TableCell>
                     <div className="text-sm text-white">
-                      <div>
-                        {typeof event.date === "object" && event.date !== null && "seconds" in event.date
-                          ? new Date(
-                              (event.date as any).seconds * 1000
-                            ).toLocaleDateString()
-                          : typeof event.date === "string"
-                          ? new Date(event.date).toLocaleDateString()
-                          : "N/A"}
-                      </div>
+                      <div>{new Date(event.date).toLocaleDateString()}</div>
                       <div className="text-gray-300">{event.time || "N/A"}</div>
                     </div>
                   </TableCell>
-
-                  {/* Venue */}
                   <TableCell className="text-white">
                     {event.venueType === "Physical"
                       ? event.venueName || "N/A"
                       : event.venueUrl || "N/A"}
                   </TableCell>
-
-                  {/* Category */}
                   <TableCell>
                     <Badge
                       variant="outline"
@@ -288,43 +265,21 @@ export default function AdminEventsPage() {
                       {event.category || "Uncategorized"}
                     </Badge>
                   </TableCell>
-
-                  {/* Recurrence */}
                   <TableCell className="text-white">
                     {event.isRecurring && event.recurrenceEndDate
-                      ? (() => {
-                          if (
-                            typeof event.recurrenceEndDate === "object" &&
-                            event.recurrenceEndDate !== null &&
-                            "seconds" in event.recurrenceEndDate
-                          ) {
-                            return `${event.recurrenceType} until ${new Date(
-                              (event.recurrenceEndDate as any).seconds * 1000
-                            ).toLocaleDateString()}`;
-                          } else if (typeof event.recurrenceEndDate === "string") {
-                            return `${event.recurrenceType} until ${new Date(
-                              event.recurrenceEndDate
-                            ).toLocaleDateString()}`;
-                          } else {
-                            return "One-time";
-                          }
-                        })()
+                      ? `${event.recurrenceType} until ${new Date(
+                          event.recurrenceEndDate
+                        ).toLocaleDateString()}`
                       : "One-time"}
                   </TableCell>
-
-                  {/* Attendees */}
                   <TableCell className="text-white">
                     {event.attendees ?? 0}
                   </TableCell>
-
-                  {/* Status */}
                   <TableCell>
                     <Badge className={getStatusColor(event.status)}>
                       {event.status || "Draft"}
                     </Badge>
                   </TableCell>
-
-                  {/* Actions */}
                   <TableCell className="text-right">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -349,7 +304,6 @@ export default function AdminEventsPage() {
                           <Edit className="mr-2 h-4 w-4" />
                           Edit
                         </DropdownMenuItem>
-
                         <DropdownMenuItem
                           className="text-destructive hover:bg-white/20"
                           onClick={() => deleteEvent(event.id)}
@@ -366,6 +320,7 @@ export default function AdminEventsPage() {
           </Table>
         )}
       </Card>
+
       {/* Edit Event Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
         <DialogContent className="max-w-2xl bg-white/10 backdrop-blur-md border border-white/20">
@@ -408,17 +363,7 @@ export default function AdminEventsPage() {
               <Input
                 type="date"
                 name="date"
-                defaultValue={
-                  typeof editingEvent.date === "object" &&
-                  editingEvent.date !== null &&
-                  "seconds" in editingEvent.date
-                    ? new Date((editingEvent.date as any).seconds * 1000)
-                        .toISOString()
-                        .split("T")[0]
-                    : typeof editingEvent.date === "string"
-                    ? new Date(editingEvent.date).toISOString().split("T")[0]
-                    : ""
-                }
+                defaultValue={editingEvent.date}
                 className="bg-white/10 border-white/20 text-white"
                 required
               />
@@ -440,9 +385,9 @@ export default function AdminEventsPage() {
               >
                 <option value="Physical">Physical</option>
                 <option value="Online">Online</option>
+                <option value="Hybrid">Hybrid</option>
               </select>
 
-              {/* Venue Name (Physical) */}
               {editingEvent.venueType === "Physical" && (
                 <Input
                   name="venueName"
@@ -451,8 +396,6 @@ export default function AdminEventsPage() {
                   className="bg-white/10 border-white/20 text-white"
                 />
               )}
-
-              {/* Venue URL (Online) */}
               {editingEvent.venueType === "Online" && (
                 <Input
                   name="venueUrl"
@@ -468,16 +411,7 @@ export default function AdminEventsPage() {
                 defaultValue={editingEvent.category}
                 className="bg-white/10 border-white/20 text-white p-2 rounded"
               >
-                {[
-                  "Prayer Meeting",
-                  "Live Recording",
-                  "Worship Practice",
-                  "Livestream Worship",
-                  "Bible Study",
-                  "Outreach",
-                  "Conference",
-                  "Other",
-                ].map((cat) => (
+                {CATEGORIES.map((cat) => (
                   <option key={cat} value={cat}>
                     {cat}
                   </option>
@@ -518,7 +452,7 @@ export default function AdminEventsPage() {
                 <input
                   type="checkbox"
                   name="isPublic"
-                  defaultChecked={editingEvent.isPublic ?? true}
+                  defaultChecked={editingEvent.isPublic}
                   className="accent-primary"
                 />
                 <label className="text-white">Make event public</label>
@@ -529,7 +463,7 @@ export default function AdminEventsPage() {
                 <input
                   type="checkbox"
                   name="isRecurring"
-                  defaultChecked={editingEvent.isRecurring ?? false}
+                  defaultChecked={editingEvent.isRecurring}
                   className="accent-primary"
                 />
                 <label className="text-white">Recurring event</label>
@@ -545,30 +479,17 @@ export default function AdminEventsPage() {
                     <option value="Daily">Daily</option>
                     <option value="Weekly">Weekly</option>
                     <option value="Monthly">Monthly</option>
+                    <option value="Yearly">Yearly</option>
                   </select>
-
                   <Input
                     type="date"
                     name="recurrenceEndDate"
-                    defaultValue={
-                      typeof editingEvent.recurrenceEndDate === "object" &&
-                      editingEvent.recurrenceEndDate !== null &&
-                      "seconds" in editingEvent.recurrenceEndDate
-                        ? new Date(
-                            (editingEvent.recurrenceEndDate as any).seconds * 1000
-                          )
-                            .toISOString()
-                            .split("T")[0]
-                        : typeof editingEvent.recurrenceEndDate === "string"
-                        ? new Date(editingEvent.recurrenceEndDate).toISOString().split("T")[0]
-                        : ""
-                    }
+                    defaultValue={editingEvent.recurrenceEndDate ?? ""}
                     className="bg-white/10 border-white/20 text-white"
                   />
                 </>
               )}
 
-              {/* Save */}
               <Button type="submit" className="bg-primary">
                 Save Changes
               </Button>
@@ -576,52 +497,6 @@ export default function AdminEventsPage() {
           )}
         </DialogContent>
       </Dialog>
-    </div>
-  );
-}
-
-// Small reusable stat card
-export function StatCard({
-  title,
-
-  value,
-  icon,
-  note,
-}: {
-  title: string;
-  value: any;
-  icon: JSX.Element;
-  note?: string;
-}) {
-  return (
-    <Card className="bg-white/10 dark:bg-white/5 backdrop-blur-md border border-white/20">
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium text-white">
-          {title}
-        </CardTitle>
-        {icon}
-      </CardHeader>
-      <CardContent>
-        <div className="text-2xl font-bold text-white">{value}</div>
-        {note && <p className="text-xs text-gray-300">{note}</p>}
-      </CardContent>
-    </Card>
-  );
-}
-
-export function LoadingTable() {
-  return (
-    <div className="p-6 space-y-4">
-      {Array(5)
-        .fill(0)
-        .map((_, idx) => (
-          <div key={idx} className="flex justify-between items-center gap-4">
-            <Skeleton className="h-4 w-32" />
-            <Skeleton className="h-4 w-20" />
-            <Skeleton className="h-4 w-24" />
-            <Skeleton className="h-4 w-16" />
-          </div>
-        ))}
     </div>
   );
 }

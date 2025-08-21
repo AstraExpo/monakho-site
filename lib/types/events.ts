@@ -124,3 +124,39 @@ export interface EventDocument {
   updatedAt: Timestamp | admin.firestore.FieldValue;
   createdBy: string;
 }
+
+export function mapEventDoc(id: string, data: EventDocument): BaseEvent {
+  return {
+    id,
+    title: data.title,
+    description: data.description,
+    category: data.category,
+    posterUrl: data.posterUrl,
+
+    date: (data.date as Timestamp).toDate().toISOString().split("T")[0],
+    time: data.time,
+
+    isPublic: data.isPublic,
+    isRecurring: data.isRecurring,
+    recurrenceType: data.recurrenceType ?? undefined,
+    recurrenceEndDate: data.recurrenceEndDate
+      ? (data.recurrenceEndDate as Timestamp)
+          .toDate()
+          .toISOString()
+          .split("T")[0]
+      : null,
+
+    maxAttendees: data.maxAttendees ?? 0,
+    attendees: data.attendees ?? 0,
+
+    venueType: data.venueType,
+    venueName: data.venueName,
+    venueUrl: data.venueUrl,
+
+    status: data.status,
+
+    createdAt: (data.createdAt as Timestamp).toDate(),
+    updatedAt: (data.updatedAt as Timestamp).toDate(),
+    createdBy: data.createdBy,
+  };
+}
