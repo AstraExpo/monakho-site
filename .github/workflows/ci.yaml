@@ -27,11 +27,19 @@ jobs:
         with:
           node-version: 18
 
-      # ✅ Recreate .env file from GitHub secret
+      # ✅ Recreate .env file from GitHub secret safely (handles multiline values)
       - name: Create .env file
         run: |
-          echo "${{ secrets.ENV_FILE }}" > .env
+          cat << 'EOF' > .env
+          ${{ secrets.ENV_FILE }}
+          EOF
         shell: bash
+
+      # 🔍 Optional debug: list keys in .env without exposing values
+      - name: Debug .env keys
+        run: |
+          echo "Loaded .env keys:"
+          cut -d= -f1 .env
 
       - name: Install dependencies
         run: pnpm install
