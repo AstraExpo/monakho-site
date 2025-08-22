@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ToastProvider } from "@/components/ui/ToastProvider";
+import { JSX } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,9 +18,9 @@ export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
-}) {
+}): JSX.Element {
   return (
-    <html lang="en" className="dark" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <ThemeProvider
           attribute="class"

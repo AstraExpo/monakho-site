@@ -66,14 +66,12 @@ export default function RegisterPage() {
         }),
       });
 
-      // ✅ Check if the server returned JSON before parsing
       const contentType = response.headers.get("content-type");
       let data: SignupResponse;
 
       if (contentType && contentType.includes("application/json")) {
         data = await response.json();
       } else {
-        // Fallback to reading plain text (HTML error page, etc.)
         const text = await response.text();
         throw new Error(
           `Server returned non-JSON response: ${text.slice(0, 100)}...`
@@ -84,7 +82,6 @@ export default function RegisterPage() {
         throw new Error(data.error || "Something went wrong.");
       }
 
-      console.log("Signup successful", data);
       router.push("/client");
     } catch (error: unknown) {
       alert(getErrorMessage(error) || "An error occurred during signup.");
@@ -94,47 +91,60 @@ export default function RegisterPage() {
   };
 
   return (
-    <Card className="border-0 bg-gradient-to-br from-card/80 to-card/40 backdrop-blur-xl shadow-2xl">
+    <Card className="bg-[hsl(var(--card)/0.1)] dark:bg-[hsl(var(--card)/0.2)] backdrop-blur-xl border border-[hsl(var(--border)/0.2)] dark:border-[hsl(var(--border)/0.3)] shadow-2xl">
       <CardHeader className="space-y-4 text-center">
-        <div className="mx-auto w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center">
-          <UserPlus className="w-8 h-8 text-primary" />
+        <div className="mx-auto w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center">
+          <UserPlus className="w-8 h-8 text-[hsl(var(--primary-foreground))]" />
         </div>
         <CardTitle className="text-2xl font-bold bg-gradient-to-r from-foreground to-primary bg-clip-text text-transparent">
           Join Our Community
         </CardTitle>
-        <CardDescription className="text-center">
+        <CardDescription className="text-[hsl(var(--muted-foreground))] text-center">
           Create your account to access member resources and stay connected
         </CardDescription>
       </CardHeader>
+
       <CardContent>
         <form className="space-y-4" onSubmit={handleSignup}>
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="firstName">First Name</Label>
+              <Label
+                htmlFor="firstName"
+                className="text-[hsl(var(--foreground))]"
+              >
+                First Name
+              </Label>
               <Input
                 id="firstName"
                 placeholder="John"
                 required
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
-                className="bg-background/50 backdrop-blur-sm border-border/50"
+                className="bg-[hsl(var(--input)/0.1)] dark:bg-[hsl(var(--input)/0.2)] border-[hsl(var(--border)/0.2)] dark:border-[hsl(var(--border)/0.3)] text-[hsl(var(--foreground))] placeholder:text-[hsl(var(--muted-foreground))]"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="lastName">Last Name</Label>
+              <Label
+                htmlFor="lastName"
+                className="text-[hsl(var(--foreground))]"
+              >
+                Last Name
+              </Label>
               <Input
                 id="lastName"
                 placeholder="Doe"
                 required
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
-                className="bg-background/50 backdrop-blur-sm border-border/50"
+                className="bg-[hsl(var(--input)/0.1)] dark:bg-[hsl(var(--input)/0.2)] border-[hsl(var(--border)/0.2)] dark:border-[hsl(var(--border)/0.3)] text-[hsl(var(--foreground))] placeholder:text-[hsl(var(--muted-foreground))]"
               />
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email" className="text-[hsl(var(--foreground))]">
+              Email
+            </Label>
             <Input
               id="email"
               type="email"
@@ -142,43 +152,52 @@ export default function RegisterPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
-              className="bg-background/50 backdrop-blur-sm border-border/50"
+              className="bg-[hsl(var(--input)/0.1)] dark:bg-[hsl(var(--input)/0.2)] border-[hsl(var(--border)/0.2)] dark:border-[hsl(var(--border)/0.3)] text-[hsl(var(--foreground))] placeholder:text-[hsl(var(--muted-foreground))]"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="phone">Phone Number</Label>
+            <Label htmlFor="phone" className="text-[hsl(var(--foreground))]">
+              Phone Number
+            </Label>
             <Input
               id="phone"
               type="tel"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="(555) 123-4567"
-              className="bg-background/50 backdrop-blur-sm border-border/50"
+              className="bg-[hsl(var(--input)/0.1)] dark:bg-[hsl(var(--input)/0.2)] border-[hsl(var(--border)/0.2)] dark:border-[hsl(var(--border)/0.3)] text-[hsl(var(--foreground))] placeholder:text-[hsl(var(--muted-foreground))]"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password" className="text-[hsl(var(--foreground))]">
+              Password
+            </Label>
             <Input
               id="password"
               type="password"
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="bg-background/50 backdrop-blur-sm border-border/50"
+              className="bg-[hsl(var(--input)/0.1)] dark:bg-[hsl(var(--input)/0.2)] border-[hsl(var(--border)/0.2)] dark:border-[hsl(var(--border)/0.3)] text-[hsl(var(--foreground))] placeholder:text-[hsl(var(--muted-foreground))]"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="confirmPassword">Confirm Password</Label>
+            <Label
+              htmlFor="confirmPassword"
+              className="text-[hsl(var(--foreground))]"
+            >
+              Confirm Password
+            </Label>
             <Input
               id="confirmPassword"
               type="password"
               required
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="bg-background/50 backdrop-blur-sm border-border/50"
+              className="bg-[hsl(var(--input)/0.1)] dark:bg-[hsl(var(--input)/0.2)] border-[hsl(var(--border)/0.2)] dark:border-[hsl(var(--border)/0.3)] text-[hsl(var(--foreground))] placeholder:text-[hsl(var(--muted-foreground))]"
             />
           </div>
 
@@ -188,7 +207,10 @@ export default function RegisterPage() {
               checked={agreeTerms}
               onCheckedChange={() => setAgreeTerms(!agreeTerms)}
             />
-            <Label htmlFor="terms" className="text-sm">
+            <Label
+              htmlFor="terms"
+              className="text-sm text-[hsl(var(--foreground))]"
+            >
               I agree to the{" "}
               <Link href="#" className="text-primary hover:underline">
                 Terms of Service
@@ -206,7 +228,10 @@ export default function RegisterPage() {
               checked={newsletter}
               onCheckedChange={() => setNewsletter(!newsletter)}
             />
-            <Label htmlFor="newsletter" className="text-sm">
+            <Label
+              htmlFor="newsletter"
+              className="text-sm text-[hsl(var(--foreground))]"
+            >
               Subscribe to our newsletter for updates and events
             </Label>
           </div>
@@ -214,14 +239,14 @@ export default function RegisterPage() {
           <Button
             type="submit"
             disabled={loading}
-            className="w-full bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70"
+            className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-[hsl(var(--primary-foreground))] shadow-lg shadow-blue-500/25"
           >
             {loading ? "Creating..." : "Create Account"}
           </Button>
         </form>
 
         <div className="mt-6 text-center space-y-2">
-          <div className="text-sm text-muted-foreground">
+          <div className="text-sm text-[hsl(var(--muted-foreground))]">
             Already have an account?{" "}
             <Link
               href="/auth/login"

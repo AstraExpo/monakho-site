@@ -17,6 +17,13 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
     setOpen(true);
   };
 
+  const bgClass = {
+    success: "bg-green-600 dark:bg-green-500",
+    error: "bg-red-600 dark:bg-red-500",
+    warning: "bg-yellow-500 text-black dark:bg-yellow-600 dark:text-black",
+    info: "bg-blue-600 dark:bg-blue-500",
+  };
+
   return (
     <ToastContext.Provider value={{ showToast }}>
       <Toast.Provider swipeDirection="right">
@@ -25,15 +32,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
         <Toast.Root
           open={open}
           onOpenChange={setOpen}
-          className={`rounded-lg px-4 py-3 shadow-lg text-white ${
-            type === "success"
-              ? "bg-green-600"
-              : type === "error"
-              ? "bg-red-600"
-              : type === "warning"
-              ? "bg-yellow-500 text-black"
-              : "bg-blue-600"
-          }`}
+          className={`rounded-lg px-4 py-3 shadow-lg text-white ${bgClass[type]}`}
         >
           <Toast.Title className="font-medium">
             {type.charAt(0).toUpperCase() + type.slice(1)}

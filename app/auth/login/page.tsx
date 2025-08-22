@@ -49,24 +49,25 @@ export default function LoginPage() {
   };
 
   return (
-    <Card className="bg-white/10 backdrop-blur-md border border-white/20 shadow-2xl">
+    <Card className="bg-[hsl(var(--card)/0.1)] dark:bg-[hsl(var(--card)/0.2)] backdrop-blur-md border border-[hsl(var(--border)/0.2)] dark:border-[hsl(var(--border)/0.3)] shadow-2xl">
       <CardHeader className="space-y-4 text-center">
         <div className="mx-auto w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center">
-          <LogIn className="w-8 h-8 text-white" />
+          <LogIn className="w-8 h-8 text-[hsl(var(--primary-foreground))]" />
         </div>
         <div className="animate-bounce">
           <CardTitle className="text-2xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
             Welcome Back
           </CardTitle>
         </div>
-        <CardDescription className="text-center text-gray-300">
+        <CardDescription className="text-[hsl(var(--muted-foreground))]">
           Enter your credentials to access your account
         </CardDescription>
       </CardHeader>
+
       <CardContent>
         <form className="space-y-4" onSubmit={handleLogin}>
           <div className="space-y-2">
-            <Label htmlFor="email" className="text-white">
+            <Label htmlFor="email" className="text-[hsl(var(--foreground))]">
               Email
             </Label>
             <Input
@@ -76,11 +77,12 @@ export default function LoginPage() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="bg-white/10 backdrop-blur-sm border-white/20 text-white placeholder:text-gray-400"
+              className="bg-[hsl(var(--input)/0.1)] dark:bg-[hsl(var(--input)/0.2)] border-[hsl(var(--border)/0.2)] dark:border-[hsl(var(--border)/0.3)] text-[hsl(var(--foreground))] placeholder:text-[hsl(var(--muted-foreground))]"
             />
           </div>
+
           <div className="space-y-2">
-            <Label htmlFor="password" className="text-white">
+            <Label htmlFor="password" className="text-[hsl(var(--foreground))]">
               Password
             </Label>
             <Input
@@ -89,13 +91,14 @@ export default function LoginPage() {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="bg-white/10 backdrop-blur-sm border-white/20 text-white placeholder:text-gray-400"
+              className="bg-[hsl(var(--input)/0.1)] dark:bg-[hsl(var(--input)/0.2)] border-[hsl(var(--border)/0.2)] dark:border-[hsl(var(--border)/0.3)] text-[hsl(var(--foreground))] placeholder:text-[hsl(var(--muted-foreground))]"
             />
           </div>
+
           <Button
             type="submit"
             disabled={loading}
-            className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg shadow-blue-500/25"
+            className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-[hsl(var(--primary-foreground))] shadow-lg shadow-blue-500/25"
           >
             {loading ? "Signing In..." : "Sign In"}
             <ArrowRight className="ml-2 h-4 w-4" />
@@ -105,15 +108,15 @@ export default function LoginPage() {
         <div className="mt-4 text-center space-y-2">
           <Link
             href="/auth/forgot-password"
-            className="text-sm text-blue-400 hover:text-blue-300 hover:underline"
+            className="text-blue-400 dark:text-blue-300 hover:underline"
           >
             Forgot your password?
           </Link>
-          <div className="text-sm text-gray-300">
+          <div className="text-[hsl(var(--muted-foreground))] text-sm">
             Don&apos;t have an account?{" "}
             <Link
               href="/auth/register"
-              className="text-purple-400 hover:text-purple-300 hover:underline font-medium"
+              className="text-purple-400 dark:text-purple-300 hover:underline font-medium"
             >
               Register here
             </Link>
