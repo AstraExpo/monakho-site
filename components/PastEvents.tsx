@@ -40,7 +40,6 @@ export function PastEvents() {
                   <CardContent className="p-6">
                     <div>
                       {event.posterUrl ? (
-                        // eslint-disable-next-line @next/next/no-img-element
                         <Image
                           src={event.posterUrl}
                           alt={event.title}
