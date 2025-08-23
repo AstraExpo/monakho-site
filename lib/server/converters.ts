@@ -3,11 +3,13 @@ import {
   DocumentData,
   QueryDocumentSnapshot,
   SnapshotOptions,
+  WithFieldValue,
 } from "firebase/firestore";
 import { BaseProduct } from "../types/product";
 
 export const productConverter: FirestoreDataConverter<BaseProduct> = {
-  toFirestore({ id, ...data }: BaseProduct): DocumentData {
+  toFirestore(product: WithFieldValue<BaseProduct>): DocumentData {
+    const { id, ...data } = product;
     return data;
   },
   fromFirestore(

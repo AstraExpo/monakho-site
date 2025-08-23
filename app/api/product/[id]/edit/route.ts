@@ -98,12 +98,12 @@ export async function PUT(
     // ✅ Fetch updated product
     const updatedProduct = (await docRef.get()).data() as BaseProduct;
 
-    // ✅ Strip out Firestore doc's `id`, but don’t keep it around
-    const { id: _id, ...productWithoutId } = updatedProduct;
+    // ✅ Remove Firestore's `id` if it exists, so it won't conflict
+    const { id: _unused, ...productDataWithoutId } = updatedProduct;
 
     return NextResponse.json({
       success: true,
-      product: { id, ...productWithoutId },
+      product: { id, ...productDataWithoutId }, // now only one `id`
     });
   } catch (err: unknown) {
     return NextResponse.json(
