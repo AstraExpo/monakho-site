@@ -29,6 +29,9 @@ import {
 
 import { uploadFileViaApi } from "@/lib/server/uploadFile";
 import type { Category, Status } from "@/lib/types/product";
+import Image from "next/image";
+import { getErrorMessage } from "@/utils/error";
+import { useToast } from "../ui/ToastContext";
 
 // --- Allowed Categories & Status (from shared types)
 const CATEGORIES: Category[] = [
@@ -71,6 +74,7 @@ export function CreateProductForm({ onClose }: { onClose: () => void }) {
   const [bookFile, setBookFile] = useState<File | null>(null);
   const [musicFile, setMusicFile] = useState<File | null>(null);
   const [videoFile, setVideoFile] = useState<File | null>(null);
+  const { showToast } = useToast();
 
   // --- Handlers
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -156,10 +160,10 @@ export function CreateProductForm({ onClose }: { onClose: () => void }) {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to create product");
 
-      alert("✅ Product created successfully!");
+      showToast("✅ Product created successfully!", "success");
       onClose();
-    } catch (err: any) {
-      alert(`❌ ${err.message}`);
+    } catch (err: unknown) {
+      showToast(getErrorMessage(err), "error");
     }
   };
 
@@ -290,7 +294,7 @@ export function CreateProductForm({ onClose }: { onClose: () => void }) {
           {previewUrls.length > 0 && (
             <div className="mt-3 flex gap-3 flex-wrap">
               {previewUrls.map((url, idx) => (
-                <img
+                <Image
                   key={idx}
                   src={url}
                   alt={`Preview ${idx + 1}`}

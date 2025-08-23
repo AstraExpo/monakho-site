@@ -18,7 +18,10 @@ const CATEGORIES: Category[] = [
 
 const STATUS: Status[] = ["Active", "Inactive", "Out of Stock"];
 
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
+export async function PUT(
+  req: Request,
+  { params }: { params: { id: string } }
+) {
   try {
     const { id } = params;
 
@@ -95,10 +98,13 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
     // ✅ Fetch updated product
     const updatedProduct = (await docRef.get()).data() as BaseProduct;
 
-    // Remove id from updatedProduct if it exists to avoid duplicate keys
-    const { id: _removedId, ...productWithoutId } = updatedProduct;
+    // ✅ Strip out Firestore doc's `id`, but don’t keep it around
+    const { id: _, ...productWithoutId } = updatedProduct;
 
-    return NextResponse.json({ success: true, product: { id, ...productWithoutId } });
+    return NextResponse.json({
+      success: true,
+      product: { id, ...productWithoutId },
+    });
   } catch (err: unknown) {
     return NextResponse.json(
       { error: getErrorMessage(err) || "Failed to update product" },

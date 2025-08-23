@@ -1,4 +1,4 @@
-import { Timestamp } from "firebase-admin/firestore";
+import { Timestamp } from "firebase/firestore";
 import { admin } from "../server/firebase-admin";
 
 /**
@@ -101,7 +101,7 @@ export interface EventCreateRequest {
 export interface EventDocument {
   title: string;
   description: string;
-  date: Timestamp;
+  date: Timestamp | Date | string;
   time: string;
 
   venueType: VenueType;
@@ -125,6 +125,29 @@ export interface EventDocument {
   createdBy: string;
 }
 
+export function normalizeDate(
+  value: Timestamp | Date | string | null | undefined
+): string {
+  if (!value) return "";
+
+  let d: Date;
+
+  if (value instanceof Timestamp) {
+    d = value.toDate();
+  } else if (value instanceof Date) {
+    d = value;
+  } else if (typeof value === "string") {
+    // Try to parse; fall back to empty if invalid
+    const parsed = new Date(value);
+    if (isNaN(parsed.getTime())) return "";
+    d = parsed;
+  } else {
+    return "";
+  }
+
+  return d.toISOString().split("T")[0];
+}
+
 export function mapEventDoc(id: string, data: EventDocument): BaseEvent {
   return {
     id,
@@ -133,18 +156,13 @@ export function mapEventDoc(id: string, data: EventDocument): BaseEvent {
     category: data.category,
     posterUrl: data.posterUrl,
 
-    date: (data.date as Timestamp).toDate().toISOString().split("T")[0],
+    date: normalizeDate(data.date),
     time: data.time,
 
     isPublic: data.isPublic,
     isRecurring: data.isRecurring,
     recurrenceType: data.recurrenceType ?? undefined,
-    recurrenceEndDate: data.recurrenceEndDate
-      ? (data.recurrenceEndDate as Timestamp)
-          .toDate()
-          .toISOString()
-          .split("T")[0]
-      : null,
+    recurrenceEndDate: normalizeDate(data.recurrenceEndDate),
 
     maxAttendees: data.maxAttendees ?? 0,
     attendees: data.attendees ?? 0,

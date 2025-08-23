@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Users, Shield, ArrowRight, Play } from "lucide-react";
@@ -76,7 +75,8 @@ export default function HomePage(): JSX.Element {
         <div className="mt-16">
           <div className="inline-block p-6 rounded-2xl bg-card/5 backdrop-blur-sm border border-border">
             <p className="text-lg text-foreground/70 italic">
-              "For where two or three gather in my name, there am I with them."
+              &quot;For where two or three gather in my name, there am I with
+              them.&quot;
             </p>
             <p className="text-sm text-foreground/50 mt-2">- Matthew 18:20</p>
           </div>

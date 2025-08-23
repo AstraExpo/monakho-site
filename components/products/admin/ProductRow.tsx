@@ -1,4 +1,3 @@
-// components/admin/products/ProductRow.tsx
 "use client";
 
 import { TableRow, TableCell } from "@/components/ui/table";
@@ -14,16 +13,15 @@ import { ProductStatusBadge } from "./ProductStatusBadge";
 import Image from "next/image";
 import { BaseProduct } from "@/lib/types/product";
 import { Badge } from "@/components/ui/badge";
-import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/ToastContext";
 import ProductView from "./ProductView";
 import { useState } from "react";
 import { EditProductDialog } from "./EditProductDialog";
+import { getErrorMessage } from "@/utils/error";
 
 export function ProductRow({ product }: { product: BaseProduct }) {
   const [viewOpen, setViewOpen] = useState(false);
-    const [isEditOpen, setIsEditOpen] = useState(false);
-  const router = useRouter();
+  const [isEditOpen, setIsEditOpen] = useState(false);
   const { showToast } = useToast();
 
   const handleDelete = async () => {
@@ -40,17 +38,18 @@ export function ProductRow({ product }: { product: BaseProduct }) {
 
       if (!res.ok) throw new Error(data.error || "Failed request");
       showToast("Product deleted successfully", "success");
-    } catch (err) {
+    } catch (err: unknown) {
       console.error(err);
-      showToast("Failed to delete product", "error");
+      showToast(getErrorMessage(err), "error");
     }
   };
 
   return (
-    <TableRow key={product.id}>
+    <TableRow key={product.id} className="hover:bg-muted/40 transition-colors">
+      {/* Product Image + Name */}
       <TableCell>
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-lg overflow-hidden bg-muted">
+          <div className="w-12 h-12 rounded-lg overflow-hidden border border-border bg-muted">
             <Image
               width={48}
               height={48}
@@ -59,51 +58,74 @@ export function ProductRow({ product }: { product: BaseProduct }) {
               className="w-full h-full object-cover"
             />
           </div>
-          <div className="font-medium">{product.name}</div>
+          <div className="font-medium text-foreground">{product.name}</div>
         </div>
       </TableCell>
 
+      {/* Category */}
       <TableCell>
-        <Badge variant="outline">{product.category}</Badge>
+        <Badge variant="outline" className="capitalize">
+          {product.category}
+        </Badge>
       </TableCell>
 
-      <TableCell>${product.price}</TableCell>
+      {/* Price */}
+      <TableCell className="font-medium text-foreground">
+        ${product.price.toFixed(2)}
+      </TableCell>
 
+      {/* Stock */}
       <TableCell
-        className={product.stock <= 20 ? "text-orange-500 font-medium" : ""}
+        className={
+          product.stock <= 20
+            ? "text-orange-500 font-semibold"
+            : "text-foreground"
+        }
       >
         {product.stock}
       </TableCell>
 
-      <TableCell>{product.sold}</TableCell>
+      {/* Sold */}
+      <TableCell className="text-foreground/80">{product.sold}</TableCell>
 
+      {/* Status */}
       <TableCell>
         <ProductStatusBadge status={product.status} />
       </TableCell>
 
+      {/* Actions */}
       <TableCell className="text-right">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <MoreHorizontal className="h-4 w-4" />
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 rounded-full hover:bg-muted"
+            >
+              <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
+              <span className="sr-only">Open menu</span>
             </Button>
           </DropdownMenuTrigger>
 
           <DropdownMenuContent align="end">
             <DropdownMenuItem
-              onClick={() => setViewOpen(true)} // open the dialog on click
+              onClick={() => setViewOpen(true)}
+              className="gap-2"
             >
               <Eye className="mr-2 h-4 w-4" />
               View
             </DropdownMenuItem>
 
-            <DropdownMenuItem onClick={() => setIsEditOpen(true)}>
+            <DropdownMenuItem
+              onClick={() => setIsEditOpen(true)}
+              className="gap-2"
+            >
               <Edit className="mr-2 h-4 w-4" />
               Edit
             </DropdownMenuItem>
 
             <DropdownMenuItem
-              className="text-destructive"
+              className="text-destructive focus:text-destructive gap-2"
               onClick={handleDelete}
             >
               <Trash2 className="mr-2 h-4 w-4" />
@@ -111,18 +133,18 @@ export function ProductRow({ product }: { product: BaseProduct }) {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+
+        {/* Modals */}
         <ProductView
           onOpenChange={setViewOpen}
           product={product}
           open={viewOpen}
         />
-                <EditProductDialog
+        <EditProductDialog
           product={product}
           open={isEditOpen}
           onOpenChange={setIsEditOpen}
-          onUpdate={updatedProduct => {
-            // Update local state or refetch
-          }}
+          onUpdate={() => {}}
         />
       </TableCell>
     </TableRow>

@@ -7,11 +7,13 @@ import {
 import { BaseProduct } from "../types/product";
 
 export const productConverter: FirestoreDataConverter<BaseProduct> = {
-  toFirestore(product: BaseProduct): DocumentData {
-    const { id, ...data } = product;
+  toFirestore({ id: _id, ...data }: BaseProduct): DocumentData {
     return data;
   },
-  fromFirestore(snapshot: QueryDocumentSnapshot, options: SnapshotOptions): BaseProduct {
+  fromFirestore(
+    snapshot: QueryDocumentSnapshot,
+    options: SnapshotOptions
+  ): BaseProduct {
     const data = snapshot.data(options)!;
     return {
       id: snapshot.id,

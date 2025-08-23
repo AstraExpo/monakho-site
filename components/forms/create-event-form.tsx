@@ -33,6 +33,8 @@ import {
   RecurrenceType,
 } from "@/lib/types/events";
 import { uploadFileViaApi } from "@/lib/server/uploadFile";
+import { getErrorMessage } from "@/utils/error";
+import { useToast } from "../ui/ToastContext";
 
 export function CreateEventForm({ onClose }: { onClose: () => void }) {
   const [formData, setFormData] = useState<EventCreateRequest>({
@@ -61,6 +63,7 @@ export function CreateEventForm({ onClose }: { onClose: () => void }) {
 
   const [posterFile, setPosterFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
+  const { showToast } = useToast();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -96,20 +99,17 @@ export function CreateEventForm({ onClose }: { onClose: () => void }) {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to create event");
 
-      alert("✅ Event created successfully!");
+      showToast("✅ Event created successfully!", "success");
       onClose();
-    } catch (err: any) {
-      alert(`❌ ${err.message}`);
+    } catch (err: unknown) {
+      showToast(getErrorMessage(err), "error");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="space-y-6"
-    >
+    <form onSubmit={handleSubmit} className="space-y-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {/* Title */}
         <div className="sm:col-span-2">
@@ -120,7 +120,9 @@ export function CreateEventForm({ onClose }: { onClose: () => void }) {
           <Input
             id="title"
             value={formData.title}
-            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, title: e.target.value })
+            }
             placeholder="Enter event title"
             required
             className="bg-white/10 backdrop-blur-sm border-white/20"
@@ -167,9 +169,7 @@ export function CreateEventForm({ onClose }: { onClose: () => void }) {
             id="date"
             type="date"
             value={formData.date}
-            onChange={(e) =>
-              setFormData({ ...formData, date: e.target.value })
-            }
+            onChange={(e) => setFormData({ ...formData, date: e.target.value })}
             required
             className="bg-white/10 backdrop-blur-sm border-white/20"
           />
@@ -185,9 +185,7 @@ export function CreateEventForm({ onClose }: { onClose: () => void }) {
             id="time"
             type="time"
             value={formData.time}
-            onChange={(e) =>
-              setFormData({ ...formData, time: e.target.value })
-            }
+            onChange={(e) => setFormData({ ...formData, time: e.target.value })}
             required
             className="bg-white/10 backdrop-blur-sm border-white/20"
           />
