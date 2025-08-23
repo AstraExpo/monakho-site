@@ -3,10 +3,10 @@ import { adminDb } from "@/lib/server/firebase-admin";
 
 export async function DELETE(
   req: Request,
-  context: { params: { id: string } }
+  { params }: { params: Record<string, string> }
 ) {
   try {
-    const { id } = context.params;
+    const { id } = params;
 
     await adminDb.collection("products").doc(id).delete();
 
