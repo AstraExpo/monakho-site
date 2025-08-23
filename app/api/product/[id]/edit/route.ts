@@ -1,4 +1,4 @@
-// app/api/products/[id]/edit/route.ts
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { adminAuth, adminDb, admin } from "@/lib/server/firebase-admin";
