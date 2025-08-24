@@ -35,3 +35,23 @@ export async function PATCH(
     );
   }
 }
+
+// GET product from the db
+export async function GET(
+  req: Request,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const doc = await adminDb.collection("products").doc(params.id).get();
+    if (!doc.exists) {
+      return NextResponse.json({ error: "Product not found" }, { status: 404 });
+    }
+    return NextResponse.json({ id: doc.id, ...doc.data() });
+  } catch (error) {
+    console.error("Error fetching product:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch product" },
+      { status: 500 }
+    );
+  }
+}

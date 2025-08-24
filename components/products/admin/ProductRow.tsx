@@ -18,11 +18,13 @@ import ProductView from "./ProductView";
 import { useState } from "react";
 import { EditProductDialog } from "./EditProductDialog";
 import { getErrorMessage } from "@/utils/error";
+import { deleteProduct } from "@/app/admin/hooks/products";
 
 export function ProductRow({ product }: { product: BaseProduct }) {
   const [viewOpen, setViewOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const { showToast } = useToast();
+  const productId = product.id;
 
   const handleDelete = async () => {
     const confirmed = confirm(
@@ -126,7 +128,7 @@ export function ProductRow({ product }: { product: BaseProduct }) {
 
             <DropdownMenuItem
               className="text-destructive focus:text-destructive gap-2"
-              onClick={handleDelete}
+              onClick={() => {deleteProduct(productId)}}
             >
               <Trash2 className="mr-2 h-4 w-4" />
               Delete
@@ -144,7 +146,7 @@ export function ProductRow({ product }: { product: BaseProduct }) {
           product={product}
           open={isEditOpen}
           onOpenChange={setIsEditOpen}
-          onUpdate={() => {}}
+          productId={productId}
         />
       </TableCell>
     </TableRow>

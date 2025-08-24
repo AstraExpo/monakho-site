@@ -112,12 +112,6 @@ export async function POST(req: Request) {
             { status: 400 }
           );
         }
-        if (!productData.thumbnail) {
-          return NextResponse.json(
-            { error: "Video requires a thumbnail image" },
-            { status: 400 }
-          );
-        }
         break;
 
       case "Accessories":
@@ -153,7 +147,6 @@ export async function POST(req: Request) {
       pdfUrl: productData.pdfUrl || null,
       musicUrl: productData.musicUrl || null,
       videoUrl: productData.videoUrl || null,
-      thumbnail: productData.thumbnail || null,
       variants: productData.variants || [],
       sold: productData.sold ?? 0,
       views: 0,

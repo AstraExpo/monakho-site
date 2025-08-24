@@ -7,66 +7,57 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { BaseProduct } from "@/lib/types/product";
+import {
+  Category,
+  ProductFormData,
+  Status,
+} from "@/lib/types/product";
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/ToastContext";
+import { updateProduct } from "@/app/admin/hooks/products";
 
 export function EditProductDialog({
   product,
   open,
   onOpenChange,
-  onUpdate,
+  productId
 }: {
-  product: BaseProduct;
+  product: ProductFormData;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onUpdate: (updatedProduct: BaseProduct) => void;
+  productId: string;
 }) {
   const { showToast } = useToast();
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<ProductFormData>({
     name: product.name,
+    slug: product.slug,
+    description: product.description,
+    category: product.category,
     price: product.price,
     stock: product.stock,
-    category: product.category,
-    description: product.description || "",
     status: product.status,
+    images: product.images,
+    thumbnail: product.thumbnail,
+    pdfUrl: product.pdfUrl,
+    musicUrl: product.musicUrl,
+    videoUrl: product.videoUrl,
+    variants: product.variants,
   });
 
-  const handleChange = (
-    field: keyof typeof formData,
-    value: string | number
-  ) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const handleSave = async () => {
-    try {
-      const res = await fetch(`/api/product/${product.id}/edit`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) throw new Error(data.error || "Failed to update product");
-
-      onUpdate(data);
-
-      onOpenChange(false);
-
-      showToast("Product updated successfully", "success");
-    } catch (err) {
-      console.error(err);
-
-      showToast("Failed to update product", "error");
-    }
-  };
+  function handleChange<K extends keyof ProductFormData>(
+    key: K,
+    value: ProductFormData[K]
+  ) {
+    setFormData((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
+  }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -124,7 +115,9 @@ export function EditProductDialog({
                     id="category"
                     type="text"
                     value={formData.category}
-                    onChange={(e) => handleChange("category", e.target.value)}
+                    onChange={(e) =>
+                      handleChange("category", e.target.value as Category)
+                    }
                     placeholder="Enter category"
                   />
                 </div>
@@ -143,6 +136,122 @@ export function EditProductDialog({
                     className="min-h-[100px] md:min-h-[140px]"
                   />
                 </div>
+
+                {/* Slug */}
+                <div className="flex flex-col gap-1">
+                  <Label htmlFor="slug" className="text-white/80">
+                    Slug
+                  </Label>
+                  <Input
+                    id="slug"
+                    type="text"
+                    value={formData.slug}
+                    onChange={(e) => handleChange("slug", e.target.value)}
+                    placeholder="enter-product-slug"
+                  />
+                </div>
+
+                {/* Status */}
+                <div className="flex flex-col gap-1">
+                  <Label htmlFor="status" className="text-white/80">
+                    Status
+                  </Label>
+                  <select
+                    id="status"
+                    value={formData.status}
+                    onChange={(e) =>
+                      handleChange("status", e.target.value as Status)
+                    }
+                    className="bg-slate-800 text-white rounded p-2"
+                  >
+                    <option value="active">Active</option>
+                    <option value="draft">Draft</option>
+                    <option value="archived">Archived</option>
+                  </select>
+                </div>
+
+                {/* Thumbnail */}
+                <div className="flex flex-col gap-1">
+                  <Label htmlFor="thumbnail" className="text-white/80">
+                    Thumbnail URL
+                  </Label>
+                  <Input
+                    id="thumbnail"
+                    type="url"
+                    value={formData.thumbnail ?? ""}
+                    onChange={(e) => handleChange("thumbnail", e.target.value)}
+                    placeholder="https://example.com/image.jpg"
+                  />
+                </div>
+
+                {/* Media URLs */}
+                <div className="flex flex-col gap-1">
+                  <Label htmlFor="pdfUrl" className="text-white/80">
+                    PDF URL
+                  </Label>
+                  <Input
+                    id="pdfUrl"
+                    type="url"
+                    value={formData.pdfUrl ?? ""}
+                    onChange={(e) => handleChange("pdfUrl", e.target.value)}
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <Label htmlFor="musicUrl" className="text-white/80">
+                    Music URL
+                  </Label>
+                  <Input
+                    id="musicUrl"
+                    type="url"
+                    value={formData.musicUrl ?? ""}
+                    onChange={(e) => handleChange("musicUrl", e.target.value)}
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <Label htmlFor="videoUrl" className="text-white/80">
+                    Video URL
+                  </Label>
+                  <Input
+                    id="videoUrl"
+                    type="url"
+                    value={formData.videoUrl ?? ""}
+                    onChange={(e) => handleChange("videoUrl", e.target.value)}
+                  />
+                </div>
+
+                {/* Images (array) */}
+                <div className="flex flex-col gap-1">
+                  <Label className="text-white/80">
+                    Images (comma separated)
+                  </Label>
+                  <Input
+                    type="text"
+                    value={formData.images.join(", ")}
+                    onChange={(e) =>
+                      handleChange(
+                        "images",
+                        e.target.value.split(",").map((s) => s.trim())
+                      )
+                    }
+                    placeholder="https://img1.jpg, https://img2.jpg"
+                  />
+                </div>
+
+                {/* Variants (TODO: complex UI) */}
+                <div className="flex flex-col gap-1">
+                  <Label className="text-white/80">Variants</Label>
+                  <Textarea
+                    value={JSON.stringify(formData.variants, null, 2)}
+                    onChange={(e) => {
+                      try {
+                        handleChange("variants", JSON.parse(e.target.value));
+                      } catch {
+                        // ignore invalid JSON
+                      }
+                    }}
+                    className="font-mono text-xs bg-slate-800 text-white"
+                  />
+                </div>
               </div>
 
               <div className="mt-4 flex flex-col sm:flex-row justify-end gap-3">
@@ -155,7 +264,7 @@ export function EditProductDialog({
                   </Button>
                 </DialogClose>
                 <Button
-                  onClick={handleSave}
+                  onClick={() => updateProduct(productId, formData)}
                   className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70"
                 >
                   Save
