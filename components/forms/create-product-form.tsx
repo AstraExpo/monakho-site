@@ -28,43 +28,28 @@ import {
 } from "lucide-react";
 
 import { uploadFileViaApi } from "@/lib/server/uploadFile";
-import type { Category, Status } from "@/lib/types/product";
+import type { Category, ProductFormData, Status } from "@/lib/types/product";
 import Image from "next/image";
 import { getErrorMessage } from "@/utils/error";
 import { useToast } from "../ui/ToastContext";
-
-// --- Allowed Categories & Status (from shared types)
-const CATEGORIES: Category[] = [
-  "Books",
-  "Music",
-  "Accessories",
-  "Clothing",
-  "Video",
-  "Merch",
-  "Other",
-];
-
-const STATUSES: Status[] = ["Active", "Inactive", "Out of Stock"];
-
-interface FormData {
-  name: string;
-  description: string;
-  price: string; // keep as string for <input>
-  stock: string; // keep as string for <input>
-  category: Category | "";
-  status: Status;
-  isFeatured: boolean;
-}
+import { createProduct } from "@/app/admin/hooks/products";
+import { CATEGORIES, STATUS } from "@/lib/types/product";
 
 export function CreateProductForm({ onClose }: { onClose: () => void }) {
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<ProductFormData>({
     name: "",
     description: "",
-    price: "",
-    stock: "",
-    category: "",
-    status: "Active",
+    price: 0,
+    stock: 0,
+    category: "" as Category,
+    status: "" as Status,
     isFeatured: false,
+    images: [],
+    pdfUrl: "",
+    musicUrl: "",
+    videoUrl: "",
+    slug: "",
+    variants: [],
   });
 
   const [images, setImages] = useState<File[]>([]);
@@ -150,15 +135,10 @@ export function CreateProductForm({ onClose }: { onClose: () => void }) {
         videoUrl,
       };
 
-      const res = await fetch("/api/product/create", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(payload),
-      });
+      const data = await createProduct(payload);
+      console.log("Created product:", data);
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Failed to create product");
+      if (!data) throw new Error("Failed to create product"); // data is null if error
 
       showToast("✅ Product created successfully!", "success");
       onClose();
@@ -209,7 +189,7 @@ export function CreateProductForm({ onClose }: { onClose: () => void }) {
             step="0.01"
             value={formData.price}
             onChange={(e) =>
-              setFormData({ ...formData, price: e.target.value })
+              setFormData({ ...formData, price: Number(e.target.value) })
             }
             placeholder="e.g., 19.99"
             required
@@ -226,7 +206,7 @@ export function CreateProductForm({ onClose }: { onClose: () => void }) {
             type="number"
             value={formData.stock}
             onChange={(e) =>
-              setFormData({ ...formData, stock: e.target.value })
+              setFormData({ ...formData, stock: Number(e.target.value) })
             }
             placeholder="e.g., 100"
             required
@@ -270,7 +250,7 @@ export function CreateProductForm({ onClose }: { onClose: () => void }) {
               <SelectValue placeholder="Select status" />
             </SelectTrigger>
             <SelectContent>
-              {STATUSES.map((s) => (
+              {STATUS.map((s) => (
                 <SelectItem key={s} value={s}>
                   {s}
                 </SelectItem>
@@ -295,6 +275,8 @@ export function CreateProductForm({ onClose }: { onClose: () => void }) {
             <div className="mt-3 flex gap-3 flex-wrap">
               {previewUrls.map((url, idx) => (
                 <Image
+                  width={96}
+                  height={96}
                   key={idx}
                   src={url}
                   alt={`Preview ${idx + 1}`}

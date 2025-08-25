@@ -13,38 +13,15 @@ import { ProductStatusBadge } from "./ProductStatusBadge";
 import Image from "next/image";
 import { BaseProduct } from "@/lib/types/product";
 import { Badge } from "@/components/ui/badge";
-import { useToast } from "@/components/ui/ToastContext";
 import ProductView from "./ProductView";
 import { useState } from "react";
 import { EditProductDialog } from "./EditProductDialog";
-import { getErrorMessage } from "@/utils/error";
 import { deleteProduct } from "@/app/admin/hooks/products";
 
 export function ProductRow({ product }: { product: BaseProduct }) {
   const [viewOpen, setViewOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const { showToast } = useToast();
   const productId = product.id;
-
-  const handleDelete = async () => {
-    const confirmed = confirm(
-      `Are you sure you want to delete ${product.name}?`
-    );
-    if (!confirmed) return;
-
-    try {
-      const res = await fetch(`/api/product/${product.id}/delete`, {
-        method: "DELETE",
-      });
-      const data = await res.json();
-
-      if (!res.ok) throw new Error(data.error || "Failed request");
-      showToast("Product deleted successfully", "success");
-    } catch (err: unknown) {
-      console.error(err);
-      showToast(getErrorMessage(err), "error");
-    }
-  };
 
   return (
     <TableRow key={product.id} className="hover:bg-muted/40 transition-colors">

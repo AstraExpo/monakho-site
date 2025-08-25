@@ -1,46 +1,8 @@
 import { Timestamp } from "firebase/firestore";
-import { admin } from "../server/firebase-admin";
+import { FieldValue } from "firebase-admin/firestore";
 
 /**
- * 🎯 Shared Event Types for Client + Server
- * These types define the shape of events across your system.
- */
-
-/**
- * Base event type used in the frontend (client-side).
- * Dates are strings here for easy form handling & JSON transport.
- */
-export interface BaseEvent {
-  id: string;
-  title: string;
-  description: string;
-  category: Category;
-  posterUrl?: string;
-
-  date: string; // ISO date string, e.g. "2025-08-19"
-  time: string; // "HH:mm" format
-
-  isPublic: boolean;
-  isRecurring: boolean;
-  recurrenceType?: RecurrenceType; // optional for one-time events
-  recurrenceEndDate?: string | null; // ISO string or null
-
-  maxAttendees: number;
-  attendees: number;
-
-  venueType: VenueType;
-  venueName?: string | null;
-  venueUrl?: string | null;
-
-  status: EventStatus;
-
-  createdAt: Date;
-  updatedAt: Date;
-  createdBy: string;
-}
-
-/**
- * ✅ Union types for safety
+ * 🎯 Event Categories, Venue Types, Recurrence, Status
  */
 export const CATEGORIES = [
   "Prayer Meeting",
@@ -54,7 +16,7 @@ export const CATEGORIES = [
 ] as const;
 export type Category = (typeof CATEGORIES)[number];
 
-export const VENUE_TYPES = ["Physical", "Online", "Hybrid"] as const; // Added "Hybrid" consistently
+export const VENUE_TYPES = ["Physical", "Online", "Hybrid"] as const;
 export type VenueType = (typeof VENUE_TYPES)[number];
 
 export const RECURRENCE_TYPES = [
@@ -62,68 +24,66 @@ export const RECURRENCE_TYPES = [
   "Weekly",
   "Monthly",
   "Yearly",
-] as const; // Added "Yearly" for completeness
+] as const;
 export type RecurrenceType = (typeof RECURRENCE_TYPES)[number];
 
 export const EVENT_STATUSES = ["Draft", "Published", "Cancelled"] as const;
 export type EventStatus = (typeof EVENT_STATUSES)[number];
 
 /**
- * 📥 Incoming request payload when creating an event
+ * 1. The full Event as stored/retrieved from the database
  */
-export interface EventCreateRequest {
+export interface BaseEvent {
+  id: string;
   title: string;
   description: string;
-  date: string; // ISO date string
+  category: Category;
+  posterUrl?: string;
+
+  date: string; // ISO date string e.g. "2025-08-19"
   time: string; // "HH:mm"
 
+  isPublic: boolean;
+  isRecurring: boolean;
+  recurrenceType?: RecurrenceType | null;
+  recurrenceEndDate?: string | null; // still string for frontend ease
+
+  maxAttendees: number | null;
+  attendees: number;
+
   venueType: VenueType;
-  venueName?: string;
-  venueUrl?: string;
+  venueName?: string | null;
+  venueUrl?: string | null;
 
-  category: Category;
-  status?: EventStatus;
+  status: EventStatus;
 
-  isPublic?: boolean;
-  attendees?: number;
-  maxAttendees?: number | null;
-
-  isRecurring?: boolean;
-  recurrenceType?: RecurrenceType;
-  recurrenceEndDate?: string;
-  posterUrl?: string; 
+  createdAt: Timestamp | FieldValue;
+  updatedAt: Timestamp | FieldValue;
+  createdBy: string;
+  updatedBy: string;
 }
 
 /**
- * 📦 Firestore document structure
- * Uses `Timestamp` for date fields (Firestore native).
+ * 2. Data needed to create a new event
+ *    (what your form/backend expects)
  */
-export interface EventDocument {
-  title: string;
-  description: string;
-  date: Timestamp | Date | string;
-  time: string;
+export type CreateEventInput = Omit<
+  BaseEvent,
+  "id" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy" | "attendees"
+> & {
+  attendees?: number; // optional for create
+};
 
-  venueType: VenueType;
-  venueName: string | null;
-  venueUrl: string | null;
+/**
+ * 3. Data used to update an existing event
+ *    (all fields optional for partial updates)
+ */
+export type UpdateEventInput = Partial<CreateEventInput>;
 
-  category: Category;
-  status: EventStatus;
-  posterUrl?: string; 
-
-  isPublic: boolean;
-  attendees: number;
-  maxAttendees: number | null;
-
-  isRecurring: boolean;
-  recurrenceType: RecurrenceType | null;
-  recurrenceEndDate: Timestamp | null;
-
-  createdAt: Timestamp | admin.firestore.FieldValue;
-  updatedAt: Timestamp | admin.firestore.FieldValue;
-  createdBy: string;
-}
+/**
+ * (Optional) Alias for form handling
+ */
+export type EventFormData = CreateEventInput;
 
 export function normalizeDate(
   value: Timestamp | Date | string | null | undefined
@@ -148,7 +108,7 @@ export function normalizeDate(
   return d.toISOString().split("T")[0];
 }
 
-export function mapEventDoc(id: string, data: EventDocument): BaseEvent {
+export function mapEventDoc(id: string, data: BaseEvent): BaseEvent {
   return {
     id,
     title: data.title,
@@ -173,8 +133,9 @@ export function mapEventDoc(id: string, data: EventDocument): BaseEvent {
 
     status: data.status,
 
-    createdAt: (data.createdAt as Timestamp).toDate(),
-    updatedAt: (data.updatedAt as Timestamp).toDate(),
+    createdAt: data.createdAt,
+    updatedAt: data.updatedAt,
     createdBy: data.createdBy,
+    updatedBy: data.updatedBy,
   };
 }

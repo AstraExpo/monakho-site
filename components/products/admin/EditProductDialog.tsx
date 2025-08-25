@@ -17,7 +17,6 @@ import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/components/ui/ToastContext";
 import { updateProduct } from "@/app/admin/hooks/products";
 
 export function EditProductDialog({
@@ -31,7 +30,6 @@ export function EditProductDialog({
   onOpenChange: (open: boolean) => void;
   productId: string;
 }) {
-  const { showToast } = useToast();
 
   const [formData, setFormData] = useState<ProductFormData>({
     name: product.name,
@@ -42,7 +40,6 @@ export function EditProductDialog({
     stock: product.stock,
     status: product.status,
     images: product.images,
-    thumbnail: product.thumbnail,
     pdfUrl: product.pdfUrl,
     musicUrl: product.musicUrl,
     videoUrl: product.videoUrl,
@@ -168,20 +165,6 @@ export function EditProductDialog({
                     <option value="draft">Draft</option>
                     <option value="archived">Archived</option>
                   </select>
-                </div>
-
-                {/* Thumbnail */}
-                <div className="flex flex-col gap-1">
-                  <Label htmlFor="thumbnail" className="text-white/80">
-                    Thumbnail URL
-                  </Label>
-                  <Input
-                    id="thumbnail"
-                    type="url"
-                    value={formData.thumbnail ?? ""}
-                    onChange={(e) => handleChange("thumbnail", e.target.value)}
-                    placeholder="https://example.com/image.jpg"
-                  />
                 </div>
 
                 {/* Media URLs */}

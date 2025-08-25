@@ -1,5 +1,15 @@
 import { FieldValue } from "firebase-admin/firestore";
 
+export const CATEGORIES = [
+  "Books",
+  "Music",
+  "Merch",
+  "Clothing",
+  "Accessories",
+  "Video",
+  "Other",
+] as const;
+
 export type Category =
   | "Books"
   | "Music"
@@ -8,6 +18,8 @@ export type Category =
   | "Accessories"
   | "Video"
   | "Other";
+
+  export const STATUS = ["Active", "Inactive", "Out of Stock"] as const;
 
 export type Status = "Active" | "Inactive" | "Out of Stock";
 
@@ -43,6 +55,7 @@ export interface BaseProduct {
   videoUrl?: string | null;
   variants?: ProductVariant[];
   sold?: number;
+  isFeatured?: boolean;
   views?: number;
   ratings?: ProductRating[];
   averageRating?: number;
