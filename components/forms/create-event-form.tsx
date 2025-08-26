@@ -27,7 +27,7 @@ import {
 import {
   CATEGORIES,
   RECURRENCE_TYPES,
-  EventCreateRequest,
+  CreateEventInput,
   Category,
   VenueType,
   RecurrenceType,
@@ -37,7 +37,7 @@ import { getErrorMessage } from "@/utils/error";
 import { useToast } from "../ui/ToastContext";
 
 export function CreateEventForm({ onClose }: { onClose: () => void }) {
-  const [formData, setFormData] = useState<EventCreateRequest>({
+  const [formData, setFormData] = useState<CreateEventInput>({
     title: "",
     description: "",
     date: "",
@@ -84,7 +84,7 @@ export function CreateEventForm({ onClose }: { onClose: () => void }) {
         );
       }
 
-      const payload: EventCreateRequest = {
+      const payload: CreateEventInput = {
         ...formData,
         posterUrl,
       };

@@ -1,9 +1,12 @@
+import { db } from "@/lib/server/firebase";
 import { ApiResponse } from "@/lib/types/api";
 import {
   BaseEvent,
   CreateEventInput,
   UpdateEventInput,
 } from "@/lib/types/events";
+import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import { useEffect, useState } from "react";
 
 // DELETE an event
 export async function deleteEvent(
@@ -77,4 +80,35 @@ export async function createEvent(
     alert("Failed to create event");
     return null;
   }
+}
+
+export function useEvents() {
+  const [events, setEvents] = useState<BaseEvent[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const q = query(collection(db, "events"), orderBy("date", "asc"));
+
+    const unsubscribe = onSnapshot(
+      q,
+      (snapshot) => {
+        const data: BaseEvent[] = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...(doc.data() as Omit<BaseEvent, "id">),
+        }));
+        setEvents(data);
+        setLoading(false);
+      },
+      (err) => {
+        console.error("Error listening to events:", err);
+        setError(err.message);
+        setLoading(false);
+      }
+    );
+
+    return () => unsubscribe();
+  }, []);
+
+  return { events, loading, error };
 }

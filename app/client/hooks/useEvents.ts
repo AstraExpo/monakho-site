@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { collection, getDocs, query, orderBy } from "firebase/firestore";
 import { db } from "@/lib/server/firebase";
-import { BaseEvent, EventDocument, mapEventDoc } from "@/lib/types/events";
+import { BaseEvent, mapEventDoc } from "@/lib/types/events";
 
 export function useEvents() {
   const [events, setEvents] = useState<BaseEvent[]>([]);
@@ -17,7 +17,7 @@ export function useEvents() {
         const snapshot = await getDocs(q);
 
         const list: BaseEvent[] = snapshot.docs.map((doc) =>
-          mapEventDoc(doc.id, doc.data() as EventDocument)
+          mapEventDoc(doc.id, doc.data() as BaseEvent)
         );
 
         setEvents(list);

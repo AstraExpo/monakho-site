@@ -12,7 +12,7 @@ export default function AdminDashboard() {
         <div className="absolute inset-0 bg-gradient-to-r from-emerald-600/20 to-teal-600/20"></div>
 
         <Image
-          src="/placeholder.svg?height=1080&width=1920"
+          src="/Monakho_PhotoGrid (1) (1).png"
           alt="Admin Dashboard Background"
           fill
           className="object-cover opacity-20"
@@ -22,7 +22,7 @@ export default function AdminDashboard() {
         <div className="relative z-10 text-center max-w-4xl mx-auto px-4">
           <div className="animate-bounce">
             <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 bg-clip-text text-transparent">
-              Ministry Command Center
+              Monakho Ministry Command Center
             </h1>
           </div>
 
