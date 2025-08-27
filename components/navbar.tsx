@@ -7,20 +7,11 @@ import { Button } from "@/components/ui/button";
 import { DesktopNav } from "./DesktopNav";
 import Image from "next/image";
 import { navItems } from "./data/Items";
-import { useRouter } from "next/navigation";
+import { useAuth } from "@/app/context/AuthContext";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const router = useRouter();
-
-  const handleLogout = async () => {
-    try {
-      await fetch("/api/auth/signout", { method: "POST" });
-      router.push("/");
-    } catch (err) {
-      console.error("Logout failed", err);
-    }
-  };
+  const { logout } = useAuth();
 
   return (
     <nav className="fixed top-0 w-full z-50 bg-black/20 backdrop-blur-md border-b border-white/10">
@@ -48,7 +39,7 @@ export default function Navbar() {
             <Button
               variant="ghost"
               className="text-gray-300 hover:text-white flex items-center gap-1"
-              onClick={handleLogout}
+              onClick={() => logout()}
             >
               <LogOut size={18} />
               Logout
@@ -89,7 +80,7 @@ export default function Navbar() {
               <button
                 onClick={() => {
                   setIsOpen(false);
-                  handleLogout();
+                  logout();
                 }}
                 className="block w-full text-left px-3 py-2 text-gray-300 hover:text-white transition-colors flex items-center gap-2"
               >

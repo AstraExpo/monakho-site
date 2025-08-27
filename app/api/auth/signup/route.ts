@@ -3,55 +3,37 @@ import { cookies } from "next/headers";
 import { adminAuth, adminDb } from "@/lib/server/firebase-admin";
 import { getErrorMessage } from "@/utils/error";
 
-const FIREBASE_API_KEY = process.env.FIREBASE_API_KEY as string;
-
 export async function POST(req: Request) {
   try {
-    const { email, password, firstName, lastName, phone, newsletter } =
-      await req.json();
+    const { idToken, email } = await req.json();
 
-    // 1️⃣ Create user in Firebase Authentication
-    const userRecord = await adminAuth.createUser({
-      email,
-      password,
-      displayName: `${firstName} ${lastName}`,
-    });
-
-    // 2️⃣ Save extra user details to Firestore
-    await adminDb.collection("users").doc(userRecord.uid).set({
-      uid: userRecord.uid,
-      firstName,
-      lastName,
-      email,
-      phone,
-      newsletter,
-      createdAt: new Date().toISOString(),
-    });
-
-    // 3️⃣ Sign in via Firebase REST API to get idToken
-    const res = await fetch(
-      `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${FIREBASE_API_KEY}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password, returnSecureToken: true }),
-      }
-    );
-
-    const data = await res.json();
-    if (!res.ok) {
-      throw new Error(data.error?.message || "Failed to sign in after signup");
+    if (!idToken || !email) {
+      return NextResponse.json(
+        { error: "idToken and email are required" },
+        { status: 400 }
+      );
     }
 
-    const idToken = data.idToken;
+    // 1️⃣ Verify token
+    const decoded = await adminAuth.verifyIdToken(idToken);
 
-    // 4️⃣ Create Firebase session cookie (5 days expiry)
-    const expiresIn = 60 * 60 * 24 * 5 * 1000; // 5 days
+    // 2️⃣ Save user to Firestore if not exists
+    const userRef = adminDb.collection("users").doc(decoded.uid);
+    const doc = await userRef.get();
+    if (!doc.exists) {
+      await userRef.set({
+        uid: decoded.uid,
+        email,
+        createdAt: new Date().toISOString(),
+      });
+    }
+
+    // 3️⃣ Create session cookie
+    const expiresIn = 60 * 60 * 24 * 1000;
     const sessionCookie = await adminAuth.createSessionCookie(idToken, {
       expiresIn,
     });
 
-    // 5️⃣ Set cookie in response
     (await cookies()).set({
       name: "session",
       value: sessionCookie,
@@ -63,8 +45,8 @@ export async function POST(req: Request) {
 
     return NextResponse.json({
       success: true,
-      uid: userRecord.uid,
-      email: userRecord.email,
+      uid: decoded.uid,
+      email,
     });
   } catch (error: unknown) {
     console.error("Signup error:", error);

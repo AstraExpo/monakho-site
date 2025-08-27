@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { UserPlus, Loader2 } from "lucide-react";
+import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -14,28 +16,17 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import { UserPlus } from "lucide-react";
-import { getErrorMessage } from "@/utils/error";
 
-interface SignupResponse {
-  success?: boolean;
-  error?: string;
-  [key: string]: unknown;
-}
+import { getErrorMessage } from "@/utils/error";
+import { useSignup } from "../hooks/auth";
 
 export default function RegisterPage() {
   const router = useRouter();
+  const { signupWithEmail, signupWithGoogle, loading } = useSignup();
 
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [agreeTerms, setAgreeTerms] = useState(false);
-  const [newsletter, setNewsletter] = useState(false);
-  const [loading, setLoading] = useState(false);
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,48 +36,20 @@ export default function RegisterPage() {
       return;
     }
 
-    if (!agreeTerms) {
-      alert("You must agree to the Terms and Privacy Policy.");
-      return;
-    }
-
-    setLoading(true);
-
     try {
-      const response = await fetch("/api/auth/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email,
-          password,
-          firstName,
-          lastName,
-          phone,
-          newsletter,
-        }),
-      });
-
-      const contentType = response.headers.get("content-type");
-      let data: SignupResponse;
-
-      if (contentType && contentType.includes("application/json")) {
-        data = await response.json();
-      } else {
-        const text = await response.text();
-        throw new Error(
-          `Server returned non-JSON response: ${text.slice(0, 100)}...`
-        );
-      }
-
-      if (!response.ok) {
-        throw new Error(data.error || "Something went wrong.");
-      }
-
+      await signupWithEmail(email, password, "/client");
       router.push("/client");
-    } catch (error: unknown) {
-      alert(getErrorMessage(error) || "An error occurred during signup.");
-    } finally {
-      setLoading(false);
+    } catch (error) {
+      alert(getErrorMessage(error) || "Signup failed");
+    }
+  };
+
+  const handleGoogleSignup = async () => {
+    try {
+      await signupWithGoogle("/client");
+      router.push("/client");
+    } catch (error) {
+      alert(getErrorMessage(error) || "Google signup failed");
     }
   };
 
@@ -97,50 +60,16 @@ export default function RegisterPage() {
           <UserPlus className="w-8 h-8 text-[hsl(var(--primary-foreground))]" />
         </div>
         <CardTitle className="text-2xl font-bold bg-gradient-to-r from-foreground to-primary bg-clip-text text-transparent">
-          Join Our Community
+          Create an Account
         </CardTitle>
         <CardDescription className="text-[hsl(var(--muted-foreground))] text-center">
-          Create your account to access member resources and stay connected
+          Sign up with your email or continue with Google
         </CardDescription>
       </CardHeader>
 
       <CardContent>
         <form className="space-y-4" onSubmit={handleSignup}>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label
-                htmlFor="firstName"
-                className="text-[hsl(var(--foreground))]"
-              >
-                First Name
-              </Label>
-              <Input
-                id="firstName"
-                placeholder="John"
-                required
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                className="bg-[hsl(var(--input)/0.1)] dark:bg-[hsl(var(--input)/0.2)] border-[hsl(var(--border)/0.2)] dark:border-[hsl(var(--border)/0.3)] text-[hsl(var(--foreground))] placeholder:text-[hsl(var(--muted-foreground))]"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label
-                htmlFor="lastName"
-                className="text-[hsl(var(--foreground))]"
-              >
-                Last Name
-              </Label>
-              <Input
-                id="lastName"
-                placeholder="Doe"
-                required
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                className="bg-[hsl(var(--input)/0.1)] dark:bg-[hsl(var(--input)/0.2)] border-[hsl(var(--border)/0.2)] dark:border-[hsl(var(--border)/0.3)] text-[hsl(var(--foreground))] placeholder:text-[hsl(var(--muted-foreground))]"
-              />
-            </div>
-          </div>
-
+          {/* Email */}
           <div className="space-y-2">
             <Label htmlFor="email" className="text-[hsl(var(--foreground))]">
               Email
@@ -156,20 +85,7 @@ export default function RegisterPage() {
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="phone" className="text-[hsl(var(--foreground))]">
-              Phone Number
-            </Label>
-            <Input
-              id="phone"
-              type="tel"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              placeholder="(555) 123-4567"
-              className="bg-[hsl(var(--input)/0.1)] dark:bg-[hsl(var(--input)/0.2)] border-[hsl(var(--border)/0.2)] dark:border-[hsl(var(--border)/0.3)] text-[hsl(var(--foreground))] placeholder:text-[hsl(var(--muted-foreground))]"
-            />
-          </div>
-
+          {/* Password */}
           <div className="space-y-2">
             <Label htmlFor="password" className="text-[hsl(var(--foreground))]">
               Password
@@ -184,6 +100,7 @@ export default function RegisterPage() {
             />
           </div>
 
+          {/* Confirm Password */}
           <div className="space-y-2">
             <Label
               htmlFor="confirmPassword"
@@ -201,41 +118,7 @@ export default function RegisterPage() {
             />
           </div>
 
-          <div className="flex items-center space-x-2">
-            <Checkbox
-              id="terms"
-              checked={agreeTerms}
-              onCheckedChange={() => setAgreeTerms(!agreeTerms)}
-            />
-            <Label
-              htmlFor="terms"
-              className="text-sm text-[hsl(var(--foreground))]"
-            >
-              I agree to the{" "}
-              <Link href="#" className="text-primary hover:underline">
-                Terms of Service
-              </Link>{" "}
-              and{" "}
-              <Link href="#" className="text-primary hover:underline">
-                Privacy Policy
-              </Link>
-            </Label>
-          </div>
-
-          <div className="flex items-center space-x-2">
-            <Checkbox
-              id="newsletter"
-              checked={newsletter}
-              onCheckedChange={() => setNewsletter(!newsletter)}
-            />
-            <Label
-              htmlFor="newsletter"
-              className="text-sm text-[hsl(var(--foreground))]"
-            >
-              Subscribe to our newsletter for updates and events
-            </Label>
-          </div>
-
+          {/* Submit button */}
           <Button
             type="submit"
             disabled={loading}
@@ -245,6 +128,36 @@ export default function RegisterPage() {
           </Button>
         </form>
 
+        {/* Divider */}
+        <div className="flex items-center my-6">
+          <div className="flex-grow border-t border-[hsl(var(--border)/0.2)] dark:border-[hsl(var(--border)/0.3)]"></div>
+          <span className="mx-2 text-sm text-[hsl(var(--muted-foreground))]">
+            or
+          </span>
+          <div className="flex-grow border-t border-[hsl(var(--border)/0.2)] dark:border-[hsl(var(--border)/0.3)]"></div>
+        </div>
+
+        {/* Google Button */}
+        <div className="mt-4">
+          <Button
+            onClick={handleGoogleSignup}
+            disabled={loading}
+            variant="outline"
+            className="w-full flex items-center gap-2"
+          >
+            {loading ? <Loader2 className="animate-spin h-4 w-4" /> : null}
+            <Image
+              width={8}
+              height={8}
+              src="/google.svg"
+              alt="Google"
+              className="w-5 h-5"
+            />
+            Continue with Google
+          </Button>
+        </div>
+
+        {/* Login link */}
         <div className="mt-6 text-center space-y-2">
           <div className="text-sm text-[hsl(var(--muted-foreground))]">
             Already have an account?{" "}

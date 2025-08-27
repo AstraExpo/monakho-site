@@ -1,21 +1,36 @@
-// app/api/auth/check-session/route.ts
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 import { adminAuth } from "@/lib/server/firebase-admin";
+import { getErrorMessage } from "@/utils/error";
 
-export const runtime = "nodejs"; // ✅ Force Node runtime for Firebase Admin SDK
+export const runtime = "nodejs";
 
-export async function POST(req: Request) {
+export async function POST() {
   try {
-    const { session } = await req.json();
+    const session = (await cookies()).get("session")?.value;
+
+    if (!session) {
+      return NextResponse.json(
+        { valid: false, error: "No session cookie" },
+        { status: 401 }
+      );
+    }
+
     const decoded = await adminAuth.verifySessionCookie(session, true);
 
     return NextResponse.json({
       valid: true,
       uid: decoded.uid,
-      email: decoded.email, // ✅ Now returning email
+      email: decoded.email,
       name: decoded.name || null,
     });
-  } catch {
-    return NextResponse.json({ valid: false }, { status: 401 });
+  } catch (err) {
+    return NextResponse.json(
+      getErrorMessage(err) || {
+        valid: false,
+        error: "Invalid or expired session",
+      },
+      { status: 401 }
+    );
   }
 }

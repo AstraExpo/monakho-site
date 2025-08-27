@@ -23,8 +23,9 @@ export function Hero() {
           </h1>
         </div>
         <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-2xl mx-auto">
-          Discover the heart of Monakho: a worship movement devoted to faith, love, music, and
-          community.
+          Discover the Heart and Spirit of God through a worship movement
+          devoted to faith, love, music, the Word, intercession, prayer, and the
+          unity of His people.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link href={"/gifts"}>

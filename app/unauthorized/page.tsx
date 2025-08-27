@@ -1,12 +1,13 @@
 // app/unauthorized/page.tsx
 "use client";
 
+import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Home, LogIn, ShieldAlert } from "lucide-react";
 
-export default function UnauthorizedPage() {
+function UnauthorizedContent() {
   const searchParams = useSearchParams();
   const reason = searchParams.get("reason");
 
@@ -59,5 +60,15 @@ export default function UnauthorizedPage() {
         </p>
       </div>
     </div>
+  );
+}
+
+export default function UnauthorizedPage() {
+  return (
+    <Suspense
+      fallback={<div className="text-center text-gray-400">Loading...</div>}
+    >
+      <UnauthorizedContent />
+    </Suspense>
   );
 }
