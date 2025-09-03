@@ -1,3 +1,5 @@
+"use client";
+
 import { db } from "@/lib/server/firebase";
 import { collection, getDocs } from "firebase/firestore";
 

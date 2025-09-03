@@ -1,3 +1,4 @@
+"use client";
 import { db } from "@/lib/server/firebase";
 import { ApiResponse } from "@/lib/types/api";
 import {
