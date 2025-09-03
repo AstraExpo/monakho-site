@@ -17,7 +17,7 @@ export default function Navbar() {
     <nav className="fixed top-0 w-full z-50 bg-black/20 backdrop-blur-md border-b border-white/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <Link href="/" className="flex items-center space-x-2 group">
+          <Link href="/client" className="flex items-center space-x-2 group">
             <div className="relative">
               <Image
                 width={40}

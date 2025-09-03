@@ -1,7 +1,8 @@
 "use client";
 import { useLogin } from "@/app/auth/hooks/auth";
 import { Label } from "../ui/label";
-import { LogIn, Loader2, ArrowRight, Link } from "lucide-react";
+import { LogIn, Loader2, ArrowRight } from "lucide-react";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
@@ -140,7 +141,7 @@ export function LoginForm() {
             Forgot your password?
           </Link>
           <div className="text-[hsl(var(--muted-foreground))] text-sm">
-            Don&apos;t have an account?{" "}
+            Don&apos;t have an account?
             <Link
               href="/auth/register"
               className="text-purple-400 dark:text-purple-300 hover:underline font-medium"
