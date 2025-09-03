@@ -11,8 +11,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
 
     steps:
       - name: Checkout code
@@ -29,11 +27,22 @@ jobs:
         with:
           node-version: 18
 
+      # ✅ Recreate .env file from GitHub secret safely (handles multiline values)
+      - name: Create .env file
+        run: |
+          cat << 'EOF' > .env
+          ${{ secrets.ENV_FILE }}
+          EOF
+        shell: bash
+
+      # 🔍 Optional debug: list keys in .env without exposing values
+      - name: Debug .env keys
+        run: |
+          echo "Loaded .env keys:"
+          cut -d= -f1 .env
+
       - name: Install dependencies
         run: pnpm install
-
-      - name: Generate Prisma Client
-        run: pnpm prisma generate && ls -la node_modules/.prisma/client && ls -la node_modules/@prisma/client
 
       - name: Run lint
         run: pnpm lint
