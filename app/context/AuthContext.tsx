@@ -11,6 +11,7 @@ import { signOut } from "firebase/auth";
 import { auth } from "@/lib/server/firebase";
 import { useToast } from "@/components/ui/ToastContext";
 import { getErrorMessage } from "@/utils/error";
+import { useRouter } from "next/navigation";
 
 type User = {
   uid: string;
@@ -32,6 +33,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const { showToast } = useToast();
+  const router = useRouter();
 
   // 👇 Auto-load user on refresh using /api/auth/me
   useEffect(() => {
@@ -56,13 +58,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = async () => {
     try {
       // 1. Clear server session
-      await fetch("/api/auth/logout", { method: "POST" });
+      await fetch("/api/auth/signout", { method: "POST" });
 
       // 2. Clear Firebase client session
       await signOut(auth);
 
       // 3. Reset user state
       setUser(null);
+
+      // Redirect after Logout
+      router.push("/");
     } catch (err) {
       showToast(getErrorMessage(err), "error");
     }
